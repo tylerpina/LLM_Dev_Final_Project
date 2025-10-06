@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI News & Research Assistant</title>
+    <style>
+        :root {
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #252526;
+            --bg-tertiary: #2d2d30;
+            --bg-hover: #2a2d2e;
+            --text-primary: #cccccc;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-blue: #007acc;
+            --accent-green: #4ec9b0;
+            --accent-orange: #ce9178;
+            --accent-purple: #c586c0;
+            --border-color: #3e3e42;
+            --border-hover: #464647;
+            --success: #4ade80;
+            --error: #f87171;
+            --warning: #fbbf24;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--accent-blue);
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .status-bar {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.875rem;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .status-indicator.error {
+            background: var(--error);
+        }
+
+        .query-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .query-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .query-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .query-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        .query-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .style-select {
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+            min-width: 140px;
+        }
+
+        .style-select:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        .ask-btn {
+            padding: 12px 24px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .ask-btn:hover:not(:disabled) {
+            background: #005a9e;
+            transform: translateY(-1px);
+        }
+
+        .ask-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .response-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            min-height: 200px;
+        }
+
+        .response {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .response h3 {
+            color: var(--accent-green);
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .response p {
+            line-height: 1.7;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .sources {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .sources h4 {
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .source-item {
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--accent-blue);
+            font-size: 0.875rem;
+        }
+
+        .source-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .source-provider {
+            color: var(--accent-orange);
+            font-weight: 600;
+        }
+
+        .source-title {
+            color: var(--text-primary);
+            margin-top: 4px;
+        }
+
+        .source-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        .source-link:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .examples {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .examples h4 {
+            color: var(--accent-green);
+            margin-bottom: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .example-queries {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .example-query {
+            background: var(--bg-primary);
+            padding: 12px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border-color);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .example-query:hover {
+            background: var(--bg-hover);
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+            transform: translateY(-1px);
+        }
+
+        .error {
+            background: rgba(248, 113, 113, 0.1);
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .meta-info {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .meta-info strong {
+            color: var(--text-secondary);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-hover);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+            
+            .query-form {
+                flex-direction: column;
+            }
+            
+            .ask-btn {
+                width: 100%;
+            }
+            
+            .example-queries {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI News & Research Assistant</h1>
+            <p>Intelligent analysis across news sources and academic research</p>
+        </div>
+
+        <div id="status" class="status-bar" style="display: none;">
+            <div class="status-indicator"></div>
+            <span>Server online • All providers available</span>
+        </div>
+
+        <div class="query-section">
+            <form class="query-form" id="queryForm">
+                <input 
+                    type="text" 
+                    class="query-input" 
+                    id="queryInput" 
+                    placeholder="Ask about AI trends, latest news, research papers..."
+                    required
+                >
+                <select class="style-select" id="styleSelect">
+                    <option value="bullet-points">Bullet Points</option>
+                    <option value="professional">Professional</option>
+                    <option value="technical">Technical</option>
+                    <option value="conversational">Conversational</option>
+                </select>
+                <button type="submit" class="ask-btn" id="askBtn">Ask AI</button>
+            </form>
+
+            <div class="examples">
+                <h4>💡 Example queries</h4>
+                <div class="example-queries">
+                    <div class="example-query" onclick="askQuestion('What are the latest AI breakthroughs?')">
+                        Latest AI breakthroughs
+                    </div>
+                    <div class="example-query" onclick="askQuestion('Find recent papers on quantum computing')">
+                        Quantum computing research
+                    </div>
+                    <div class="example-query" onclick="askQuestion('How is climate change being reported?')">
+                        Climate change news analysis
+                    </div>
+                    <div class="example-query" onclick="askQuestion('What trends are emerging in machine learning?')">
+                        ML trends analysis
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="response-section">
+            <div id="response">
+                <div style="text-align: center; color: var(--text-muted); padding: 40px;">
+                    <p>Ask a question to get started with AI-powered analysis</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isLoading = false;
+
+        // Check server status on load
+        async function checkStatus() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                if (data.status === 'ok') {
+                    const statusEl = document.getElementById('status');
+                    statusEl.style.display = 'flex';
+                    statusEl.innerHTML = `
+                        <div class="status-indicator"></div>
+                        <span>Server online • Providers: ${data.providers.join(', ')}</span>
+                    `;
+                }
+            } catch (error) {
+                const statusEl = document.getElementById('status');
+                statusEl.style.display = 'flex';
+                statusEl.innerHTML = `
+                    <div class="status-indicator error"></div>
+                    <span>Server offline • Check connection</span>
+                `;
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('queryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const query = document.getElementById('queryInput').value.trim();
+            if (query && !isLoading) {
+                await askQuestion(query);
+            }
+        });
+
+        // Ask question function
+        async function askQuestion(query) {
+            if (isLoading) return;
+            
+            isLoading = true;
+            const askBtn = document.getElementById('askBtn');
+            const responseDiv = document.getElementById('response');
+            const styleSelect = document.getElementById('styleSelect');
+            const selectedStyle = styleSelect.value;
+            
+            askBtn.disabled = true;
+            askBtn.textContent = 'Analyzing...';
+            
+            responseDiv.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing query and gathering data from multiple sources...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        query,
+                        style: selectedStyle 
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayResponse(data);
+                } else {
+                    displayError(data.error || 'Something went wrong');
+                }
+            } catch (error) {
+                displayError('Failed to connect to the AI assistant. Please try again.');
+            } finally {
+                isLoading = false;
+                askBtn.disabled = false;
+                askBtn.textContent = 'Ask AI';
+            }
+        }
+
+        // Display AI response
+        function displayResponse(data) {
+            const responseDiv = document.getElementById('response');
+            
+            let sourcesHtml = '';
+            if (data.sources && data.sources.length > 0) {
+                sourcesHtml = `
+                    <div class="sources">
+                        <h4>📚 Sources</h4>
+                        ${data.sources.map(source => `
+                            <div class="source-item">
+                                <div class="source-provider">${source.provider}</div>
+                                ${source.title ? `<div class="source-title">${source.title}</div>` : ''}
+                                ${source.url ? `<a href="${source.url}" target="_blank" class="source-link">View source →</a>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            responseDiv.innerHTML = `
+                <div class="response">
+                    <h3>🤖 AI Analysis</h3>
+                    <p>${data.synthesizedResponse}</p>
+                    ${sourcesHtml}
+                    <div class="meta-info">
+                        Intent: <strong>${data.analysis.intent}</strong> • 
+                        Sources: <strong>${data.analysis.sources.join(', ')}</strong> • 
+                        ${new Date(data.timestamp).toLocaleTimeString()}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Display error
+        function displayError(message) {
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = `
+                <div class="response error">
+                    <h3>❌ Error</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        // Initialize
+        checkStatus();
+    </script>
+</body>
+</html>

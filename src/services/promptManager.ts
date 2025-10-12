@@ -39,11 +39,18 @@ Provide a comprehensive, synthesized response that:
 4. Keeps it professional and informative
 5. Mentions source attribution
 
+FORMAT YOUR RESPONSE IN MARKDOWN:
+- Use **bold** for key terms and emphasis
+- Use bullet points (-) for lists
+- Use headings (## or ###) for sections if needed
+- Separate paragraphs with blank lines
+- Use backticks for technical terms
+
 Response:`,
 
   responseStyle: 'professional',
   includeGreeting: false,
-  maxResponseLength: 300
+  maxResponseLength: 1000  // Increased for more comprehensive responses
 };
 
 export const PROMPT_STYLES: Record<string, Partial<PromptConfig>> = {
@@ -60,6 +67,12 @@ Provide a professional, synthesized response that:
 3. Highlights key trends or patterns
 4. Uses professional tone
 5. Mentions source attribution
+
+FORMAT IN MARKDOWN:
+- Use **bold** for key findings and terms
+- Use bullet points (-) for lists
+- Use ### for section headings if needed
+- Separate paragraphs clearly
 
 Response:`,
     includeGreeting: false,
@@ -80,6 +93,11 @@ Provide a friendly, conversational response that:
 4. Uses a warm, engaging tone
 5. Mentions source attribution
 
+FORMAT IN MARKDOWN:
+- Use **bold** for emphasis naturally
+- Use bullet points for easy reading
+- Keep it friendly but well-structured
+
 Response:`,
     includeGreeting: true,
     maxResponseLength: 400
@@ -98,6 +116,12 @@ Provide a technical, detailed response that:
 3. Highlights key trends or patterns with technical analysis
 4. Uses precise, technical language
 5. Mentions source attribution
+
+FORMAT IN MARKDOWN:
+- Use **bold** for technical terms and key concepts
+- Use backticks for technical notation, commands, or variables
+- Use bullet points for feature lists
+- Use ### for subsections
 
 Response:`,
     includeGreeting: false,
@@ -118,9 +142,17 @@ Provide a structured response using bullet points that:
 4. Uses bullet points for clarity
 5. Includes source attribution
 
-Format as bullet points. Response:`,
+FORMAT IN MARKDOWN (REQUIRED):
+- Start with **bold summary** of main findings
+- Use bullet points (-) for all lists
+- Use **bold** for key terms and findings
+- Use numbered lists (1., 2., 3.) for sequential steps
+- Separate sections with blank lines
+- Use ### for section headings if needed
+
+Response:`,
     includeGreeting: false,
-    maxResponseLength: 400
+    maxResponseLength: 1200  // Increased for detailed bullet-point responses
   }
 };
 

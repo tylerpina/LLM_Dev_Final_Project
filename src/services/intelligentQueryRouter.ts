@@ -38,10 +38,10 @@ export class IntelligentQueryRouter {
 
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.1,
-        max_tokens: 150  // Reduced for cost savings
+        max_tokens: 300  // Increased for better analysis
       });
 
       const analysis = JSON.parse(response.choices[0].message.content || '{}');
@@ -127,7 +127,7 @@ export class IntelligentQueryRouter {
 
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: this.promptManager.getMaxTokens()

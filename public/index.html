@@ -194,6 +194,79 @@
             margin-bottom: 16px;
         }
 
+        .response-content {
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .response-content p {
+            margin-bottom: 16px;
+        }
+
+        .response-content ul,
+        .response-content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .response-content li {
+            margin: 8px 0;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .response-content ul li::marker {
+            color: var(--accent-blue);
+        }
+
+        .response-content ol li::marker {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .response-content strong {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .response-content em {
+            color: var(--accent-purple);
+            font-style: italic;
+        }
+
+        .response-content code {
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            color: var(--accent-orange);
+        }
+
+        .response-content h3 {
+            color: var(--accent-green);
+            margin: 24px 0 16px 0;
+            font-size: 1.3em;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .response-content h4 {
+            color: var(--accent-blue);
+            margin: 20px 0 12px 0;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .response-content blockquote {
+            border-left: 3px solid var(--accent-blue);
+            padding-left: 16px;
+            margin: 16px 0;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
         .sources {
             background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
@@ -267,48 +340,123 @@
             100% { transform: rotate(360deg); }
         }
 
-        .examples {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-        }
-
-        .examples h4 {
-            color: var(--accent-green);
-            margin-bottom: 16px;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .example-queries {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 12px;
-        }
-
-        .example-query {
-            background: var(--bg-primary);
-            padding: 12px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid var(--border-color);
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-
-        .example-query:hover {
-            background: var(--bg-hover);
-            border-color: var(--border-hover);
-            color: var(--text-primary);
-            transform: translateY(-1px);
-        }
 
         .error {
             background: rgba(248, 113, 113, 0.1);
             border-color: var(--error);
             color: var(--error);
+        }
+
+        /* Headlines Section */
+        .headlines-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .headlines-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .headlines-header h2 {
+            color: var(--accent-green);
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        .refresh-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .refresh-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent-blue);
+        }
+
+        .headlines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 16px;
+        }
+
+        .headline-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .headline-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .headline-source {
+            display: inline-block;
+            background: var(--accent-blue);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .headline-source.newsapi {
+            background: var(--accent-blue);
+        }
+
+        .headline-source.guardian {
+            background: var(--accent-purple);
+        }
+
+        .headline-source.arxiv {
+            background: var(--accent-green);
+        }
+
+        .headline-title {
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .headline-description {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .headline-meta {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .headline-category {
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            border-radius: 3px;
         }
 
         .meta-info {
@@ -357,9 +505,6 @@
                 width: 100%;
             }
             
-            .example-queries {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -392,30 +537,25 @@
                 </select>
                 <button type="submit" class="ask-btn" id="askBtn">Ask AI</button>
             </form>
-
-            <div class="examples">
-                <h4>💡 Example queries</h4>
-                <div class="example-queries">
-                    <div class="example-query" onclick="askQuestion('What are the latest AI breakthroughs?')">
-                        Latest AI breakthroughs
-                    </div>
-                    <div class="example-query" onclick="askQuestion('Find recent papers on quantum computing')">
-                        Quantum computing research
-                    </div>
-                    <div class="example-query" onclick="askQuestion('How is climate change being reported?')">
-                        Climate change news analysis
-                    </div>
-                    <div class="example-query" onclick="askQuestion('What trends are emerging in machine learning?')">
-                        ML trends analysis
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="response-section">
             <div id="response">
                 <div style="text-align: center; color: var(--text-muted); padding: 40px;">
                     <p>Ask a question to get started with AI-powered analysis</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="headlines-section" id="headlinesSection">
+            <div class="headlines-header">
+                <h2>📰 Latest Headlines & Research</h2>
+                <button class="refresh-btn" onclick="refreshHeadlines()">🔄 Refresh</button>
+            </div>
+            <div id="headlines">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading latest headlines...</p>
                 </div>
             </div>
         </div>
@@ -504,9 +644,102 @@
             }
         }
 
+        // Format response text with proper HTML and Markdown support
+        function formatResponseText(text) {
+            // Split into paragraphs by double line breaks
+            let paragraphs = text.split(/\n\n+/);
+            
+            let formattedHtml = '';
+            
+            for (let para of paragraphs) {
+                para = para.trim();
+                if (!para) continue;
+                
+                // Check for markdown headings (### or ##)
+                if (/^###\s/.test(para)) {
+                    const heading = para.replace(/^###\s+/, '').trim();
+                    formattedHtml += `<h4>${heading}</h4>`;
+                    continue;
+                }
+                else if (/^##\s/.test(para)) {
+                    const heading = para.replace(/^##\s+/, '').trim();
+                    formattedHtml += `<h3>${heading}</h3>`;
+                    continue;
+                }
+                
+                // Check if it's a bullet list (lines starting with -, •, or *)
+                if (/^[-•*]\s/.test(para)) {
+                    const items = para.split('\n').filter(line => line.trim());
+                    formattedHtml += '<ul>';
+                    items.forEach(item => {
+                        const cleaned = item.replace(/^[-•*]\s+/, '').trim();
+                        if (cleaned) {
+                            formattedHtml += `<li>${cleaned}</li>`;
+                        }
+                    });
+                    formattedHtml += '</ul>';
+                }
+                // Check if it's a numbered list
+                else if (/^\d+\.\s/.test(para)) {
+                    const items = para.split('\n').filter(line => line.trim());
+                    formattedHtml += '<ol>';
+                    items.forEach(item => {
+                        const cleaned = item.replace(/^\d+\.\s+/, '').trim();
+                        if (cleaned) {
+                            formattedHtml += `<li>${cleaned}</li>`;
+                        }
+                    });
+                    formattedHtml += '</ol>';
+                }
+                // Regular paragraph
+                else {
+                    // Handle single line breaks within a paragraph
+                    const lines = para.split('\n').map(line => line.trim()).filter(line => line);
+                    
+                    // If multiple lines, treat as separate items
+                    if (lines.length > 1 && lines.every(line => /^[-•*]\s/.test(line) || /^\d+\.\s/.test(line))) {
+                        // It's a list that wasn't caught above
+                        if (/^[-•*]\s/.test(lines[0])) {
+                            formattedHtml += '<ul>';
+                            lines.forEach(line => {
+                                const cleaned = line.replace(/^[-•*]\s+/, '').trim();
+                                formattedHtml += `<li>${cleaned}</li>`;
+                            });
+                            formattedHtml += '</ul>';
+                        } else {
+                            formattedHtml += '<ol>';
+                            lines.forEach(line => {
+                                const cleaned = line.replace(/^\d+\.\s+/, '').trim();
+                                formattedHtml += `<li>${cleaned}</li>`;
+                            });
+                            formattedHtml += '</ol>';
+                        }
+                    } else {
+                        formattedHtml += `<p>${lines.join(' ')}</p>`;
+                    }
+                }
+            }
+            
+            // If no formatting was applied, wrap in paragraph
+            if (!formattedHtml) {
+                formattedHtml = `<p>${text}</p>`;
+            }
+            
+            // Apply inline formatting (do this AFTER structural formatting)
+            formattedHtml = formattedHtml
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')  // Bold **text**
+                .replace(/\*(?!\*)(.+?)\*/g, '<em>$1</em>')        // Italic *text* (not **)
+                .replace(/`([^`]+?)`/g, '<code>$1</code>');        // Code `text`
+            
+            return formattedHtml;
+        }
+
         // Display AI response
         function displayResponse(data) {
             const responseDiv = document.getElementById('response');
+            
+            // Format the response text
+            const formattedResponse = formatResponseText(data.synthesizedResponse);
             
             let sourcesHtml = '';
             if (data.sources && data.sources.length > 0) {
@@ -527,7 +760,9 @@
             responseDiv.innerHTML = `
                 <div class="response">
                     <h3>🤖 AI Analysis</h3>
-                    <p>${data.synthesizedResponse}</p>
+                    <div class="response-content">
+                        ${formattedResponse}
+                    </div>
                     ${sourcesHtml}
                     <div class="meta-info">
                         Intent: <strong>${data.analysis.intent}</strong> • 
@@ -549,8 +784,85 @@
             `;
         }
 
+        // Load headlines
+        async function loadHeadlines() {
+            const headlinesDiv = document.getElementById('headlines');
+            
+            try {
+                const response = await fetch('/headlines?limit=12');
+                const data = await response.json();
+
+                if (response.ok && data.headlines) {
+                    displayHeadlines(data.headlines);
+                } else {
+                    headlinesDiv.innerHTML = '<p style="color: var(--text-muted);">No headlines available</p>';
+                }
+            } catch (error) {
+                headlinesDiv.innerHTML = '<p style="color: var(--error);">Failed to load headlines</p>';
+            }
+        }
+
+        // Display headlines
+        function displayHeadlines(headlines) {
+            const headlinesDiv = document.getElementById('headlines');
+            
+            if (!headlines || headlines.length === 0) {
+                headlinesDiv.innerHTML = '<p style="color: var(--text-muted);">No headlines available yet</p>';
+                return;
+            }
+
+            const html = `
+                <div class="headlines-grid">
+                    ${headlines.map(h => `
+                        <div class="headline-card" onclick="window.open('${h.url}', '_blank')">
+                            <div class="headline-source ${h.source}">${h.source}</div>
+                            <div class="headline-title">${h.title}</div>
+                            <div class="headline-description">${h.description ? h.description.substring(0, 150) + '...' : ''}</div>
+                            <div class="headline-meta">
+                                <span class="headline-category">${h.category}</span>
+                                <span>${timeAgo(h.publishedAt || h.fetchedAt)}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            headlinesDiv.innerHTML = html;
+        }
+
+        // Refresh headlines
+        async function refreshHeadlines() {
+            const headlinesDiv = document.getElementById('headlines');
+            headlinesDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Refreshing headlines...</p></div>';
+            
+            // Trigger fetch on server
+            await fetch('/headlines/fetch', { method: 'POST' });
+            
+            // Wait a bit for fetch to complete
+            setTimeout(() => {
+                loadHeadlines();
+            }, 2000);
+        }
+
+        // Format time ago
+        function timeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const seconds = Math.floor((now - date) / 1000);
+            
+            if (seconds < 60) return 'just now';
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+            if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+            return date.toLocaleDateString();
+        }
+
         // Initialize
         checkStatus();
+        loadHeadlines();
+        
+        // Auto-refresh headlines every 5 minutes
+        setInterval(loadHeadlines, 5 * 60 * 1000);
     </script>
 </body>
 </html>

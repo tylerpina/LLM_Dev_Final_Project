@@ -46,7 +46,7 @@ export class SentimentAgent extends BaseAgent<SentimentAgentResult> {
       articleSentiments
     );
 
-    this.log("info", "Sentiment analysis completed", {
+    this.log("info", "💭 SentimentAgent: Analysis completed", {
       total: articles.length,
       sentimentCounts,
       overallSentiment,

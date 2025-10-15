@@ -38,15 +38,20 @@ export class BiasAgent extends BaseAgent<BiasAgentResult> {
       return this.getDefaultResult();
     }
 
+    this.log("info", "⚖️ BiasAgent: Analyzing source diversity and bias...", {
+      articleCount: articles.length,
+    });
+
     // Analyze source diversity
     const sourceDiversity = this.analyzeSourceDiversity(articles);
 
     // Analyze content bias using LLM
     const biasAnalysis = await this.analyzeContentBias(articles, context.query);
 
-    this.log("info", "Bias analysis completed", {
+    this.log("info", "⚖️ BiasAgent: Analysis completed", {
       sourceDiversity,
       warningsCount: biasAnalysis.biasWarnings.length,
+      perspectivesCount: biasAnalysis.perspectives.length,
     });
 
     return {

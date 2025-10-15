@@ -12,15 +12,19 @@ export class SynthesisAgent extends BaseAgent<string> {
   }
 
   protected async process(context: AgentContext): Promise<string> {
+    this.log("info", "📝 SynthesisAgent: Building context from all agents...");
+
     const rawData = context.rawData || {};
 
     // Build comprehensive context for synthesis
     const synthesisContext = this.buildSynthesisContext(rawData, context);
 
+    this.log("info", "📝 SynthesisAgent: Generating final report...");
+
     // Generate final markdown report
     const report = await this.generateReport(synthesisContext, context.query);
 
-    this.log("info", "Synthesis completed", {
+    this.log("info", "📝 SynthesisAgent: Report generation complete", {
       reportLength: report.length,
       query: context.query,
     });

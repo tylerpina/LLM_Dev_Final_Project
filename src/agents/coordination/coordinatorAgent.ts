@@ -17,10 +17,19 @@ export class CoordinatorAgent extends BaseAgent<CoordinationResult> {
   }
 
   protected async process(context: AgentContext): Promise<CoordinationResult> {
+    this.log("info", "🎯 CoordinatorAgent: Analyzing query intent...");
+
     // Step 1: Load user profile if available
     const userProfile = this.personalizationService?.getUserProfile(
       context.userId
     );
+
+    if (userProfile) {
+      this.log("info", "🎯 CoordinatorAgent: User profile loaded", {
+        interests: userProfile.interests.slice(0, 3),
+        interactionCount: userProfile.interactionCount,
+      });
+    }
 
     // Step 2: Analyze query intent and requirements
     const analysis = await this.analyzeQuery(context.query, userProfile);
@@ -32,10 +41,11 @@ export class CoordinatorAgent extends BaseAgent<CoordinationResult> {
       hasHistory: !!userProfile && userProfile.interactionCount > 0,
     };
 
-    this.log("info", "Coordination completed", {
+    this.log("info", "🎯 CoordinatorAgent: Planning complete", {
       intent: analysis.intent,
       agentsToRun: analysis.agentsToRun,
-      hasUserHistory: userContext.hasHistory,
+      searchTerms: analysis.searchTerms,
+      priority: analysis.priority,
     });
 
     return {

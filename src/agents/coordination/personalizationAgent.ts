@@ -79,10 +79,11 @@ export class PersonalizationAgent extends BaseAgent<PersonalizationResult> {
       interactionType: "query",
     });
 
-    this.log("info", "Personalization completed", {
+    this.log("info", "🎯 PersonalizationAgent: Ranking and insights complete", {
       totalArticles: articles.length,
       topScore: rankedArticles[0]?.relevanceScore || 0,
-      insightsGenerated: insights.personalizedInsights.length,
+      insights: insights.personalizedInsights.length,
+      followUps: insights.recommendedFollowUps.length,
     });
 
     return insights;

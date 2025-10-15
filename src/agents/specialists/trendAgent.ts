@@ -20,12 +20,17 @@ export class TrendAgent extends BaseAgent<TrendAgentResult> {
       return this.getDefaultResult();
     }
 
+    this.log("info", "📈 TrendAgent: Detecting trends and patterns...", {
+      articleCount: articles.length,
+    });
+
     // Analyze trends using LLM
     const trendAnalysis = await this.analyzeTrends(articles, context.query);
 
-    this.log("info", "Trend analysis completed", {
+    this.log("info", "📈 TrendAgent: Analysis completed", {
       mainTopics: trendAnalysis.mainTopics.length,
       emergingThemes: trendAnalysis.emergingThemes.length,
+      insights: trendAnalysis.keyInsights.length,
     });
 
     return trendAnalysis;

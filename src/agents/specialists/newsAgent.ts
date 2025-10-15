@@ -18,11 +18,17 @@ export class NewsAgent extends BaseAgent<NewsAgentResult> {
 
   protected async process(context: AgentContext): Promise<NewsAgentResult> {
     // Step 1: Extract search terms if not provided
+    this.log("info", "📰 NewsAgent: Extracting search terms...");
     const searchTerms =
       context.searchTerms || (await this.extractSearchTerms(context.query));
 
+    this.log("info", "📰 NewsAgent: Search terms extracted", { searchTerms });
+
     // Step 2: Fetch from all available sources in parallel
     const availableSources = this.mcpServer.getAvailableProviders();
+    this.log("info", "📰 NewsAgent: Fetching from sources...", {
+      sources: availableSources,
+    });
     const fetchPromises = availableSources.map((source) =>
       this.fetchFromSource(source, searchTerms, context)
     );
@@ -44,7 +50,7 @@ export class NewsAgent extends BaseAgent<NewsAgentResult> {
       }
     });
 
-    this.log("info", "News fetching completed", {
+    this.log("info", "📰 NewsAgent: Fetching completed", {
       totalArticles: articles.length,
       sources: successfulSources,
       searchTerms,

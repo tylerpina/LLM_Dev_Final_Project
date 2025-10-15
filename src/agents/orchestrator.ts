@@ -68,10 +68,11 @@ export class MultiAgentOrchestrator {
     const startTime = Date.now();
     this.metrics = []; // Reset metrics
 
-    logger.info("Multi-agent orchestration started", { query, userId });
+    logger.info("🚀 Multi-agent orchestration started", { query, userId });
 
     try {
       // Phase 1: Coordination - Analyze query and plan execution
+      logger.info("📋 Phase 1: Starting Coordinator Agent...", { query });
       const context: AgentContext = {
         query,
         userId,
@@ -85,6 +86,11 @@ export class MultiAgentOrchestrator {
       }
 
       const coordination = coordinationResult.data;
+      logger.info("✅ Coordinator complete", {
+        intent: coordination.intent,
+        agentsToRun: coordination.agentsToRun,
+        searchTerms: coordination.searchTerms,
+      });
 
       // Update context with coordination results
       context.searchTerms = coordination.searchTerms;
@@ -93,16 +99,32 @@ export class MultiAgentOrchestrator {
       context.userProfile = this.personalizationService?.getUserProfile(userId);
 
       // Phase 2: Execute specialist agents in parallel
+      logger.info("⚡ Phase 2: Starting specialist agents in parallel...", {
+        agents: coordination.agentsToRun,
+      });
       const specialistResults = await this.executeSpecialistAgents(
         context,
         coordination.agentsToRun
       );
 
+      logger.info("✅ All specialist agents complete", {
+        newsArticles: specialistResults.news?.totalFetched || 0,
+        hasSentiment: !!specialistResults.sentiment,
+        hasTrend: !!specialistResults.trend,
+        hasBias: !!specialistResults.bias,
+      });
+
       // Phase 3: Personalization (sequential, needs specialist results)
+      logger.info("🎯 Phase 3: Starting Personalization Agent...", { userId });
       context.rawData = specialistResults;
       const personalizationResult = await this.personalizationAgent.execute(
         context
       );
+
+      logger.info("✅ Personalization complete", {
+        rankedArticles: personalizationResult.data?.rankedArticles.length || 0,
+        insights: personalizationResult.data?.personalizedInsights.length || 0,
+      });
 
       // Add personalization to context
       specialistResults.personalization = personalizationResult.success
@@ -110,7 +132,12 @@ export class MultiAgentOrchestrator {
         : null;
 
       // Phase 4: Synthesis (final)
+      logger.info("📝 Phase 4: Starting Synthesis Agent...");
       const synthesisResult = await this.synthesisAgent.execute(context);
+
+      logger.info("✅ Synthesis complete", {
+        reportLength: synthesisResult.data?.length || 0,
+      });
 
       if (!synthesisResult.success) {
         throw new Error("Synthesis failed: " + synthesisResult.error);
@@ -146,10 +173,12 @@ export class MultiAgentOrchestrator {
         timestamp: new Date().toISOString(),
       };
 
-      logger.info("Multi-agent orchestration completed", {
+      logger.info("🎉 Multi-agent orchestration completed", {
         executionTimeMs,
         estimatedCost: `$${estimatedCost.toFixed(4)}`,
-        agentsExecuted: result.agentsExecuted.length,
+        totalAgents: result.agentsExecuted.length,
+        query,
+        userId,
       });
 
       return result;

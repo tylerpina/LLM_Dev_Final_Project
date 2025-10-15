@@ -57,3 +57,41 @@
 {"level":"info","message":"Response style updated","service":"llm-dev-project","style":"technical","timestamp":"2025-10-06T23:18:52.010Z"}
 {"duration":"2908ms","intent":"news","level":"info","message":"AI query completed","query":"give me recent headlines","service":"llm-dev-project","sources":["newsapi","guardian"],"style":"technical","timestamp":"2025-10-06T23:18:54.918Z"}
 {"level":"info","message":"::1 - - [06/Oct/2025:23:18:54 +0000] \"POST /ask HTTP/1.1\" 200 6028 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-06T23:18:54.919Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-10-15T20:14:20.877Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-10-15T20:14:20.878Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-10-15T20:14:20.878Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-10-15T20:14:20.882Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-10-15T20:14:20.882Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-10-15T20:14:20.914Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-10-15T20:14:20.915Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-10-15T20:14:20.917Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-10-15T20:14:20.918Z"}
+{"count":8,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-10-15T20:14:21.182Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-10-15T20:14:21.807Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-10-15T20:14:21.879Z"}
+{"count":28,"duration":999,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-10-15T20:14:21.881Z"}
+{"level":"info","message":"Health check requested","service":"llm-dev-project","timestamp":"2025-10-15T20:14:40.574Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:14:40 +0000] \"GET /health HTTP/1.1\" 200 127 \"http://localhost:3000/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-10-15T20:14:40.575Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:14:40.576Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:14:40 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 200 5892 \"http://localhost:3000/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-10-15T20:14:40.577Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:14:40 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"http://localhost:3000/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-10-15T20:14:40.593Z"}
+{"level":"info","message":"AI query received","query":"Analyze the Goldman Sachs earnings reports","service":"llm-dev-project","style":"conversational","timestamp":"2025-10-15T20:15:41.928Z","useMultiAgent":true}
+{"level":"info","message":"🚀 Multi-agent orchestration started","query":"Analyze the Goldman Sachs earnings reports","service":"llm-dev-project","timestamp":"2025-10-15T20:15:41.929Z","userId":"anonymous"}
+{"level":"info","message":"📋 Phase 1: Starting Coordinator Agent...","query":"Analyze the Goldman Sachs earnings reports","service":"llm-dev-project","timestamp":"2025-10-15T20:15:41.929Z"}
+{"level":"info","message":"[coordinator] Starting execution","query":"Analyze the Goldman Sachs earnings reports","service":"llm-dev-project","timestamp":"2025-10-15T20:15:41.929Z","userId":"anonymous"}
+{"level":"info","message":"[coordinator] 🎯 CoordinatorAgent: Analyzing query intent...","service":"llm-dev-project","timestamp":"2025-10-15T20:15:41.929Z"}
+{"agentsToRun":["news","sentiment","trend"],"intent":"analysis","level":"info","message":"[coordinator] 🎯 CoordinatorAgent: Planning complete","priority":"depth","searchTerms":["Goldman Sachs","earnings report","financial analysis","quarterly results","stock performance"],"service":"llm-dev-project","timestamp":"2025-10-15T20:15:45.118Z"}
+{"durationMs":3190,"level":"info","message":"[coordinator] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-10-15T20:15:45.119Z"}
+{"agentsToRun":["news","sentiment","trend"],"intent":"analysis","level":"info","message":"✅ Coordinator complete","searchTerms":["Goldman Sachs","earnings report","financial analysis","quarterly results","stock performance"],"service":"llm-dev-project","timestamp":"2025-10-15T20:15:45.119Z"}
+{"agents":["news","sentiment","trend"],"level":"info","message":"⚡ Phase 2: Starting specialist agents in parallel...","service":"llm-dev-project","timestamp":"2025-10-15T20:15:45.119Z"}
+{"level":"info","message":"[news] Starting execution","query":"Analyze the Goldman Sachs earnings reports","service":"llm-dev-project","timestamp":"2025-10-15T20:15:45.119Z","userId":"anonymous"}
+{"level":"info","message":"[news] 📰 NewsAgent: Extracting search terms...","service":"llm-dev-project","timestamp":"2025-10-15T20:15:45.119Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Search terms extracted","searchTerms":["Goldman Sachs","earnings report","financial analysis","quarterly results","stock performance"],"service":"llm-dev-project","timestamp":"2025-10-15T20:15:45.119Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching from sources...","service":"llm-dev-project","sources":["newsapi","guardian","arxiv"],"timestamp":"2025-10-15T20:15:45.119Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching completed","searchTerms":["Goldman Sachs","earnings report","financial analysis","quarterly results","stock performance"],"service":"llm-dev-project","sources":["newsapi","guardian","arxiv"],"timestamp":"2025-10-15T20:15:45.785Z","totalArticles":20}
+{"durationMs":667,"level":"info","message":"[news] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-10-15T20:15:45.786Z"}
+{"level":"info","message":"[sentiment] Starting execution","query":"Analyze the Goldman Sachs earnings reports","service":"llm-dev-project","timestamp":"2025-10-15T20:15:45.786Z","userId":"anonymous"}
+{"level":"info","message":"[trend] Starting execution","query":"Analyze the Goldman Sachs earnings reports","service":"llm-dev-project","timestamp":"2025-10-15T20:15:45.787Z","userId":"anonymous"}
+{"articleCount":20,"level":"info","message":"[trend] 📈 TrendAgent: Detecting trends and patterns...","service":"llm-dev-project","timestamp":"2025-10-15T20:15:45.787Z"}
+{"emergingThemes":3,"insights":3,"level":"info","mainTopics":5,"message":"[trend] 📈 TrendAgent: Analysis completed","service":"llm-dev-project","timestamp":"2025-10-15T20:15:52.419Z"}
+{"durationMs":6632,"level":"info","message":"[trend] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-10-15T20:15:52.419Z"}

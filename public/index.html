@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI News & Research Assistant</title>
+    <style>
+        :root {
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #252526;
+            --bg-tertiary: #2d2d30;
+            --bg-hover: #2a2d2e;
+            --text-primary: #cccccc;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-blue: #007acc;
+            --accent-green: #4ec9b0;
+            --accent-orange: #ce9178;
+            --accent-purple: #c586c0;
+            --border-color: #3e3e42;
+            --border-hover: #464647;
+            --success: #4ade80;
+            --error: #f87171;
+            --warning: #fbbf24;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--accent-blue);
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .status-bar {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.875rem;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .status-indicator.error {
+            background: var(--error);
+        }
+
+        .query-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .query-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .query-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .query-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        .query-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .style-select {
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+            min-width: 140px;
+        }
+
+        .style-select:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        .ask-btn {
+            padding: 12px 24px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .ask-btn:hover:not(:disabled) {
+            background: #005a9e;
+            transform: translateY(-1px);
+        }
+
+        .ask-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .response-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            min-height: 200px;
+        }
+
+        .response {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .response h3 {
+            color: var(--accent-green);
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .response p {
+            line-height: 1.7;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .response-content {
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .response-content p {
+            margin-bottom: 16px;
+        }
+
+        .response-content ul,
+        .response-content ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .response-content li {
+            margin: 8px 0;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .response-content ul li::marker {
+            color: var(--accent-blue);
+        }
+
+        .response-content ol li::marker {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .response-content strong {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .response-content em {
+            color: var(--accent-purple);
+            font-style: italic;
+        }
+
+        .response-content code {
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            color: var(--accent-orange);
+        }
+
+        .response-content h3 {
+            color: var(--accent-green);
+            margin: 24px 0 16px 0;
+            font-size: 1.3em;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .response-content h4 {
+            color: var(--accent-blue);
+            margin: 20px 0 12px 0;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .response-content blockquote {
+            border-left: 3px solid var(--accent-blue);
+            padding-left: 16px;
+            margin: 16px 0;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .sources {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .sources h4 {
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .source-item {
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--accent-blue);
+            font-size: 0.875rem;
+        }
+
+        .source-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .source-provider {
+            color: var(--accent-orange);
+            font-weight: 600;
+        }
+
+        .source-title {
+            color: var(--text-primary);
+            margin-top: 4px;
+        }
+
+        .source-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        .source-link:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+        .error {
+            background: rgba(248, 113, 113, 0.1);
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        /* Headlines Section */
+        .headlines-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .headlines-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .headlines-header h2 {
+            color: var(--accent-green);
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        .refresh-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .refresh-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent-blue);
+        }
+
+        .headlines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 16px;
+        }
+
+        .headline-card {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .headline-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .headline-source {
+            display: inline-block;
+            background: var(--accent-blue);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .headline-source.newsapi {
+            background: var(--accent-blue);
+        }
+
+        .headline-source.guardian {
+            background: var(--accent-purple);
+        }
+
+        .headline-source.arxiv {
+            background: var(--accent-green);
+        }
+
+        .headline-title {
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .headline-description {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .headline-meta {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .headline-category {
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .meta-info {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .meta-info strong {
+            color: var(--text-secondary);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--border-hover);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+            
+            .query-form {
+                flex-direction: column;
+            }
+            
+            .ask-btn {
+                width: 100%;
+            }
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI News & Research Assistant</h1>
+            <p>Intelligent analysis across news sources and academic research</p>
+        </div>
+
+        <div id="status" class="status-bar" style="display: none;">
+            <div class="status-indicator"></div>
+            <span>Server online • All providers available</span>
+        </div>
+
+        <div class="query-section">
+            <form class="query-form" id="queryForm">
+                <input 
+                    type="text" 
+                    class="query-input" 
+                    id="queryInput" 
+                    placeholder="Ask about AI trends, latest news, research papers..."
+                    required
+                >
+                <select class="style-select" id="styleSelect">
+                    <option value="bullet-points">Bullet Points</option>
+                    <option value="professional">Professional</option>
+                    <option value="technical">Technical</option>
+                    <option value="conversational">Conversational</option>
+                </select>
+                <button type="submit" class="ask-btn" id="askBtn">Ask AI</button>
+            </form>
+        </div>
+
+        <div class="response-section">
+            <div id="response">
+                <div style="text-align: center; color: var(--text-muted); padding: 40px;">
+                    <p>Ask a question to get started with AI-powered analysis</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="headlines-section" id="headlinesSection">
+            <div class="headlines-header">
+                <h2>📰 Latest Headlines & Research</h2>
+                <button class="refresh-btn" onclick="refreshHeadlines()">🔄 Refresh</button>
+            </div>
+            <div id="headlines">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading latest headlines...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isLoading = false;
+
+        // Check server status on load
+        async function checkStatus() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                if (data.status === 'ok') {
+                    const statusEl = document.getElementById('status');
+                    statusEl.style.display = 'flex';
+                    statusEl.innerHTML = `
+                        <div class="status-indicator"></div>
+                        <span>Server online • Providers: ${data.providers.join(', ')}</span>
+                    `;
+                }
+            } catch (error) {
+                const statusEl = document.getElementById('status');
+                statusEl.style.display = 'flex';
+                statusEl.innerHTML = `
+                    <div class="status-indicator error"></div>
+                    <span>Server offline • Check connection</span>
+                `;
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('queryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const query = document.getElementById('queryInput').value.trim();
+            if (query && !isLoading) {
+                await askQuestion(query);
+            }
+        });
+
+        // Ask question function
+        async function askQuestion(query) {
+            if (isLoading) return;
+            
+            isLoading = true;
+            const askBtn = document.getElementById('askBtn');
+            const responseDiv = document.getElementById('response');
+            const styleSelect = document.getElementById('styleSelect');
+            const selectedStyle = styleSelect.value;
+            
+            askBtn.disabled = true;
+            askBtn.textContent = 'Analyzing...';
+            
+            responseDiv.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing query and gathering data from multiple sources...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        query,
+                        style: selectedStyle 
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Server responded with error:', response.status, errorText);
+                    displayError(`Server error (${response.status}): ${response.statusText}`);
+                    return;
+                }
+
+                const data = await response.json();
+                console.log('Received response data:', data);
+
+                if (response.ok) {
+                    displayResponse(data);
+                } else {
+                    displayError(data.error || 'Something went wrong');
+                }
+            } catch (error) {
+                console.error('Fetch request failed:', error);
+                displayError('Failed to connect to the AI assistant. Please try again.');
+            } finally {
+                isLoading = false;
+                askBtn.disabled = false;
+                askBtn.textContent = 'Ask AI';
+            }
+        }
+
+        // Format response text with proper HTML and Markdown support
+        function formatResponseText(text) {
+            // Remove any leading markdown code block markers and clean up the text
+            text = text.replace(/^```markdown\s*/i, '').replace(/```\s*$/, '').trim();
+            
+            // Split the text into lines for processing
+            let lines = text.split('\n');
+            let formattedHtml = '';
+            let currentList = null; // Track if we're in a list and what type ('ul' or 'ol')
+            let currentListItems = [];
+            
+            function closeCurrentList() {
+                if (currentList && currentListItems.length > 0) {
+                    formattedHtml += `<${currentList}>`;
+                    currentListItems.forEach(item => {
+                        formattedHtml += `<li>${formatInlineMarkdown(item)}</li>`;
+                    });
+                    formattedHtml += `</${currentList}>`;
+                    currentList = null;
+                    currentListItems = [];
+                }
+            }
+            
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].trim();
+                
+                if (!line) {
+                    // Empty line - close current list and continue
+                    closeCurrentList();
+                    continue;
+                }
+                
+                // Handle headings
+                if (/^###?\s/.test(line)) {
+                    closeCurrentList();
+                    if (/^###\s/.test(line)) {
+                        const heading = line.replace(/^###\s+/, '').trim();
+                        formattedHtml += `<h4>${escapeHtml(heading)}</h4>`;
+                    } else {
+                        const heading = line.replace(/^##\s+/, '').trim();
+                        formattedHtml += `<h3>${escapeHtml(heading)}</h3>`;
+                    }
+                    continue;
+                }
+                
+                // Handle bullet lists - check for dash/asterisk at the beginning of the line
+                if (/^[-•*]\s/.test(line)) {
+                    if (currentList !== 'ul') {
+                        closeCurrentList();
+                        currentList = 'ul';
+                        currentListItems = [];
+                    }
+                    const cleaned = line.replace(/^[-•*]\s+/, '').trim();
+                    if (cleaned) {
+                        currentListItems.push(cleaned);
+                    }
+                }
+                // Handle numbered lists - check for number followed by dot at the beginning
+                else if (/^\d+\.\s/.test(line)) {
+                    if (currentList !== 'ol') {
+                        closeCurrentList();
+                        currentList = 'ol';
+                        currentListItems = [];
+                    }
+                    const cleaned = line.replace(/^\d+\.\s+/, '').trim();
+                    if (cleaned) {
+                        currentListItems.push(cleaned);
+                    }
+                }
+                // Regular line
+                else {
+                    closeCurrentList();
+                    
+                    // Add as paragraph, but don't combine with next lines automatically
+                    // This prevents list items from being merged into paragraphs
+                    if (line.trim()) {
+                        formattedHtml += `<p>${formatInlineMarkdown(line)}</p>`;
+                    }
+                }
+            }
+            
+            // Close any remaining list
+            closeCurrentList();
+            
+            return formattedHtml || `<p>${formatInlineMarkdown(text)}</p>`;
+        }
+        
+        // Helper function to format inline markdown (bold, italic, code, links)
+        function formatInlineMarkdown(text) {
+            // Don't process text that already contains HTML tags
+            if (/<[^>]+>/.test(text)) {
+                // Still process links and code blocks that might be in HTML
+                return text
+                    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>') // Links [text](url)
+                    .replace(/`([^`]+?)`/g, '<code>$1</code>'); // Code `text`
+            }
+            
+            return text
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')                    // Bold **text**
+                .replace(/\*(?!\*)(.+?)\*/g, '<em>$1</em>')                        // Italic *text* (not **)
+                .replace(/`([^`]+?)`/g, '<code>$1</code>')                        // Code `text`
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>'); // Links [text](url)
+        }
+        
+        // Helper function to escape HTML characters
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Display AI response
+        function displayResponse(data) {
+            const responseDiv = document.getElementById('response');
+            
+            // Handle both multi-agent and legacy response formats
+            const responseText = data.synthesizedResponse || data.response || 'No response received';
+            
+            // Ensure we have valid response text
+            if (!responseText || responseText.trim() === '') {
+                console.error('No response text received:', data);
+                displayError('Received empty response from AI assistant.');
+                return;
+            }
+            
+            const formattedResponse = formatResponseText(responseText);
+            
+            let sourcesHtml = '';
+            if (data.sources && data.sources.length > 0) {
+                sourcesHtml = `
+                    <div class="sources">
+                        <h4>📚 Sources</h4>
+                        ${data.sources.map(source => `
+                            <div class="source-item">
+                                <div class="source-provider">${source.provider}</div>
+                                ${source.title ? `<div class="source-title">${source.title}</div>` : ''}
+                                ${source.url ? `<a href="${source.url}" target="_blank" class="source-link">View source →</a>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            // Handle metadata for different response formats
+            let metaInfo = '';
+            if (data.metadata) {
+                // Multi-agent format
+                const systemType = data.metadata.system === 'multi-agent' ? 'Multi-Agent' : 'Legacy';
+                const agentsExecuted = data.metadata.agentsExecuted ? data.metadata.agentsExecuted.join(', ') : 'N/A';
+                const executionTime = data.metadata.executionTimeMs ? `${Math.round(data.metadata.executionTimeMs/1000)}s` : 'N/A';
+                
+                metaInfo = `
+                    <div class="meta-info">
+                        System: <strong>${systemType}</strong> • 
+                        Agents: <strong>${agentsExecuted}</strong> • 
+                        Time: <strong>${executionTime}</strong> • 
+                        ${data.timestamp ? new Date(data.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
+                    </div>
+                `;
+            } else if (data.analysis) {
+                // Legacy format
+                metaInfo = `
+                    <div class="meta-info">
+                        Intent: <strong>${data.analysis.intent || 'Unknown'}</strong> • 
+                        Sources: <strong>${(data.analysis.sources || []).join(', ')}</strong> • 
+                        ${data.timestamp ? new Date(data.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
+                    </div>
+                `;
+            } else {
+                // Fallback
+                metaInfo = `
+                    <div class="meta-info">
+                        ${data.timestamp ? new Date(data.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
+                    </div>
+                `;
+            }
+
+            responseDiv.innerHTML = `
+                <div class="response">
+                    <h3>🤖 AI Analysis</h3>
+                    <div class="response-content">
+                        ${formattedResponse}
+                    </div>
+                    ${sourcesHtml}
+                    ${metaInfo}
+                </div>
+            `;
+        }
+
+        // Display error
+        function displayError(message) {
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = `
+                <div class="response error">
+                    <h3>❌ Error</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        // Load headlines
+        async function loadHeadlines() {
+            const headlinesDiv = document.getElementById('headlines');
+            
+            try {
+                const response = await fetch('/headlines?limit=12');
+                const data = await response.json();
+
+                if (response.ok && data.headlines) {
+                    displayHeadlines(data.headlines);
+                } else {
+                    headlinesDiv.innerHTML = '<p style="color: var(--text-muted);">No headlines available</p>';
+                }
+            } catch (error) {
+                headlinesDiv.innerHTML = '<p style="color: var(--error);">Failed to load headlines</p>';
+            }
+        }
+
+        // Display headlines
+        function displayHeadlines(headlines) {
+            const headlinesDiv = document.getElementById('headlines');
+            
+            if (!headlines || headlines.length === 0) {
+                headlinesDiv.innerHTML = '<p style="color: var(--text-muted);">No headlines available yet</p>';
+                return;
+            }
+
+            const html = `
+                <div class="headlines-grid">
+                    ${headlines.map(h => `
+                        <div class="headline-card" onclick="window.open('${h.url}', '_blank')">
+                            <div class="headline-source ${h.source}">${h.source}</div>
+                            <div class="headline-title">${h.title}</div>
+                            <div class="headline-description">${h.description ? h.description.substring(0, 150) + '...' : ''}</div>
+                            <div class="headline-meta">
+                                <span class="headline-category">${h.category}</span>
+                                <span>${timeAgo(h.publishedAt || h.fetchedAt)}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            headlinesDiv.innerHTML = html;
+        }
+
+        // Refresh headlines
+        async function refreshHeadlines() {
+            const headlinesDiv = document.getElementById('headlines');
+            headlinesDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Refreshing headlines...</p></div>';
+            
+            // Trigger fetch on server
+            await fetch('/headlines/fetch', { method: 'POST' });
+            
+            // Wait a bit for fetch to complete
+            setTimeout(() => {
+                loadHeadlines();
+            }, 2000);
+        }
+
+        // Format time ago
+        function timeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const seconds = Math.floor((now - date) / 1000);
+            
+            if (seconds < 60) return 'just now';
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+            if (seconds < 604800) return `${Math.floor(seconds / 86400)}d ago`;
+            return date.toLocaleDateString();
+        }
+
+        // Initialize
+        checkStatus();
+        loadHeadlines();
+        
+        // Auto-refresh headlines every 5 minutes
+        setInterval(loadHeadlines, 5 * 60 * 1000);
+    </script>
+</body>
+</html>

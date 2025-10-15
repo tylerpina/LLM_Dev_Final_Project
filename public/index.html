@@ -741,41 +741,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .server-item {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 8px 16px;
-            font-size: 0.875rem;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .server-item.active {
-            border-color: var(--accent-green);
-            color: var(--accent-green);
-        }
-
-        .server-item.inactive {
-            border-color: var(--text-muted);
-            color: var(--text-muted);
-        }
-
-        .server-status {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--accent-green);
-        }
-
-        .server-status.inactive {
-            background: var(--text-muted);
+            color: var(--text-secondary);
         }
 
         /* Scrollbar styling */
@@ -870,7 +836,7 @@
         </div>
 
         <div class="servers-section" id="serversSection">
-            <h3>🔗 Available Services</h3>
+            <h3>📡 Online Providers</h3>
             <div class="servers-list" id="serversList">
                 <div class="loading">
                     <div class="spinner"></div>
@@ -1364,17 +1330,12 @@
                 const data = await response.json();
 
                 if (response.ok && data.providers) {
-                    const serversHtml = data.providers.map(provider => {
-                        const providerName = provider.charAt(0).toUpperCase() + provider.slice(1);
-                        return `
-                            <div class="server-item active">
-                                <div class="server-status"></div>
-                                <span>${providerName}</span>
-                            </div>
-                        `;
-                    }).join('');
-
-                    serversListEl.innerHTML = serversHtml;
+                    // Display providers in the same format as the status bar
+                    serversListEl.innerHTML = `
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                            Providers: ${data.providers.join(', ')}
+                        </div>
+                    `;
                 } else {
                     serversListEl.innerHTML = '<p style="color: var(--text-muted);">Unable to load service status</p>';
                 }

@@ -21,8 +21,10 @@
     "axios": "^1.12.2",
     "better-sqlite3": "^12.4.1",
     "chromadb": "^3.0.17",
+    "dompurify": "^3.3.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "marked": "^16.4.0",
     "morgan": "^1.10.1",
     "node-cache": "^5.1.2",
     "node-cron": "^4.2.1",
@@ -32,7 +34,9 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@types/dompurify": "^3.0.5",
     "@types/express": "^5.0.3",
+    "@types/marked": "^5.0.2",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.7.0",
     "@types/winston": "^2.4.4",

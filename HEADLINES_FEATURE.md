@@ -267,3 +267,5 @@ sqlite3 data/headlines.db "SELECT source, COUNT(*) FROM headlines GROUP BY sourc
 
 **Headlines are now automatically fetched hourly and beautifully displayed!** 📰✨
 
+
+

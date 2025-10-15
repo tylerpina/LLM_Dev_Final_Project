@@ -217,3 +217,5 @@ Potential future enhancements:
 
 **Enjoy your beautifully formatted AI responses!** 🎨✨
 
+
+

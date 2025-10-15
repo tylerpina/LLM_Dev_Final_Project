@@ -628,7 +628,15 @@
                     })
                 });
 
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Server responded with error:', response.status, errorText);
+                    displayError(`Server error (${response.status}): ${response.statusText}`);
+                    return;
+                }
+
                 const data = await response.json();
+                console.log('Received response data:', data);
 
                 if (response.ok) {
                     displayResponse(data);
@@ -636,6 +644,7 @@
                     displayError(data.error || 'Something went wrong');
                 }
             } catch (error) {
+                console.error('Fetch request failed:', error);
                 displayError('Failed to connect to the AI assistant. Please try again.');
             } finally {
                 isLoading = false;
@@ -646,100 +655,130 @@
 
         // Format response text with proper HTML and Markdown support
         function formatResponseText(text) {
-            // Split into paragraphs by double line breaks
-            let paragraphs = text.split(/\n\n+/);
+            // Remove any leading markdown code block markers and clean up the text
+            text = text.replace(/^```markdown\s*/i, '').replace(/```\s*$/, '').trim();
             
+            // Split the text into lines for processing
+            let lines = text.split('\n');
             let formattedHtml = '';
+            let currentList = null; // Track if we're in a list and what type ('ul' or 'ol')
+            let currentListItems = [];
             
-            for (let para of paragraphs) {
-                para = para.trim();
-                if (!para) continue;
+            function closeCurrentList() {
+                if (currentList && currentListItems.length > 0) {
+                    formattedHtml += `<${currentList}>`;
+                    currentListItems.forEach(item => {
+                        formattedHtml += `<li>${formatInlineMarkdown(item)}</li>`;
+                    });
+                    formattedHtml += `</${currentList}>`;
+                    currentList = null;
+                    currentListItems = [];
+                }
+            }
+            
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].trim();
                 
-                // Check for markdown headings (### or ##)
-                if (/^###\s/.test(para)) {
-                    const heading = para.replace(/^###\s+/, '').trim();
-                    formattedHtml += `<h4>${heading}</h4>`;
+                if (!line) {
+                    // Empty line - close current list and continue
+                    closeCurrentList();
                     continue;
                 }
-                else if (/^##\s/.test(para)) {
-                    const heading = para.replace(/^##\s+/, '').trim();
-                    formattedHtml += `<h3>${heading}</h3>`;
-                    continue;
-                }
                 
-                // Check if it's a bullet list (lines starting with -, •, or *)
-                if (/^[-•*]\s/.test(para)) {
-                    const items = para.split('\n').filter(line => line.trim());
-                    formattedHtml += '<ul>';
-                    items.forEach(item => {
-                        const cleaned = item.replace(/^[-•*]\s+/, '').trim();
-                        if (cleaned) {
-                            formattedHtml += `<li>${cleaned}</li>`;
-                        }
-                    });
-                    formattedHtml += '</ul>';
-                }
-                // Check if it's a numbered list
-                else if (/^\d+\.\s/.test(para)) {
-                    const items = para.split('\n').filter(line => line.trim());
-                    formattedHtml += '<ol>';
-                    items.forEach(item => {
-                        const cleaned = item.replace(/^\d+\.\s+/, '').trim();
-                        if (cleaned) {
-                            formattedHtml += `<li>${cleaned}</li>`;
-                        }
-                    });
-                    formattedHtml += '</ol>';
-                }
-                // Regular paragraph
-                else {
-                    // Handle single line breaks within a paragraph
-                    const lines = para.split('\n').map(line => line.trim()).filter(line => line);
-                    
-                    // If multiple lines, treat as separate items
-                    if (lines.length > 1 && lines.every(line => /^[-•*]\s/.test(line) || /^\d+\.\s/.test(line))) {
-                        // It's a list that wasn't caught above
-                        if (/^[-•*]\s/.test(lines[0])) {
-                            formattedHtml += '<ul>';
-                            lines.forEach(line => {
-                                const cleaned = line.replace(/^[-•*]\s+/, '').trim();
-                                formattedHtml += `<li>${cleaned}</li>`;
-                            });
-                            formattedHtml += '</ul>';
-                        } else {
-                            formattedHtml += '<ol>';
-                            lines.forEach(line => {
-                                const cleaned = line.replace(/^\d+\.\s+/, '').trim();
-                                formattedHtml += `<li>${cleaned}</li>`;
-                            });
-                            formattedHtml += '</ol>';
-                        }
+                // Handle headings
+                if (/^###?\s/.test(line)) {
+                    closeCurrentList();
+                    if (/^###\s/.test(line)) {
+                        const heading = line.replace(/^###\s+/, '').trim();
+                        formattedHtml += `<h4>${escapeHtml(heading)}</h4>`;
                     } else {
-                        formattedHtml += `<p>${lines.join(' ')}</p>`;
+                        const heading = line.replace(/^##\s+/, '').trim();
+                        formattedHtml += `<h3>${escapeHtml(heading)}</h3>`;
+                    }
+                    continue;
+                }
+                
+                // Handle bullet lists - check for dash/asterisk at the beginning of the line
+                if (/^[-•*]\s/.test(line)) {
+                    if (currentList !== 'ul') {
+                        closeCurrentList();
+                        currentList = 'ul';
+                        currentListItems = [];
+                    }
+                    const cleaned = line.replace(/^[-•*]\s+/, '').trim();
+                    if (cleaned) {
+                        currentListItems.push(cleaned);
+                    }
+                }
+                // Handle numbered lists - check for number followed by dot at the beginning
+                else if (/^\d+\.\s/.test(line)) {
+                    if (currentList !== 'ol') {
+                        closeCurrentList();
+                        currentList = 'ol';
+                        currentListItems = [];
+                    }
+                    const cleaned = line.replace(/^\d+\.\s+/, '').trim();
+                    if (cleaned) {
+                        currentListItems.push(cleaned);
+                    }
+                }
+                // Regular line
+                else {
+                    closeCurrentList();
+                    
+                    // Add as paragraph, but don't combine with next lines automatically
+                    // This prevents list items from being merged into paragraphs
+                    if (line.trim()) {
+                        formattedHtml += `<p>${formatInlineMarkdown(line)}</p>`;
                     }
                 }
             }
             
-            // If no formatting was applied, wrap in paragraph
-            if (!formattedHtml) {
-                formattedHtml = `<p>${text}</p>`;
+            // Close any remaining list
+            closeCurrentList();
+            
+            return formattedHtml || `<p>${formatInlineMarkdown(text)}</p>`;
+        }
+        
+        // Helper function to format inline markdown (bold, italic, code, links)
+        function formatInlineMarkdown(text) {
+            // Don't process text that already contains HTML tags
+            if (/<[^>]+>/.test(text)) {
+                // Still process links and code blocks that might be in HTML
+                return text
+                    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>') // Links [text](url)
+                    .replace(/`([^`]+?)`/g, '<code>$1</code>'); // Code `text`
             }
             
-            // Apply inline formatting (do this AFTER structural formatting)
-            formattedHtml = formattedHtml
-                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')  // Bold **text**
-                .replace(/\*(?!\*)(.+?)\*/g, '<em>$1</em>')        // Italic *text* (not **)
-                .replace(/`([^`]+?)`/g, '<code>$1</code>');        // Code `text`
-            
-            return formattedHtml;
+            return text
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')                    // Bold **text**
+                .replace(/\*(?!\*)(.+?)\*/g, '<em>$1</em>')                        // Italic *text* (not **)
+                .replace(/`([^`]+?)`/g, '<code>$1</code>')                        // Code `text`
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>'); // Links [text](url)
+        }
+        
+        // Helper function to escape HTML characters
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         // Display AI response
         function displayResponse(data) {
             const responseDiv = document.getElementById('response');
             
-            // Format the response text
-            const formattedResponse = formatResponseText(data.synthesizedResponse);
+            // Handle both multi-agent and legacy response formats
+            const responseText = data.synthesizedResponse || data.response || 'No response received';
+            
+            // Ensure we have valid response text
+            if (!responseText || responseText.trim() === '') {
+                console.error('No response text received:', data);
+                displayError('Received empty response from AI assistant.');
+                return;
+            }
+            
+            const formattedResponse = formatResponseText(responseText);
             
             let sourcesHtml = '';
             if (data.sources && data.sources.length > 0) {
@@ -757,6 +796,40 @@
                 `;
             }
 
+            // Handle metadata for different response formats
+            let metaInfo = '';
+            if (data.metadata) {
+                // Multi-agent format
+                const systemType = data.metadata.system === 'multi-agent' ? 'Multi-Agent' : 'Legacy';
+                const agentsExecuted = data.metadata.agentsExecuted ? data.metadata.agentsExecuted.join(', ') : 'N/A';
+                const executionTime = data.metadata.executionTimeMs ? `${Math.round(data.metadata.executionTimeMs/1000)}s` : 'N/A';
+                
+                metaInfo = `
+                    <div class="meta-info">
+                        System: <strong>${systemType}</strong> • 
+                        Agents: <strong>${agentsExecuted}</strong> • 
+                        Time: <strong>${executionTime}</strong> • 
+                        ${data.timestamp ? new Date(data.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
+                    </div>
+                `;
+            } else if (data.analysis) {
+                // Legacy format
+                metaInfo = `
+                    <div class="meta-info">
+                        Intent: <strong>${data.analysis.intent || 'Unknown'}</strong> • 
+                        Sources: <strong>${(data.analysis.sources || []).join(', ')}</strong> • 
+                        ${data.timestamp ? new Date(data.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
+                    </div>
+                `;
+            } else {
+                // Fallback
+                metaInfo = `
+                    <div class="meta-info">
+                        ${data.timestamp ? new Date(data.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
+                    </div>
+                `;
+            }
+
             responseDiv.innerHTML = `
                 <div class="response">
                     <h3>🤖 AI Analysis</h3>
@@ -764,11 +837,7 @@
                         ${formattedResponse}
                     </div>
                     ${sourcesHtml}
-                    <div class="meta-info">
-                        Intent: <strong>${data.analysis.intent}</strong> • 
-                        Sources: <strong>${data.analysis.sources.join(', ')}</strong> • 
-                        ${new Date(data.timestamp).toLocaleTimeString()}
-                    </div>
+                    ${metaInfo}
                 </div>
             `;
         }

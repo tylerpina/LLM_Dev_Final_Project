@@ -473,6 +473,182 @@
             color: var(--text-secondary);
         }
 
+        /* Progress tracking styles */
+        .progress-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .progress-title {
+            color: var(--accent-blue);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .progress-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            border-color: var(--accent-blue);
+            background: rgba(0, 122, 204, 0.1);
+        }
+
+        .progress-step.completed {
+            border-color: var(--accent-green);
+            background: rgba(78, 201, 176, 0.1);
+        }
+
+        .progress-step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .progress-step-icon.pending {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .progress-step-icon.active {
+            background: var(--accent-blue);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .progress-step-icon.completed {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .progress-step-content {
+            flex: 1;
+        }
+
+        .progress-step-name {
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .progress-step-description {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .progress-step-time {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-family: monospace;
+        }
+
+        /* Enhanced source links */
+        .sources-enhanced {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .sources-enhanced h4 {
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .source-item-enhanced {
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--accent-blue);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .source-item-enhanced:hover {
+            background: var(--bg-hover);
+            transform: translateX(2px);
+        }
+
+        .source-item-enhanced:last-child {
+            margin-bottom: 0;
+        }
+
+        .source-provider-enhanced {
+            color: var(--accent-orange);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+        }
+
+        .source-title-enhanced {
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .source-link-enhanced {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .source-link-enhanced:hover {
+            color: var(--accent-green);
+            text-decoration: underline;
+        }
+
+        .source-link-enhanced::after {
+            content: "↗";
+            font-size: 0.8em;
+        }
+
         /* Scrollbar styling */
         ::-webkit-scrollbar {
             width: 8px;
@@ -563,6 +739,47 @@
 
     <script>
         let isLoading = false;
+        let progressInterval = null;
+        let currentProgressStep = 0;
+        
+        // Define the expected multi-agent execution steps
+        const progressSteps = [
+            {
+                id: 'coordinator',
+                name: 'Query Analysis',
+                description: 'Analyzing query intent and planning execution strategy'
+            },
+            {
+                id: 'news',
+                name: 'News Gathering',
+                description: 'Fetching latest articles from multiple sources'
+            },
+            {
+                id: 'sentiment',
+                name: 'Sentiment Analysis',
+                description: 'Analyzing sentiment and emotional tone'
+            },
+            {
+                id: 'trend',
+                name: 'Trend Detection',
+                description: 'Identifying patterns and emerging trends'
+            },
+            {
+                id: 'bias',
+                name: 'Bias Analysis',
+                description: 'Evaluating diverse perspectives and coverage'
+            },
+            {
+                id: 'personalization',
+                name: 'Personalization',
+                description: 'Tailoring results to user preferences'
+            },
+            {
+                id: 'synthesis',
+                name: 'Response Synthesis',
+                description: 'Creating final comprehensive report'
+            }
+        ];
 
         // Check server status on load
         async function checkStatus() {
@@ -596,6 +813,119 @@
             }
         });
 
+        // Show progress display
+        function showProgressDisplay() {
+            const responseDiv = document.getElementById('response');
+            
+            const progressHtml = `
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <div class="progress-title">🤖 Multi-Agent Analysis in Progress</div>
+                        <div class="progress-step-time" id="progressTimer">0s</div>
+                    </div>
+                    <div class="progress-steps" id="progressSteps">
+                        ${progressSteps.map((step, index) => `
+                            <div class="progress-step" data-step="${step.id}">
+                                <div class="progress-step-icon pending" id="step-icon-${step.id}">${index + 1}</div>
+                                <div class="progress-step-content">
+                                    <div class="progress-step-name">${step.name}</div>
+                                    <div class="progress-step-description">${step.description}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            responseDiv.innerHTML = progressHtml;
+            
+            // Start progress animation
+            startProgressAnimation();
+        }
+
+        // Start progress animation
+        function startProgressAnimation() {
+            currentProgressStep = 0;
+            let startTime = Date.now();
+            let timerInterval = null;
+            
+            // Update timer
+            const timerEl = document.getElementById('progressTimer');
+            timerInterval = setInterval(() => {
+                if (timerEl) {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    timerEl.textContent = `${elapsed}s`;
+                }
+            }, 1000);
+            
+            // Simulate progress through steps with realistic timing
+            progressInterval = setInterval(() => {
+                if (currentProgressStep < progressSteps.length) {
+                    updateProgressStep(currentProgressStep, 'active');
+                    
+                    // Complete previous step (except for first one)
+                    if (currentProgressStep > 0) {
+                        updateProgressStep(currentProgressStep - 1, 'completed');
+                    }
+                    
+                    currentProgressStep++;
+                } else {
+                    // Complete all remaining steps
+                    for (let i = 0; i < progressSteps.length; i++) {
+                        updateProgressStep(i, 'completed');
+                    }
+                    clearInterval(progressInterval);
+                    if (timerInterval) clearInterval(timerInterval);
+                    progressInterval = null;
+                }
+            }, 500 + Math.random() * 1000); // Random timing between 0.5-1.5s per step
+            
+            // Store timer interval for cleanup
+            window.currentTimerInterval = timerInterval;
+        }
+
+        // Update progress step status
+        function updateProgressStep(stepIndex, status) {
+            if (stepIndex >= 0 && stepIndex < progressSteps.length) {
+                const stepId = progressSteps[stepIndex].id;
+                const stepElement = document.querySelector(`[data-step="${stepId}"]`);
+                const iconElement = document.getElementById(`step-icon-${stepId}`);
+                
+                if (stepElement && iconElement) {
+                    // Remove all status classes
+                    stepElement.classList.remove('pending', 'active', 'completed');
+                    iconElement.classList.remove('pending', 'active', 'completed');
+                    
+                    // Add new status class
+                    stepElement.classList.add(status);
+                    iconElement.classList.add(status);
+                    
+                    // Update icon for completed steps
+                    if (status === 'completed') {
+                        iconElement.textContent = '✓';
+                    } else if (status === 'active') {
+                        iconElement.textContent = '⏱';
+                    }
+                }
+            }
+        }
+
+        // Clear progress display
+        function clearProgressDisplay() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+            
+            // Clear timer interval if it exists
+            if (window.currentTimerInterval) {
+                clearInterval(window.currentTimerInterval);
+                window.currentTimerInterval = null;
+            }
+            
+            currentProgressStep = 0;
+        }
+
         // Ask question function
         async function askQuestion(query) {
             if (isLoading) return;
@@ -609,12 +939,8 @@
             askBtn.disabled = true;
             askBtn.textContent = 'Analyzing...';
             
-            responseDiv.innerHTML = `
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <p>Analyzing query and gathering data from multiple sources...</p>
-                </div>
-            `;
+            // Show progress display instead of simple loading
+            showProgressDisplay();
 
             try {
                 const response = await fetch('/ask', {
@@ -639,6 +965,7 @@
                 console.log('Received response data:', data);
 
                 if (response.ok) {
+                    clearProgressDisplay(); // Clear progress before showing response
                     displayResponse(data);
                 } else {
                     displayError(data.error || 'Something went wrong');
@@ -650,6 +977,7 @@
                 isLoading = false;
                 askBtn.disabled = false;
                 askBtn.textContent = 'Ask AI';
+                clearProgressDisplay();
             }
         }
 
@@ -783,13 +1111,28 @@
             let sourcesHtml = '';
             if (data.sources && data.sources.length > 0) {
                 sourcesHtml = `
-                    <div class="sources">
-                        <h4>📚 Sources</h4>
+                    <div class="sources-enhanced">
+                        <h4>📚 Article Sources</h4>
                         ${data.sources.map(source => `
-                            <div class="source-item">
-                                <div class="source-provider">${source.provider}</div>
-                                ${source.title ? `<div class="source-title">${source.title}</div>` : ''}
-                                ${source.url ? `<a href="${source.url}" target="_blank" class="source-link">View source →</a>` : ''}
+                            <div class="source-item-enhanced">
+                                <div class="source-provider-enhanced">${source.provider || 'Unknown'}</div>
+                                ${source.title ? `<div class="source-title-enhanced">${source.title}</div>` : ''}
+                                ${source.url ? `<a href="${source.url}" target="_blank" class="source-link-enhanced">Read full article</a>` : '<span style="color: var(--text-muted); font-size: 0.8rem;">URL not available</span>'}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (data.detailedResults && data.detailedResults.news && data.detailedResults.news.articles) {
+                // Fallback: extract sources from detailed results if available
+                const articles = data.detailedResults.news.articles;
+                sourcesHtml = `
+                    <div class="sources-enhanced">
+                        <h4>📚 Article Sources</h4>
+                        ${articles.slice(0, 10).map(article => `
+                            <div class="source-item-enhanced">
+                                <div class="source-provider-enhanced">${article.source || 'Unknown'}</div>
+                                <div class="source-title-enhanced">${article.title || 'Untitled'}</div>
+                                ${article.url ? `<a href="${article.url}" target="_blank" class="source-link-enhanced">Read full article</a>` : '<span style="color: var(--text-muted); font-size: 0.8rem;">URL not available</span>'}
                             </div>
                         `).join('')}
                     </div>
@@ -801,14 +1144,20 @@
             if (data.metadata) {
                 // Multi-agent format
                 const systemType = data.metadata.system === 'multi-agent' ? 'Multi-Agent' : 'Legacy';
-                const agentsExecuted = data.metadata.agentsExecuted ? data.metadata.agentsExecuted.join(', ') : 'N/A';
+                const agentsExecuted = data.metadata.agentsExecuted ? data.metadata.agentsExecuted.length : 0;
                 const executionTime = data.metadata.executionTimeMs ? `${Math.round(data.metadata.executionTimeMs/1000)}s` : 'N/A';
+                const estimatedCost = data.metadata.estimatedCost ? `$${data.metadata.estimatedCost.toFixed(4)}` : 'N/A';
+                
+                // Get source count
+                const sourceCount = data.sources ? data.sources.length : (data.detailedResults?.news?.articles?.length || 0);
                 
                 metaInfo = `
                     <div class="meta-info">
-                        System: <strong>${systemType}</strong> • 
-                        Agents: <strong>${agentsExecuted}</strong> • 
-                        Time: <strong>${executionTime}</strong> • 
+                        <strong>🤖 ${systemType} System</strong> • 
+                        <strong>${agentsExecuted}</strong> agents executed • 
+                        <strong>${executionTime}</strong> execution time • 
+                        <strong>${sourceCount}</strong> sources analyzed •
+                        <strong>${estimatedCost}</strong> estimated cost • 
                         ${data.timestamp ? new Date(data.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
                     </div>
                 `;

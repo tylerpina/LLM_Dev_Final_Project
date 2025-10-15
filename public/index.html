@@ -66,28 +66,6 @@
             font-size: 1rem;
         }
 
-        .status-bar {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 12px 16px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.875rem;
-        }
-
-        .status-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success);
-        }
-
-        .status-indicator.error {
-            background: var(--error);
-        }
 
         .query-section {
             background: var(--bg-secondary);
@@ -790,10 +768,6 @@
             <p>Intelligent analysis across news sources and academic research</p>
         </div>
 
-        <div id="status" class="status-bar" style="display: none;">
-            <div class="status-indicator"></div>
-            <span>Server online • All providers available</span>
-        </div>
 
         <div class="query-section">
             <form class="query-form" id="queryForm">
@@ -890,28 +864,6 @@
             }
         ];
 
-        // Check server status on load
-        async function checkStatus() {
-            try {
-                const response = await fetch('/health');
-                const data = await response.json();
-                if (data.status === 'ok') {
-                    const statusEl = document.getElementById('status');
-                    statusEl.style.display = 'flex';
-                    statusEl.innerHTML = `
-                        <div class="status-indicator"></div>
-                        <span>Server online • Providers: ${data.providers.join(', ')}</span>
-                    `;
-                }
-            } catch (error) {
-                const statusEl = document.getElementById('status');
-                statusEl.style.display = 'flex';
-                statusEl.innerHTML = `
-                    <div class="status-indicator error"></div>
-                    <span>Server offline • Check connection</span>
-                `;
-            }
-        }
 
         // Handle form submission
         document.getElementById('queryForm').addEventListener('submit', async (e) => {
@@ -1345,7 +1297,6 @@
         }
 
         // Initialize
-        checkStatus();
         loadHeadlines();
         loadServers();
         

@@ -95,3 +95,116 @@
 {"articleCount":20,"level":"info","message":"[trend] 📈 TrendAgent: Detecting trends and patterns...","service":"llm-dev-project","timestamp":"2025-10-15T20:15:45.787Z"}
 {"emergingThemes":3,"insights":3,"level":"info","mainTopics":5,"message":"[trend] 📈 TrendAgent: Analysis completed","service":"llm-dev-project","timestamp":"2025-10-15T20:15:52.419Z"}
 {"durationMs":6632,"level":"info","message":"[trend] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-10-15T20:15:52.419Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-10-15T20:27:33.293Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-10-15T20:27:33.325Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-10-15T20:27:33.327Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-10-15T20:27:33.471Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-10-15T20:27:33.480Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-10-15T20:27:33.489Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-10-15T20:27:33.491Z"}
+{"count":8,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-10-15T20:27:33.864Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-10-15T20:27:34.673Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-10-15T20:27:34.939Z"}
+{"count":28,"duration":1634,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-10-15T20:27:34.961Z"}
+{"level":"info","message":"Health check requested","service":"llm-dev-project","timestamp":"2025-10-15T20:27:40.793Z"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [15/Oct/2025:20:27:40 +0000] \"GET /health HTTP/1.1\" 200 127 \"-\" \"curl/7.68.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:27:40.798Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:27:43.207Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:27:43 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 200 5813 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:27:43.209Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:28:00.589Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:28:00 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:28:00.591Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:28:42.837Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:28:42 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:28:42.839Z"}
+{"level":"info","message":"Health check requested","service":"llm-dev-project","timestamp":"2025-10-15T20:28:42.841Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:28:42 +0000] \"GET /health HTTP/1.1\" 200 127 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:28:42.843Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:28:42 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:28:42.910Z"}
+{"level":"info","message":"Manual headline fetch triggered","service":"llm-dev-project","timestamp":"2025-10-15T20:28:46.517Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:28:46 +0000] \"POST /headlines/fetch HTTP/1.1\" 200 53 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:28:46.528Z"}
+{"count":8,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-10-15T20:28:46.866Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-10-15T20:28:47.797Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-10-15T20:28:48.068Z"}
+{"count":28,"duration":1573,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-10-15T20:28:48.090Z"}
+{"count":1,"level":"info","message":"Manual fetch completed","service":"llm-dev-project","timestamp":"2025-10-15T20:28:48.091Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:28:48.544Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:28:48 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 200 5813 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:28:48.545Z"}
+{"level":"info","message":"AI query received","query":"Can you give me some information on ai news?","service":"llm-dev-project","style":"bullet-points","timestamp":"2025-10-15T20:28:58.331Z"}
+{"level":"info","message":"Response style updated","service":"llm-dev-project","style":"bullet-points","timestamp":"2025-10-15T20:28:58.332Z"}
+{"duration":"8812ms","intent":"news","level":"info","message":"AI query completed","query":"Can you give me some information on ai news?","service":"llm-dev-project","sources":["newsapi","guardian"],"style":"bullet-points","timestamp":"2025-10-15T20:29:07.143Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:29:07 +0000] \"POST /ask HTTP/1.1\" 200 7428 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:29:07.145Z"}
+{"level":"info","message":"AI query received","query":"Can you give me some information on ai news? Can you","service":"llm-dev-project","style":"technical","timestamp":"2025-10-15T20:29:25.155Z"}
+{"level":"info","message":"Response style updated","service":"llm-dev-project","style":"technical","timestamp":"2025-10-15T20:29:25.156Z"}
+{"duration":"15666ms","intent":"news","level":"info","message":"AI query completed","query":"Can you give me some information on ai news? Can you","service":"llm-dev-project","sources":["newsapi","guardian"],"style":"technical","timestamp":"2025-10-15T20:29:40.821Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:29:40 +0000] \"POST /ask HTTP/1.1\" 200 8625 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:29:40.822Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:32:43.768Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:32:43 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:32:43.771Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:33:01.319Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:33:01 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:33:01.321Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:33:43.447Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:33:43 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:33:43.449Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:37:42.513Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:37:42 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:37:42.515Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:38:00.772Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:38:00 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:38:00.774Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:38:11.126Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:38:11 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:38:11.127Z"}
+{"level":"info","message":"Health check requested","service":"llm-dev-project","timestamp":"2025-10-15T20:38:11.129Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:38:11 +0000] \"GET /health HTTP/1.1\" 200 127 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:38:11.130Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:38:11 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:38:11.194Z"}
+{"level":"info","message":"Manual headline fetch triggered","service":"llm-dev-project","timestamp":"2025-10-15T20:38:14.909Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:38:14 +0000] \"POST /headlines/fetch HTTP/1.1\" 200 53 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:38:14.920Z"}
+{"count":8,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-10-15T20:38:15.272Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-10-15T20:38:16.211Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-10-15T20:38:16.490Z"}
+{"count":28,"duration":1598,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-10-15T20:38:16.508Z"}
+{"count":1,"level":"info","message":"Manual fetch completed","service":"llm-dev-project","timestamp":"2025-10-15T20:38:16.509Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:38:17.133Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:38:17 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 200 5820 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:38:17.135Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:38:44.197Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:38:44 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:38:44.197Z"}
+{"level":"info","message":"AI query received","query":"\"What are the latest AI breakthroughs? Give me specific examples.\"","service":"llm-dev-project","style":"bullet-points","timestamp":"2025-10-15T20:39:48.844Z"}
+{"level":"info","message":"Response style updated","service":"llm-dev-project","style":"bullet-points","timestamp":"2025-10-15T20:39:48.844Z"}
+{"level":"info","message":"Manual headline fetch triggered","service":"llm-dev-project","timestamp":"2025-10-15T20:39:56.252Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:39:56 +0000] \"POST /headlines/fetch HTTP/1.1\" 200 53 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:39:56.255Z"}
+{"count":8,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-10-15T20:39:56.369Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-10-15T20:39:56.581Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-10-15T20:39:56.817Z"}
+{"count":28,"duration":582,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-10-15T20:39:56.834Z"}
+{"count":1,"level":"info","message":"Manual fetch completed","service":"llm-dev-project","timestamp":"2025-10-15T20:39:56.835Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:39:58.271Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:39:58 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 200 5820 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:39:58.272Z"}
+{"duration":"15095ms","intent":"news","level":"info","message":"AI query completed","query":"\"What are the latest AI breakthroughs? Give me specific examples.\"","service":"llm-dev-project","sources":["newsapi","guardian"],"style":"bullet-points","timestamp":"2025-10-15T20:40:03.939Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:40:03 +0000] \"POST /ask HTTP/1.1\" 200 7707 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:40:03.940Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:42:43.125Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:42:43 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:42:43.127Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:43:01.930Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:43:01 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:43:01.931Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:43:11.723Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:43:11 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:43:11.724Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:43:44.397Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:43:44 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:43:44.398Z"}
+{"level":"info","message":"Health check requested","service":"llm-dev-project","timestamp":"2025-10-15T20:46:40.237Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:46:40 +0000] \"GET /health HTTP/1.1\" 200 127 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:46:40.239Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:46:40.242Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:46:40 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 200 5820 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:46:40.243Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:46:40 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:46:40.312Z"}
+{"level":"info","message":"AI query received","query":"Can you search for recent information on AI? Use academic resources if possible.","service":"llm-dev-project","style":"professional","timestamp":"2025-10-15T20:47:06.033Z"}
+{"level":"info","message":"Response style updated","service":"llm-dev-project","style":"professional","timestamp":"2025-10-15T20:47:06.033Z"}
+{"duration":"9823ms","intent":"research","level":"info","message":"AI query completed","query":"Can you search for recent information on AI? Use academic resources if possible.","service":"llm-dev-project","sources":["arxiv","newsapi"],"style":"professional","timestamp":"2025-10-15T20:47:15.856Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:47:15 +0000] \"POST /ask HTTP/1.1\" 200 9771 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:47:15.858Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:47:45.930Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:47:45 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 200 5820 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:47:45.931Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:48:13.757Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:48:13 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:48:13.758Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:48:46.734Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:48:46 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:48:46.735Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:49:39.730Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:49:39 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:49:39.732Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T20:49:40.759Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:20:49:40 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T20:49:40.761Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T21:01:55.749Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:21:01:55 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T21:01:55.752Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T21:01:55.835Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:21:01:55 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T21:01:55.841Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T21:01:56.837Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:21:01:56 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T21:01:56.840Z"}
+{"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T21:01:57.900Z"}
+{"level":"info","message":"::1 - - [15/Oct/2025:21:01:57 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T21:01:57.902Z"}

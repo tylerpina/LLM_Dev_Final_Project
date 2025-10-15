@@ -32,7 +32,7 @@ const queryRouter = new IntelligentQueryRouter(
   {
     responseStyle: "bullet-points",
     includeGreeting: false,
-    maxResponseLength: 1200, // Increased for more detailed responses
+    maxResponseLength: 2500, // Increased for more detailed responses and comprehensive coverage
   }
 );
 

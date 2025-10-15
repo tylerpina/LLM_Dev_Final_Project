@@ -8,38 +8,38 @@ export const AGENT_CONFIGS: Record<AgentRole, AgentConfig> = {
   [AgentRole.COORDINATOR]: {
     model: "gpt-4o-mini",
     temperature: 0.1, // Low temperature for consistent analysis
-    maxTokens: 500,
+    maxTokens: 800, // Increased from 500
   },
   [AgentRole.NEWS]: {
     model: "gpt-4o-mini",
     temperature: 0.3, // Slightly higher for search term extraction
-    maxTokens: 1000,
+    maxTokens: 1500, // Increased from 1000
     maxConcurrentRequests: 3,
   },
   [AgentRole.SENTIMENT]: {
     model: "gpt-4o-mini",
     temperature: 0.2, // Low for consistent sentiment classification
-    maxTokens: 800,
+    maxTokens: 1200, // Increased from 800
   },
   [AgentRole.TREND]: {
     model: "gpt-4o-mini",
     temperature: 0.4, // Higher for pattern recognition
-    maxTokens: 1000,
+    maxTokens: 1500, // Increased from 1000
   },
   [AgentRole.BIAS]: {
     model: "gpt-4o-mini",
     temperature: 0.3,
-    maxTokens: 800,
+    maxTokens: 1200, // Increased from 800
   },
   [AgentRole.PERSONALIZATION]: {
     model: "gpt-4o-mini",
     temperature: 0.5, // Higher for creative matching
-    maxTokens: 1000,
+    maxTokens: 1500, // Increased from 1000
   },
   [AgentRole.SYNTHESIS]: {
     model: "gpt-4o", // Use full model for best synthesis quality
     temperature: 0.7, // Higher for natural, engaging writing
-    maxTokens: 2000,
+    maxTokens: 4000, // Increased from 2000 for more comprehensive coverage
   },
 };
 
@@ -88,10 +88,10 @@ export const SYSTEM_CONFIG = {
   continueOnAgentFailure: true,
 
   // Minimum number of articles to fetch
-  minArticles: 5,
+  minArticles: 8, // Increased from 5
 
   // Maximum number of articles to process
-  maxArticles: 20,
+  maxArticles: 40, // Increased from 20 to double coverage
 
   // Enable detailed debugging
   debugMode: process.env.NODE_ENV === "development",

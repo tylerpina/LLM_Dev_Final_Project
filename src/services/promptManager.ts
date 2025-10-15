@@ -50,7 +50,7 @@ Response:`,
 
   responseStyle: 'professional',
   includeGreeting: false,
-  maxResponseLength: 1000  // Increased for more comprehensive responses
+  maxResponseLength: 2000  // Increased for more comprehensive responses
 };
 
 export const PROMPT_STYLES: Record<string, Partial<PromptConfig>> = {
@@ -76,7 +76,7 @@ FORMAT IN MARKDOWN:
 
 Response:`,
     includeGreeting: false,
-    maxResponseLength: 300
+    maxResponseLength: 800
   },
 
   conversational: {
@@ -100,7 +100,7 @@ FORMAT IN MARKDOWN:
 
 Response:`,
     includeGreeting: true,
-    maxResponseLength: 400
+    maxResponseLength: 1000
   },
 
   technical: {
@@ -125,7 +125,7 @@ FORMAT IN MARKDOWN:
 
 Response:`,
     includeGreeting: false,
-    maxResponseLength: 500
+    maxResponseLength: 1200
   },
 
   'bullet-points': {
@@ -152,7 +152,7 @@ FORMAT IN MARKDOWN (REQUIRED):
 
 Response:`,
     includeGreeting: false,
-    maxResponseLength: 1200  // Increased for detailed bullet-point responses
+    maxResponseLength: 2500  // Increased for detailed bullet-point responses
   }
 };
 

@@ -116,7 +116,7 @@ Extract 2-5 search terms, with the most important one as the primary term.`,
           path: "/news/top-headlines",
           query: {
             q: searchQuery,
-            pageSize: "10",
+            pageSize: "20", // Increased from 10 to get more articles
           },
           provider: "newsapi",
         });
@@ -141,7 +141,7 @@ Extract 2-5 search terms, with the most important one as the primary term.`,
           path: "/guardian/search",
           query: {
             q: searchQuery,
-            "page-size": "10",
+            "page-size": "20", // Increased from 10 to get more articles
           },
           provider: "guardian",
         });
@@ -167,7 +167,7 @@ Extract 2-5 search terms, with the most important one as the primary term.`,
           path: "/arxiv/search",
           query: {
             search_query: searchTerms.join("+"),
-            max_results: "10",
+            max_results: "20", // Increased from 10 to get more papers
           },
           provider: "arxiv",
         });

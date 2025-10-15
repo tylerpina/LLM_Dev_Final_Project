@@ -39,7 +39,7 @@ export const AGENT_CONFIGS: Record<AgentRole, AgentConfig> = {
   [AgentRole.SYNTHESIS]: {
     model: "gpt-4o", // Use full model for best synthesis quality
     temperature: 0.7, // Higher for natural, engaging writing
-    maxTokens: 4000, // Increased from 2000 for more comprehensive coverage
+    maxTokens: 6000, // Increased from 4000 for maximum comprehensive coverage
   },
 };
 

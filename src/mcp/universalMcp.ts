@@ -1,4 +1,4 @@
-import { ApiRegistry, createNewsApiProvider, createGuardianProvider, createArxivProvider } from '../services/apiRegistry';
+import { ApiRegistry, createNewsApiProvider, createGuardianProvider, createArxivProvider, createNYTimesProvider } from '../services/apiRegistry';
 
 export interface McpRequest {
   method: string;
@@ -16,7 +16,7 @@ export interface McpResponse {
 export class UniversalMcpServer {
   private readonly registry: ApiRegistry;
 
-  constructor(newsApiKey: string, guardianApiKey?: string) {
+  constructor(newsApiKey: string, guardianApiKey?: string, nyTimesApiKey?: string) {
     this.registry = new ApiRegistry();
     
     // Register NewsAPI
@@ -25,6 +25,11 @@ export class UniversalMcpServer {
     // Register Guardian if key provided
     if (guardianApiKey) {
       this.registry.register(createGuardianProvider(guardianApiKey));
+    }
+    
+    // Register NYTimes if key provided
+    if (nyTimesApiKey) {
+      this.registry.register(createNYTimesProvider(nyTimesApiKey));
     }
     
     // Register ArXiv (no API key needed)
@@ -54,6 +59,28 @@ export class UniversalMcpServer {
         });
       } else {
         throw new Error(`Top headlines not supported by ${providerName}`);
+      }
+    } else if (req.method === 'GET' && req.path === '/news/everything') {
+      if (provider.name === 'newsapi') {
+        const { q, searchIn, sources, domains, excludeDomains, from, to, language, sortBy, pageSize, page } = req.query || {};
+        if (!q) {
+          throw new Error('Query parameter (q) is required for /news/everything');
+        }
+        data = await (provider.service as any).searchEverything({
+          q: q as string,
+          searchIn: searchIn as string | undefined,
+          sources: sources as string | undefined,
+          domains: domains as string | undefined,
+          excludeDomains: excludeDomains as string | undefined,
+          from: from as string | undefined,
+          to: to as string | undefined,
+          language: language as string | undefined,
+          sortBy: sortBy as 'relevancy' | 'popularity' | 'publishedAt' | undefined,
+          pageSize: pageSize ? Number(pageSize) : undefined,
+          page: page ? Number(page) : undefined,
+        });
+      } else {
+        throw new Error(`Everything search not supported by ${providerName}`);
       }
     } else if (req.method === 'GET' && req.path === '/guardian/search') {
       if (provider.name === 'guardian') {
@@ -113,6 +140,40 @@ export class UniversalMcpServer {
         });
       } else {
         throw new Error(`ArXiv category search not supported by ${providerName}`);
+      }
+    } else if (req.method === 'GET' && req.path === '/nytimes/search') {
+      if (provider.name === 'nytimes') {
+        const { q, fq, begin_date, end_date, sort, page, facet_field, facet_filter, fl } = req.query || {};
+        data = await (provider.service as any).searchArticles({
+          q: q as string | undefined,
+          fq: fq as string | undefined,
+          begin_date: begin_date as string | undefined,
+          end_date: end_date as string | undefined,
+          sort: sort as 'newest' | 'oldest' | 'relevance' | undefined,
+          page: page ? Number(page) : undefined,
+          facet_field: Array.isArray(facet_field) ? facet_field as string[] : (facet_field ? [facet_field as string] : undefined),
+          facet_filter: facet_filter === 'true',
+          fl: Array.isArray(fl) ? fl as string[] : (fl ? [fl as string] : undefined),
+        });
+      } else {
+        throw new Error(`NYTimes search not supported by ${providerName}`);
+      }
+    } else if (req.method === 'GET' && req.path === '/nytimes/archive') {
+      if (provider.name === 'nytimes') {
+        const { year, month, q, fq, f, page } = req.query || {};
+        if (!year || !month) {
+          throw new Error('NYTimes archive requires year and month parameters');
+        }
+        data = await (provider.service as any).getArchiveArticles({
+          year: Number(year),
+          month: Number(month),
+          q: q as string | undefined,
+          fq: fq as string | undefined,
+          f: f as string | undefined,
+          page: page ? Number(page) : undefined,
+        });
+      } else {
+        throw new Error(`NYTimes archive not supported by ${providerName}`);
       }
     } else {
       throw new Error(`Unsupported method/path: ${req.method} ${req.path}`);

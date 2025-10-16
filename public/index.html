@@ -447,8 +447,8 @@
 
         .headlines-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 12px;
             padding: 20px 20px 16px 20px;
             border-bottom: 1px solid var(--border-color);
             flex-shrink: 0;
@@ -470,6 +470,7 @@
             cursor: pointer;
             font-size: 0.875rem;
             transition: all 0.2s;
+            width: 100%;
         }
 
         .refresh-btn:hover {
@@ -805,7 +806,7 @@
         }
 
         .source-link-enhanced::after {
-            content: "→";
+            content: "↗";
             font-size: 0.8em;
         }
 
@@ -1133,7 +1134,7 @@
             <div class="headlines-column">
                 <div class="headlines-section" id="headlinesSection">
                     <div class="headlines-header">
-                        <h2>Latest Headlines & Research</h2>
+                        <h1>Feed</h1>
                         <button class="refresh-btn" onclick="refreshHeadlines()">Refresh</button>
                     </div>
                     <div id="headlines">
@@ -1355,7 +1356,7 @@
                                         <div class="progress-step-name">${step.name}</div>
                                         <div class="progress-step-description">${step.description}</div>
                                     </div>
-                                    <div class="progress-step-arrow" id="step-arrow-${step.id}">▾</div>
+                                    <div class="progress-step-arrow" id="step-arrow-${step.id}">▼</div>
                                 </div>
                                 <div class="progress-step-content" id="step-content-${step.id}">
                                     <div class="progress-step-reasoning" id="step-reasoning-${step.id}">
@@ -1444,7 +1445,7 @@
                         iconElement.textContent = '✓';
                         if (statusElement) statusElement.textContent = 'Status: Completed';
                     } else if (status === 'active') {
-                        iconElement.textContent = '○';
+                        iconElement.textContent = '⏱';
                         if (statusElement) statusElement.textContent = 'Status: Active - Processing...';
                     } else {
                         if (statusElement) statusElement.textContent = 'Status: Pending';

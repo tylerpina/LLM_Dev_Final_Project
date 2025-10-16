@@ -56,8 +56,10 @@
 
         .header {
             background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             padding: 24px;
+            margin: 12px 12px 0 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             text-align: center;
             flex-shrink: 0;
@@ -67,6 +69,8 @@
             display: flex;
             flex: 1;
             overflow: hidden;
+            margin: 12px;
+            gap: 6px;
         }
         
         .content-column {
@@ -75,15 +79,15 @@
             flex-direction: column;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 20px;
-            padding-right: 10px;
+            padding: 0;
         }
         
         .headlines-column {
             flex: 1;
             display: flex;
             flex-direction: column;
-            border-left: 1px solid var(--border-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             background: var(--bg-secondary);
             overflow: hidden;
         }
@@ -106,7 +110,7 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 24px;
-            margin-bottom: 20px;
+            margin: 20px 20px 20px 20px;
             flex-shrink: 0;
         }
 
@@ -183,6 +187,7 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 24px;
+            margin: 0 20px 20px 20px;
             flex-shrink: 0;
             min-height: 200px;
         }
@@ -1056,15 +1061,23 @@
         @media (max-width: 768px) {
             .main-layout {
                 flex-direction: column;
+                margin: 8px;
+            }
+            
+            .header {
+                margin: 8px;
             }
             
             .content-column {
-                padding: 12px;
+                padding: 0;
+            }
+            
+            .query-section,
+            .response-section {
+                margin: 8px;
             }
             
             .headlines-column {
-                border-left: none;
-                border-top: 1px solid var(--border-color);
                 max-height: 40vh;
             }
             
@@ -1134,8 +1147,10 @@
             <div class="headlines-column">
                 <div class="headlines-section" id="headlinesSection">
                     <div class="headlines-header">
-                        <h1>Feed</h1>
-                        <button class="refresh-btn" onclick="refreshHeadlines()">Refresh</button>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                            <h1 style="margin: 0;">Headlines</h1>
+                            <button class="refresh-btn" onclick="refreshHeadlines()">Refresh</button>
+                        </div>
                     </div>
                     <div id="headlines">
                         <div class="loading">

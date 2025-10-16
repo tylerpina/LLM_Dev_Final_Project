@@ -204,11 +204,7 @@ Extract 2-5 search terms, with the most important one as the primary term.`,
         });
         
         // Use /everything endpoint for better search results
-        // Calculate date range for recent articles (last 30 days)
-        const toDate = new Date();
-        const fromDate = new Date();
-        fromDate.setDate(fromDate.getDate() - 30);
-        
+        // Don't specify date range to get most recent articles
         const result = await this.mcpServer.handle({
           method: "GET",
           path: "/news/everything",
@@ -216,8 +212,6 @@ Extract 2-5 search terms, with the most important one as the primary term.`,
             q: searchQuery,
             language: "en",
             sortBy: "publishedAt",
-            from: fromDate.toISOString().split('T')[0],
-            to: toDate.toISOString().split('T')[0],
             pageSize: "50", // Significantly increased to prioritize NewsAPI results
           },
           provider: "newsapi",

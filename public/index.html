@@ -434,25 +434,36 @@
             border-color: var(--accent-blue);
         }
 
-        .headlines-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 16px;
+        .headlines-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 100%;
         }
 
         .headline-card {
             background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 16px;
+            border-radius: 8px;
+            padding: 16px 20px;
             transition: all 0.2s;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .headline-card:hover {
             border-color: var(--accent-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            background: var(--bg-hover);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .headline-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .headline-source {
@@ -479,19 +490,22 @@
             background: var(--accent-green);
         }
 
+        .headline-source.nytimes,
+        .headline-source[data-source*="New York Times"] {
+            background: #d32f2f;
+        }
+
         .headline-title {
             color: var(--text-primary);
-            font-size: 0.95rem;
+            font-size: 1.05rem;
             font-weight: 600;
-            margin-bottom: 8px;
             line-height: 1.4;
         }
 
         .headline-description {
             color: var(--text-secondary);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             line-height: 1.5;
-            margin-bottom: 8px;
         }
 
         .headline-meta {
@@ -504,8 +518,10 @@
 
         .headline-category {
             background: var(--bg-secondary);
-            padding: 2px 6px;
-            border-radius: 3px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
         }
 
         .meta-info {
@@ -551,14 +567,25 @@
         }
 
         .progress-step {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
             background: var(--bg-tertiary);
             border-radius: 6px;
             border: 1px solid var(--border-color);
             transition: all 0.3s ease;
+            margin-bottom: 8px;
+        }
+
+        .progress-step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .progress-step-header:hover {
+            background: var(--bg-hover);
         }
 
         .progress-step.active {
@@ -606,7 +633,7 @@
             100% { opacity: 1; }
         }
 
-        .progress-step-content {
+        .progress-step-info {
             flex: 1;
         }
 
@@ -625,6 +652,47 @@
             color: var(--text-muted);
             font-size: 0.75rem;
             font-family: monospace;
+        }
+
+        .progress-step-arrow {
+            color: var(--text-muted);
+            transition: transform 0.2s;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .progress-step-arrow.expanded {
+            transform: rotate(180deg);
+        }
+
+        .progress-step-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .progress-step-content.expanded {
+            max-height: 500px;
+        }
+
+        .progress-step-reasoning {
+            padding: 16px;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre-line;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .progress-step-status {
+            padding: 12px 16px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-secondary);
         }
 
         /* Enhanced source links */
@@ -740,6 +808,211 @@
             background: var(--border-hover);
         }
 
+        /* Agent Reasoning Dropdown */
+        .agent-reasoning {
+            margin-top: 16px;
+        }
+
+        .reasoning-toggle {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .reasoning-toggle:hover {
+            border-color: var(--accent-blue);
+            background: var(--bg-secondary);
+        }
+
+        .reasoning-toggle.active {
+            border-color: var(--accent-blue);
+            background: var(--bg-secondary);
+        }
+
+        .reasoning-title {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reasoning-arrow {
+            color: var(--text-muted);
+            transition: transform 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .reasoning-arrow.expanded {
+            transform: rotate(180deg);
+        }
+
+        .reasoning-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .reasoning-content.expanded {
+            max-height: 600px; /* Adjust based on content */
+        }
+
+        .reasoning-list {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            padding: 0;
+        }
+
+        .reasoning-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 16px;
+        }
+
+        .reasoning-item:last-child {
+            border-bottom: none;
+        }
+
+        .reasoning-agent {
+            font-weight: 600;
+            color: var(--accent-blue);
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            text-transform: capitalize;
+        }
+
+        .reasoning-text {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            line-height: 1.4;
+            white-space: pre-line;
+        }
+
+        /* Live agent boxes styles */
+        .live-agents-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .live-agents-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .live-agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 16px;
+        }
+
+        .agent-box {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .agent-box[data-status="active"] {
+            border-color: var(--warning);
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+        }
+
+        .agent-box[data-status="processing"] {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 122, 204, 0.3);
+        }
+
+        .agent-box[data-status="completed"] {
+            border-color: var(--success);
+        }
+
+        .agent-box-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .agent-box-icon {
+            font-size: 24px;
+        }
+
+        .agent-box-title {
+            flex: 1;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .agent-box-status {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .agent-box-content {
+            padding: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .agent-box-loading {
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .agent-output {
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 11px;
+            line-height: 1.4;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+        }
+
+        .final-synthesis-section {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Responsive design */
         @media (max-width: 768px) {
             .container {
@@ -754,6 +1027,13 @@
                 width: 100%;
             }
             
+            .live-agents-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .agent-box-content {
+                max-height: 200px;
+            }
         }
     </style>
     
@@ -764,7 +1044,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🤖 AI News & Research Assistant</h1>
+            <h1><img src="logo.svg" alt="AI Assistant Logo" style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;"> AI News & Research Assistant</h1>
             <p>Intelligent analysis across news sources and academic research</p>
         </div>
 
@@ -874,6 +1154,132 @@
             }
         });
 
+        // Show live agent processing boxes
+        function showLiveAgentBoxes() {
+            const responseDiv = document.getElementById('response');
+            
+            const agents = [
+                { id: 'coordinator', name: 'Coordinator Agent', icon: '📋', description: 'Analyzing query intent and planning strategy...' },
+                { id: 'news', name: 'News Agent', icon: '📰', description: 'Fetching articles from multiple sources...' },
+                { id: 'specialists', name: 'Specialist Agents', icon: '🔬', description: 'Running sentiment, trend, and bias analysis in parallel...' },
+                { id: 'personalization', name: 'Personalization Agent', icon: '🎯', description: 'Ranking and filtering results for you...' },
+                { id: 'synthesis', name: 'Synthesis Agent', icon: '✨', description: 'Creating comprehensive final report...' }
+            ];
+            
+            const boxesHtml = agents.map(agent => `
+                <div class="agent-box" id="box-${agent.id}">
+                    <div class="agent-box-header">
+                        <div class="agent-box-icon">${agent.icon}</div>
+                        <div class="agent-box-title">${agent.name}</div>
+                        <div class="agent-box-status" id="status-${agent.id}">⏳ Waiting...</div>
+                    </div>
+                    <div class="agent-box-content" id="content-${agent.id}">
+                        <div class="agent-box-loading">${agent.description}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            responseDiv.innerHTML = `
+                <div class="live-agents-container">
+                    <div class="live-agents-header">
+                        <div style="font-size: 20px; font-weight: 600; color: var(--accent-blue);">
+                            <img src="logo.svg" alt="AI" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 8px;">
+                            Multi-Agent Processing
+                        </div>
+                        <div id="overallTimer" style="color: var(--text-secondary);">0s</div>
+                    </div>
+                    <div class="live-agents-grid">
+                        ${boxesHtml}
+                    </div>
+                </div>
+            `;
+            
+            // Start simulated progress
+            simulateAgentProgress();
+        }
+
+        // Simulate agent progress with realistic timing
+        function simulateAgentProgress() {
+            const startTime = Date.now();
+            const timerInterval = setInterval(() => {
+                const timerEl = document.getElementById('overallTimer');
+                if (timerEl) {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    timerEl.textContent = `${elapsed}s`;
+                }
+            }, 1000);
+            
+            // Store for cleanup
+            window.currentTimerInterval = timerInterval;
+            
+            // Simulate progress through agents
+            const agentSequence = [
+                { id: 'coordinator', delay: 500, duration: 1500 },
+                { id: 'news', delay: 2000, duration: 2000 },
+                { id: 'specialists', delay: 4000, duration: 2500 },
+                { id: 'personalization', delay: 6500, duration: 1500 },
+                { id: 'synthesis', delay: 8000, duration: 3000 }
+            ];
+            
+            agentSequence.forEach(agent => {
+                setTimeout(() => {
+                    updateAgentBoxStatus(agent.id, 'active');
+                }, agent.delay);
+                
+                setTimeout(() => {
+                    updateAgentBoxStatus(agent.id, 'processing');
+                }, agent.delay + agent.duration / 2);
+            });
+        }
+
+        // Update agent box status
+        function updateAgentBoxStatus(agentId, status) {
+            const statusEl = document.getElementById(`status-${agentId}`);
+            const boxEl = document.getElementById(`box-${agentId}`);
+            
+            if (statusEl && boxEl) {
+                boxEl.setAttribute('data-status', status);
+                
+                if (status === 'active') {
+                    statusEl.textContent = '⚡ Active';
+                    statusEl.style.color = 'var(--warning)';
+                } else if (status === 'processing') {
+                    statusEl.textContent = '⏱️ Processing...';
+                    statusEl.style.color = 'var(--accent-blue)';
+                } else if (status === 'completed') {
+                    statusEl.textContent = '✅ Completed';
+                    statusEl.style.color = 'var(--success)';
+                }
+            }
+        }
+
+        // Populate agent box with actual data
+        function populateAgentBox(agentId, data, reasoning) {
+            console.log(`[populateAgentBox] Called for ${agentId}`, { data, reasoning });
+            
+            const contentEl = document.getElementById(`content-${agentId}`);
+            const statusEl = document.getElementById(`status-${agentId}`);
+            
+            if (!contentEl) {
+                console.error(`[populateAgentBox] Content element not found for ${agentId}`);
+                return;
+            }
+            
+            if (contentEl) {
+                let displayText = '';
+                
+                if (reasoning) {
+                    displayText += `=== REASONING ===\n${reasoning}\n\n`;
+                }
+                
+                displayText += `=== RAW OUTPUT ===\n${JSON.stringify(data, null, 2)}`;
+                
+                contentEl.innerHTML = `<pre class="agent-output">${displayText}</pre>`;
+                updateAgentBoxStatus(agentId, 'completed');
+                console.log(`[populateAgentBox] Successfully populated ${agentId}`);
+            }
+        }
+
         // Show progress display
         function showProgressDisplay() {
             const responseDiv = document.getElementById('response');
@@ -881,16 +1287,27 @@
             const progressHtml = `
                 <div class="progress-container">
                     <div class="progress-header">
-                        <div class="progress-title">🤖 Multi-Agent Analysis in Progress</div>
+                        <div class="progress-title"><img src="logo.svg" alt="AI" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 6px;"> Multi-Agent Analysis in Progress</div>
                         <div class="progress-step-time" id="progressTimer">0s</div>
                     </div>
                     <div class="progress-steps" id="progressSteps">
                         ${progressSteps.map((step, index) => `
                             <div class="progress-step" data-step="${step.id}">
-                                <div class="progress-step-icon pending" id="step-icon-${step.id}">${index + 1}</div>
-                                <div class="progress-step-content">
-                                    <div class="progress-step-name">${step.name}</div>
-                                    <div class="progress-step-description">${step.description}</div>
+                                <div class="progress-step-header" onclick="toggleProgressStep('${step.id}')">
+                                    <div class="progress-step-icon pending" id="step-icon-${step.id}">${index + 1}</div>
+                                    <div class="progress-step-info">
+                                        <div class="progress-step-name">${step.name}</div>
+                                        <div class="progress-step-description">${step.description}</div>
+                                    </div>
+                                    <div class="progress-step-arrow" id="step-arrow-${step.id}">▼</div>
+                                </div>
+                                <div class="progress-step-content" id="step-content-${step.id}">
+                                    <div class="progress-step-reasoning" id="step-reasoning-${step.id}">
+                                        Waiting for agent data...
+                                    </div>
+                                    <div class="progress-step-status" id="step-status-${step.id}">
+                                        Status: Pending
+                                    </div>
                                 </div>
                             </div>
                         `).join('')}
@@ -922,7 +1339,11 @@
             // Simulate progress through steps with realistic timing
             progressInterval = setInterval(() => {
                 if (currentProgressStep < progressSteps.length) {
+                    const stepId = progressSteps[currentProgressStep].id;
                     updateProgressStep(currentProgressStep, 'active');
+                    
+                    // Update with placeholder text while active
+                    updateProgressStepReasoning(stepId, `Processing: ${progressSteps[currentProgressStep].description}...`);
                     
                     // Complete previous step (except for first one)
                     if (currentProgressStep > 0) {
@@ -951,6 +1372,7 @@
                 const stepId = progressSteps[stepIndex].id;
                 const stepElement = document.querySelector(`[data-step="${stepId}"]`);
                 const iconElement = document.getElementById(`step-icon-${stepId}`);
+                const statusElement = document.getElementById(`step-status-${stepId}`);
                 
                 if (stepElement && iconElement) {
                     // Remove all status classes
@@ -961,13 +1383,55 @@
                     stepElement.classList.add(status);
                     iconElement.classList.add(status);
                     
-                    // Update icon for completed steps
+                    // Update icon and status text
                     if (status === 'completed') {
                         iconElement.textContent = '✓';
+                        if (statusElement) statusElement.textContent = 'Status: Completed';
                     } else if (status === 'active') {
                         iconElement.textContent = '⏱';
+                        if (statusElement) statusElement.textContent = 'Status: Active - Processing...';
+                    } else {
+                        if (statusElement) statusElement.textContent = 'Status: Pending';
                     }
                 }
+            }
+        }
+
+        // Update progress step with actual agent data
+        function updateProgressStepReasoning(stepId, data, reasoning = null) {
+            const reasoningElement = document.getElementById(`step-reasoning-${stepId}`);
+            if (reasoningElement && data) {
+                let displayText = '';
+                
+                // Handle string input (placeholder text)
+                if (typeof data === 'string') {
+                    displayText = data;
+                } else {
+                    // Show both reasoning (if available) and the complete raw data as JSON
+                    if (reasoning) {
+                        displayText = `REASONING:\n${reasoning}\n\n--- RAW DATA ---\n`;
+                    }
+                    
+                    // Add the complete, unprocessed raw data as JSON
+                    try {
+                        displayText += JSON.stringify(data, null, 2);
+                    } catch (error) {
+                        displayText += 'Error displaying data: ' + error.message;
+                    }
+                }
+                
+                reasoningElement.textContent = displayText || 'No data available yet...';
+            }
+        }
+
+        // Toggle progress step dropdown
+        function toggleProgressStep(stepId) {
+            const content = document.getElementById(`step-content-${stepId}`);
+            const arrow = document.getElementById(`step-arrow-${stepId}`);
+            
+            if (content && arrow) {
+                content.classList.toggle('expanded');
+                arrow.classList.toggle('expanded');
             }
         }
 
@@ -1000,18 +1464,21 @@
             askBtn.disabled = true;
             askBtn.textContent = 'Analyzing...';
             
-            // Show progress display instead of simple loading
-            showProgressDisplay();
+            // Show live agent processing boxes
+            showLiveAgentBoxes();
 
             try {
                 const response = await fetch('/ask', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
                     },
                     body: JSON.stringify({ 
                         query,
-                        style: selectedStyle 
+                        style: selectedStyle,
+                        timestamp: Date.now() // Add timestamp to help with debugging
                     })
                 });
 
@@ -1024,12 +1491,16 @@
 
                 const data = await response.json();
                 console.log('Received response data:', data);
+                console.log('Metadata:', data.metadata);
+                console.log('Agent reasoning data:', data.agentReasoning);
+                console.log('Sources data:', data.sources);
+                console.log('Detailed results:', data.detailedResults);
 
                 if (response.ok) {
-                    clearProgressDisplay(); // Clear progress before showing response
-                    displayResponse(data);
+                    displayResponse(data, clearProgressDisplay); // Clear progress after showing response
                 } else {
                     displayError(data.error || 'Something went wrong');
+                    clearProgressDisplay();
                 }
             } catch (error) {
                 console.error('Fetch request failed:', error);
@@ -1091,7 +1562,7 @@
         }
 
         // Display AI response
-        function displayResponse(data) {
+        function displayResponse(data, onComplete) {
             const responseDiv = document.getElementById('response');
             
             // Handle both multi-agent and legacy response formats
@@ -1151,7 +1622,7 @@
                 
                 metaInfo = `
                     <div class="meta-info">
-                        <strong>🤖 ${systemType} System</strong> • 
+                        <strong><img src="logo.svg" alt="AI" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;">${systemType} System</strong> • 
                         <strong>${agentsExecuted}</strong> agents executed • 
                         <strong>${executionTime}</strong> execution time • 
                         <strong>${sourceCount}</strong> sources analyzed •
@@ -1177,16 +1648,141 @@
                 `;
             }
 
-            responseDiv.innerHTML = `
-                <div class="response">
-                    <h3>🤖 AI Analysis</h3>
-                    <div class="response-content">
-                        ${formattedResponse}
+            // Debug: Log the full data structure
+            console.log('=== DEBUGGING AGENT DATA ===');
+            console.log('Full data:', data);
+            console.log('DetailedResults:', data.detailedResults);
+            console.log('DetailedResults keys:', data.detailedResults ? Object.keys(data.detailedResults) : 'NO DETAILED RESULTS');
+            console.log('Agent reasoning:', data.agentReasoning);
+            console.log('Agent reasoning keys:', data.agentReasoning ? Object.keys(data.agentReasoning) : 'NO REASONING');
+            
+            // Populate the live agent boxes with actual data
+            // NOTE: The actual agent data is in detailedResults, not metadata!
+            const agentData = data.detailedResults || {};
+            
+            if (agentData) {
+                // Coordinator
+                console.log('Coordinator data:', agentData.coordination);
+                if (agentData.coordination) {
+                    populateAgentBox('coordinator', agentData.coordination, data.agentReasoning?.coordinator);
+                } else {
+                    console.warn('No coordination data found');
+                }
+                
+                // News Agent
+                console.log('News data:', agentData.news);
+                if (agentData.news) {
+                    populateAgentBox('news', agentData.news, data.agentReasoning?.news);
+                } else {
+                    console.warn('No news data found');
+                }
+                
+                // Specialists (combine sentiment, trend, bias)
+                const specialistsData = {};
+                if (agentData.sentiment) specialistsData.sentiment = agentData.sentiment;
+                if (agentData.trend) specialistsData.trend = agentData.trend;
+                if (agentData.bias) specialistsData.bias = agentData.bias;
+                
+                console.log('Specialists data:', specialistsData);
+                if (Object.keys(specialistsData).length > 0) {
+                    const specialistsReasoning = [
+                        data.agentReasoning?.sentiment,
+                        data.agentReasoning?.trend,
+                        data.agentReasoning?.bias
+                    ].filter(r => r).join('\n\n---\n\n');
+                    
+                    populateAgentBox('specialists', specialistsData, specialistsReasoning || null);
+                } else {
+                    console.warn('No specialists data found');
+                }
+                
+                // Personalization
+                console.log('Personalization data:', agentData.personalization);
+                if (agentData.personalization) {
+                    populateAgentBox('personalization', agentData.personalization, data.agentReasoning?.personalization);
+                } else {
+                    console.warn('No personalization data found');
+                }
+                
+                // Synthesis - show the final response
+                console.log('Synthesis data exists:', !!data.synthesizedResponse);
+                if (data.synthesizedResponse) {
+                    const synthesisData = {
+                        responseLength: data.synthesizedResponse.length,
+                        preview: data.synthesizedResponse.substring(0, 200) + '...'
+                    };
+                    populateAgentBox('synthesis', synthesisData, data.agentReasoning?.synthesis);
+                } else {
+                    console.warn('No synthesis data found');
+                }
+            } else {
+                console.error('No detailedResults found in response!');
+            }
+            
+            // After populating all boxes, scroll down to show the final synthesis below
+            setTimeout(() => {
+                // Add final synthesis section after the agent boxes
+                const container = document.querySelector('.live-agents-container');
+                if (container) {
+                    const synthesisSection = document.createElement('div');
+                    synthesisSection.className = 'final-synthesis-section';
+                    synthesisSection.innerHTML = `
+                        <div style="margin-top: 24px; padding-top: 24px; border-top: 2px solid var(--border-color);">
+                            <h2 style="color: var(--accent-blue); margin-bottom: 16px;">
+                                ✨ Final Synthesis
+                            </h2>
+                            <div class="response-content">
+                                ${formattedResponse}
+                            </div>
+                            ${sourcesHtml}
+                            ${metaInfo}
+                        </div>
+                    `;
+                    container.appendChild(synthesisSection);
+                    
+                    // Smooth scroll to synthesis
+                    synthesisSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 500);
+
+            // Build agent reasoning dropdown if available
+            let reasoningHtml = '';
+            console.log('Checking agent reasoning:', data.agentReasoning);
+            if (data.agentReasoning && Object.keys(data.agentReasoning).length > 0) {
+                const reasoningItems = Object.entries(data.agentReasoning)
+                    .map(([agent, reasoning]) => `
+                        <div class="reasoning-item">
+                            <div class="reasoning-agent">${agent}</div>
+                            <div class="reasoning-text">${reasoning || 'No reasoning provided'}</div>
+                        </div>
+                    `).join('');
+
+                reasoningHtml = `
+                    <div class="agent-reasoning">
+                        <div class="reasoning-toggle" onclick="toggleReasoning()">
+                            <div class="reasoning-title">
+                                🧠 Complete Agent Thought Process (${Object.keys(data.agentReasoning).length} models)
+                            </div>
+                            <div class="reasoning-arrow">▼</div>
+                        </div>
+                        <div class="reasoning-content">
+                            <div class="reasoning-list">
+                                ${reasoningItems}
+                            </div>
+                        </div>
                     </div>
-                    ${sourcesHtml}
-                    ${metaInfo}
-                </div>
-            `;
+                `;
+            }
+
+            // Execute callback after response is fully rendered
+            if (onComplete && typeof onComplete === 'function') {
+                onComplete();
+            }
+            
+            // Stop the timer
+            if (window.currentTimerInterval) {
+                clearInterval(window.currentTimerInterval);
+            }
         }
 
         // Display error
@@ -1200,12 +1796,34 @@
             `;
         }
 
+        // Toggle agent reasoning dropdown
+        function toggleReasoning() {
+            const toggle = event.currentTarget;
+            const content = toggle.nextElementSibling;
+            const arrow = toggle.querySelector('.reasoning-arrow');
+            
+            toggle.classList.toggle('active');
+            content.classList.toggle('expanded');
+            arrow.classList.toggle('expanded');
+        }
+
+        // Toggle intermediate agents dropdown
+        function toggleIntermediate() {
+            const toggle = event.currentTarget;
+            const content = toggle.nextElementSibling;
+            const arrow = toggle.querySelector('.reasoning-arrow');
+            
+            toggle.classList.toggle('active');
+            content.classList.toggle('expanded');
+            arrow.classList.toggle('expanded');
+        }
+
         // Load headlines
         async function loadHeadlines() {
             const headlinesDiv = document.getElementById('headlines');
             
             try {
-                const response = await fetch('/headlines?limit=12');
+                const response = await fetch('/headlines?limit=24');
                 const data = await response.json();
 
                 if (response.ok && data.headlines) {
@@ -1218,6 +1836,26 @@
             }
         }
 
+        // Helper function to format URLs properly, especially for Arxiv
+        function formatHeadlineUrl(headline) {
+            if (!headline.url) return '#';
+            
+            // If it's already a full URL, return as is
+            if (headline.url.startsWith('http://') || headline.url.startsWith('https://')) {
+                return headline.url;
+            }
+            
+            // Handle Arxiv URLs specifically
+            if (headline.source === 'arxiv' || headline.provider === 'arxiv') {
+                // If it's just an ID (like "2401.12345v1"), construct full Arxiv URL
+                if (headline.url && !headline.url.includes('arxiv.org') && !headline.url.includes('localhost')) {
+                    return `https://arxiv.org/abs/${headline.url}`;
+                }
+            }
+            
+            return headline.url;
+        }
+
         // Display headlines
         function displayHeadlines(headlines) {
             const headlinesDiv = document.getElementById('headlines');
@@ -1227,19 +1865,51 @@
                 return;
             }
 
+            // Randomize the order of headlines using Fisher-Yates shuffle
+            const shuffledHeadlines = [...headlines];
+            for (let i = shuffledHeadlines.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledHeadlines[i], shuffledHeadlines[j]] = [shuffledHeadlines[j], shuffledHeadlines[i]];
+            }
+
             const html = `
-                <div class="headlines-grid">
-                    ${headlines.map(h => `
-                        <div class="headline-card" onclick="window.open('${h.url}', '_blank')">
-                            <div class="headline-source ${h.source}">${h.source}</div>
-                            <div class="headline-title">${h.title}</div>
-                            <div class="headline-description">${h.description ? h.description.substring(0, 150) + '...' : ''}</div>
-                            <div class="headline-meta">
+                <div class="headlines-list">
+                    ${shuffledHeadlines.map((h, index) => {
+                        const properUrl = formatHeadlineUrl(h);
+                        
+                        // Determine the source class for styling based on provider
+                        let sourceClass = '';
+                        let displaySource = h.source;
+                        
+                        if (h.provider) {
+                            // Use provider for styling
+                            sourceClass = h.provider.toLowerCase();
+                        } else {
+                            // Fallback: determine from source name
+                            if (h.source.toLowerCase().includes('new york times')) {
+                                sourceClass = 'nytimes';
+                            } else if (h.source.toLowerCase() === 'the guardian' || h.source.toLowerCase() === 'guardian') {
+                                sourceClass = 'guardian';
+                            } else if (h.source.toLowerCase() === 'arxiv') {
+                                sourceClass = 'arxiv';
+                            } else {
+                                sourceClass = 'newsapi';
+                            }
+                        }
+                        
+                        return `
+                        <div class="headline-card" onclick="window.open('${properUrl}', '_blank')">
+                            <div class="headline-header">
+                                <span style="color: var(--text-muted); font-weight: 600; min-width: 30px;">#${index + 1}</span>
+                                <div class="headline-source ${sourceClass}">${displaySource}</div>
                                 <span class="headline-category">${h.category}</span>
-                                <span>${timeAgo(h.publishedAt || h.fetchedAt)}</span>
+                                <span style="color: var(--text-muted); font-size: 0.85rem; margin-left: auto;">${timeAgo(h.publishedAt || h.fetchedAt)}</span>
                             </div>
+                            <div class="headline-title">${h.title}</div>
+                            ${h.description ? `<div class="headline-description">${h.description.substring(0, 200)}${h.description.length > 200 ? '...' : ''}</div>` : ''}
                         </div>
-                    `).join('')}
+                        `;
+                    }).join('')}
                 </div>
             `;
             

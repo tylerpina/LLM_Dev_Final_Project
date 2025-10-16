@@ -805,7 +805,7 @@
         }
 
         .source-link-enhanced::after {
-            content: "↗";
+            content: "→";
             font-size: 0.8em;
         }
 
@@ -1093,7 +1093,7 @@
     <div class="container">
         <!-- Full-width header at top -->
         <div class="header">
-            <h1><img src="logo.svg" alt="AI Assistant Logo" style="width: 32px; height: 32px; vertical-align: middle; margin-right: 8px;"> LLM NEWS</h1>
+            <h1>LLM NEWS</h1>
             <p>Intelligent analysis across news sources and academic research</p>
         </div>
 
@@ -1133,8 +1133,8 @@
             <div class="headlines-column">
                 <div class="headlines-section" id="headlinesSection">
                     <div class="headlines-header">
-                        <h2>📰 Latest Headlines & Research</h2>
-                        <button class="refresh-btn" onclick="refreshHeadlines()">🔄 Refresh</button>
+                        <h2>Latest Headlines & Research</h2>
+                        <button class="refresh-btn" onclick="refreshHeadlines()">Refresh</button>
                     </div>
                     <div id="headlines">
                         <div class="loading">
@@ -1147,7 +1147,7 @@
         </div>
 
         <div class="servers-section" id="serversSection">
-            <h3>📡 Online Providers</h3>
+            <h3>Online Providers</h3>
             <div class="servers-list" id="serversList">
                 <div class="loading">
                     <div class="spinner"></div>
@@ -1216,11 +1216,11 @@
             const responseDiv = document.getElementById('response');
             
             const agents = [
-                { id: 'coordinator', name: 'Coordinator Agent', icon: '📋', description: 'Analyzing query intent and planning strategy...' },
-                { id: 'news', name: 'News Agent', icon: '📰', description: 'Fetching articles from multiple sources...' },
-                { id: 'specialists', name: 'Specialist Agents', icon: '🔬', description: 'Running sentiment, trend, and bias analysis in parallel...' },
-                { id: 'personalization', name: 'Personalization Agent', icon: '🎯', description: 'Ranking and filtering results for you...' },
-                { id: 'synthesis', name: 'Synthesis Agent', icon: '✨', description: 'Creating comprehensive final report...' }
+                { id: 'coordinator', name: 'Coordinator Agent', icon: '', description: 'Analyzing query intent and planning strategy...' },
+                { id: 'news', name: 'News Agent', icon: '', description: 'Fetching articles from multiple sources...' },
+                { id: 'specialists', name: 'Specialist Agents', icon: '', description: 'Running sentiment, trend, and bias analysis in parallel...' },
+                { id: 'personalization', name: 'Personalization Agent', icon: '', description: 'Ranking and filtering results for you...' },
+                { id: 'synthesis', name: 'Synthesis Agent', icon: '', description: 'Creating comprehensive final report...' }
             ];
             
             const boxesHtml = agents.map(agent => `
@@ -1228,7 +1228,7 @@
                     <div class="agent-box-header">
                         <div class="agent-box-icon">${agent.icon}</div>
                         <div class="agent-box-title">${agent.name}</div>
-                        <div class="agent-box-status" id="status-${agent.id}">⏳ Waiting...</div>
+                        <div class="agent-box-status" id="status-${agent.id}">Waiting...</div>
                     </div>
                     <div class="agent-box-content" id="content-${agent.id}">
                         <div class="agent-box-loading">${agent.description}</div>
@@ -1240,7 +1240,6 @@
                 <div class="live-agents-container">
                     <div class="live-agents-header">
                         <div style="font-size: 20px; font-weight: 600; color: var(--accent-blue);">
-                            <img src="logo.svg" alt="AI" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 8px;">
                             Multi-Agent Processing
                         </div>
                         <div id="overallTimer" style="color: var(--text-secondary);">0s</div>
@@ -1298,13 +1297,13 @@
                 boxEl.setAttribute('data-status', status);
                 
                 if (status === 'active') {
-                    statusEl.textContent = '⚡ Active';
+                    statusEl.textContent = 'Active';
                     statusEl.style.color = 'var(--warning)';
                 } else if (status === 'processing') {
-                    statusEl.textContent = '⏱️ Processing...';
+                    statusEl.textContent = 'Processing...';
                     statusEl.style.color = 'var(--accent-blue)';
                 } else if (status === 'completed') {
-                    statusEl.textContent = '✅ Completed';
+                    statusEl.textContent = 'Completed';
                     statusEl.style.color = 'var(--success)';
                 }
             }
@@ -1356,7 +1355,7 @@
                                         <div class="progress-step-name">${step.name}</div>
                                         <div class="progress-step-description">${step.description}</div>
                                     </div>
-                                    <div class="progress-step-arrow" id="step-arrow-${step.id}">▼</div>
+                                    <div class="progress-step-arrow" id="step-arrow-${step.id}">▾</div>
                                 </div>
                                 <div class="progress-step-content" id="step-content-${step.id}">
                                     <div class="progress-step-reasoning" id="step-reasoning-${step.id}">
@@ -1445,7 +1444,7 @@
                         iconElement.textContent = '✓';
                         if (statusElement) statusElement.textContent = 'Status: Completed';
                     } else if (status === 'active') {
-                        iconElement.textContent = '⏱';
+                        iconElement.textContent = '○';
                         if (statusElement) statusElement.textContent = 'Status: Active - Processing...';
                     } else {
                         if (statusElement) statusElement.textContent = 'Status: Pending';
@@ -1638,7 +1637,7 @@
             if (data.sources && data.sources.length > 0) {
                 sourcesHtml = `
                     <div class="sources-enhanced">
-                        <h4>📚 Article Sources</h4>
+                        <h4>Article Sources</h4>
                         ${data.sources.map(source => `
                             <div class="source-item-enhanced">
                                 <div class="source-provider-enhanced">${source.provider || 'Unknown'}</div>
@@ -1653,7 +1652,7 @@
                 const articles = data.detailedResults.news.articles;
                 sourcesHtml = `
                     <div class="sources-enhanced">
-                        <h4>📚 Article Sources</h4>
+                        <h4>Article Sources</h4>
                         ${articles.slice(0, 10).map(article => `
                             <div class="source-item-enhanced">
                                 <div class="source-provider-enhanced">${article.source || 'Unknown'}</div>
@@ -1679,7 +1678,7 @@
                 
                 metaInfo = `
                     <div class="meta-info">
-                        <strong><img src="logo.svg" alt="AI" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;">${systemType} System</strong> • 
+                        <strong>${systemType} System</strong> • 
                         <strong>${agentsExecuted}</strong> agents executed • 
                         <strong>${executionTime}</strong> execution time • 
                         <strong>${sourceCount}</strong> sources analyzed •
@@ -1786,7 +1785,7 @@
                     synthesisSection.innerHTML = `
                         <div style="margin-top: 24px; padding-top: 24px; border-top: 2px solid var(--border-color);">
                             <h2 style="color: var(--accent-blue); margin-bottom: 16px;">
-                                ✨ Final Synthesis
+                                Final Synthesis
                             </h2>
                             <div class="response-content">
                                 ${formattedResponse}
@@ -1818,9 +1817,9 @@
                     <div class="agent-reasoning">
                         <div class="reasoning-toggle" onclick="toggleReasoning()">
                             <div class="reasoning-title">
-                                🧠 Complete Agent Thought Process (${Object.keys(data.agentReasoning).length} models)
+                                Complete Agent Thought Process (${Object.keys(data.agentReasoning).length} models)
                             </div>
-                            <div class="reasoning-arrow">▼</div>
+                            <div class="reasoning-arrow">▾</div>
                         </div>
                         <div class="reasoning-content">
                             <div class="reasoning-list">
@@ -1847,7 +1846,7 @@
             const responseDiv = document.getElementById('response');
             responseDiv.innerHTML = `
                 <div class="response error">
-                    <h3>❌ Error</h3>
+                    <h3>Error</h3>
                     <p>${message}</p>
                 </div>
             `;

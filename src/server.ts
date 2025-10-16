@@ -22,8 +22,18 @@ const USE_MULTI_AGENT = process.env.USE_MULTI_AGENT === "true";
 // Initialize MCP server with available API keys
 const mcpServer = new UniversalMcpServer(
   process.env.NEWSAPI_KEY || "",
-  process.env.GUARDIAN_API_KEY
+  process.env.GUARDIAN_API_KEY,
+  process.env.NYTIMES_API_KEY
 );
+
+// Log available providers for debugging
+logger.info("MCP Server initialized with providers:", {
+  providers: mcpServer.getAvailableProviders(),
+  hasNewsAPI: mcpServer.getAvailableProviders().includes('newsapi'),
+  hasGuardian: mcpServer.getAvailableProviders().includes('guardian'),
+  hasNYTimes: mcpServer.getAvailableProviders().includes('nytimes'),
+  hasArxiv: mcpServer.getAvailableProviders().includes('arxiv')
+});
 
 // Initialize OpenAI-powered query router with bullet-point style by default
 const queryRouter = new IntelligentQueryRouter(
@@ -32,7 +42,7 @@ const queryRouter = new IntelligentQueryRouter(
   {
     responseStyle: "bullet-points",
     includeGreeting: false,
-    maxResponseLength: 1200, // Increased for more detailed responses
+    maxResponseLength: 2500, // Increased for more detailed responses and comprehensive coverage
   }
 );
 
@@ -53,6 +63,9 @@ if (process.env.OPENAI_API_KEY) {
     );
 }
 
+// Initialize database first
+const databaseService = new DatabaseService();
+
 // Initialize multi-agent orchestrator
 let multiAgentOrchestrator: MultiAgentOrchestrator | null = null;
 
@@ -60,15 +73,15 @@ if (process.env.OPENAI_API_KEY) {
   multiAgentOrchestrator = new MultiAgentOrchestrator(
     process.env.OPENAI_API_KEY,
     mcpServer,
-    personalizationService
+    personalizationService,
+    databaseService
   );
   logger.info("Multi-agent orchestrator initialized", {
     enabled: USE_MULTI_AGENT,
   });
 }
 
-// Initialize database and headline fetcher
-const databaseService = new DatabaseService();
+// Initialize headline fetcher
 const headlineFetcherService = new HeadlineFetcherService(
   databaseService,
   mcpServer
@@ -120,15 +133,16 @@ app.post("/ask", async (req, res) => {
   const startTime = Date.now();
   const { query, style, userId, useMultiAgent } = req.body;
 
-  // Determine which system to use
-  const shouldUseMultiAgent =
-    useMultiAgent !== undefined ? useMultiAgent : USE_MULTI_AGENT;
+  // Determine which system to use - force multi-agent for now to test
+  const shouldUseMultiAgent = true; // Force multi-agent system usage
 
   logger.info("AI query received", {
     query,
     style,
     userId,
     useMultiAgent: shouldUseMultiAgent,
+    USE_MULTI_AGENT_ENV: USE_MULTI_AGENT,
+    hasOrchestrator: !!multiAgentOrchestrator,
     timestamp: new Date().toISOString(),
   });
 
@@ -163,6 +177,7 @@ app.post("/ask", async (req, res) => {
         },
         sources: result.sources,
         detailedResults: result.metadata,
+        agentReasoning: result.agentReasoning,
         timestamp: result.timestamp,
       });
     } else {
@@ -509,7 +524,9 @@ app.get("/headlines", (req, res) => {
     const limit = parseInt(req.query.limit as string) || 20;
     const source = req.query.source as string;
 
-    const headlines = databaseService.getRecentHeadlines(limit, source);
+    const headlines = source 
+      ? databaseService.getRecentHeadlines(limit, source)
+      : databaseService.getBalancedHeadlines(limit);
 
     logger.info("Headlines retrieved", { count: headlines.length, source });
 
@@ -784,6 +801,49 @@ app.get("/arxiv/category", async (req, res) => {
   }
 });
 
+// NYTimes-specific endpoints
+app.get("/nytimes/search", async (req, res) => {
+  logger.info("NYTimes search requested", { query: req.query });
+  try {
+    const result = await mcpServer.handle({
+      method: "GET",
+      path: "/nytimes/search",
+      query: req.query as Record<string, string | string[]>,
+      provider: "nytimes",
+    });
+    logger.info("NYTimes search completed", {
+      resultCount: result.data?.response?.docs?.length || 0,
+      totalResults: result.data?.response?.meta?.hits || 0,
+    });
+    res.json(result);
+  } catch (err: any) {
+    logger.error("NYTimes search failed", { error: err.message });
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
+
+app.get("/nytimes/archive", async (req, res) => {
+  logger.info("NYTimes archive requested", { query: req.query });
+  try {
+    const result = await mcpServer.handle({
+      method: "GET",
+      path: "/nytimes/archive",
+      query: req.query as Record<string, string | string[]>,
+      provider: "nytimes",
+    });
+    logger.info("NYTimes archive completed", {
+      year: req.query.year,
+      month: req.query.month,
+      resultCount: result.data?.response?.docs?.length || 0,
+      totalResults: result.data?.response?.meta?.hits || 0,
+    });
+    res.json(result);
+  } catch (err: any) {
+    logger.error("NYTimes archive failed", { error: err.message });
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
+
 app.listen(port, () => {
   logger.info("Server started successfully", {
     port,
@@ -796,7 +856,7 @@ app.listen(port, () => {
   console.log(
     `📊 Available providers: ${mcpServer.getAvailableProviders().join(", ")}`
   );
-  console.log(`🤖 AI-powered endpoint: POST /ask`);
+  console.log(`AI-powered endpoint: POST /ask`);
   console.log(
     `🎯 Personalization: ${
       personalizationService ? "ENABLED" : "DISABLED (set OPENAI_API_KEY)"

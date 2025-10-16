@@ -38,10 +38,20 @@
             line-height: 1.6;
         }
 
+        body {
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+            padding: 0;
+            margin: 0;
         }
 
         .header {
@@ -49,8 +59,37 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 24px;
-            margin-bottom: 24px;
+            margin: 12px 12px 0 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .main-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            margin: 12px;
+            gap: 6px;
+        }
+        
+        .content-column {
+            flex: 4;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 0;
+        }
+        
+        .headlines-column {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            overflow: hidden;
         }
 
         .header h1 {
@@ -65,35 +104,14 @@
             font-size: 1rem;
         }
 
-        .status-bar {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 12px 16px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.875rem;
-        }
-
-        .status-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success);
-        }
-
-        .status-indicator.error {
-            background: var(--error);
-        }
 
         .query-section {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 24px;
-            margin-bottom: 24px;
+            margin: 20px 20px 20px 20px;
+            flex-shrink: 0;
         }
 
         .query-form {
@@ -169,7 +187,8 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 24px;
-            margin-bottom: 24px;
+            margin: 0 20px 20px 20px;
+            flex-shrink: 0;
             min-height: 200px;
         }
 
@@ -267,6 +286,76 @@
             font-style: italic;
         }
 
+        .response-content pre {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 12px;
+            margin: 16px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+
+        .response-content pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+            color: var(--accent-orange);
+        }
+
+        .response-content hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 24px 0;
+        }
+
+        .response-content a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+
+        .response-content a:hover {
+            color: var(--accent-green);
+            text-decoration: underline;
+        }
+
+        .response-content h1,
+        .response-content h2 {
+            color: var(--accent-green);
+            margin: 32px 0 16px 0;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .response-content h5,
+        .response-content h6 {
+            color: var(--accent-purple);
+            margin: 16px 0 8px 0;
+            font-weight: 600;
+        }
+
+        .response-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 16px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .response-content th,
+        .response-content td {
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .response-content th {
+            background: var(--bg-tertiary);
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
         .sources {
             background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
@@ -349,23 +438,31 @@
 
         /* Headlines Section */
         .headlines-section {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 24px;
-            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        #headlines {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 20px 20px;
         }
 
         .headlines-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+            flex-direction: column;
+            gap: 12px;
+            padding: 20px 20px 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            margin-bottom: 0;
         }
 
         .headlines-header h2 {
             color: var(--accent-green);
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             margin: 0;
         }
 
@@ -378,6 +475,7 @@
             cursor: pointer;
             font-size: 0.875rem;
             transition: all 0.2s;
+            width: 100%;
         }
 
         .refresh-btn:hover {
@@ -385,25 +483,36 @@
             border-color: var(--accent-blue);
         }
 
-        .headlines-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 16px;
+        .headlines-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 100%;
         }
 
         .headline-card {
             background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 16px;
+            border-radius: 8px;
+            padding: 16px 20px;
             transition: all 0.2s;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .headline-card:hover {
             border-color: var(--accent-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            background: var(--bg-hover);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .headline-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .headline-source {
@@ -430,19 +539,22 @@
             background: var(--accent-green);
         }
 
+        .headline-source.nytimes,
+        .headline-source[data-source*="New York Times"] {
+            background: #d32f2f;
+        }
+
         .headline-title {
             color: var(--text-primary);
-            font-size: 0.95rem;
+            font-size: 1.05rem;
             font-weight: 600;
-            margin-bottom: 8px;
             line-height: 1.4;
         }
 
         .headline-description {
             color: var(--text-secondary);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             line-height: 1.5;
-            margin-bottom: 8px;
         }
 
         .headline-meta {
@@ -455,8 +567,10 @@
 
         .headline-category {
             background: var(--bg-secondary);
-            padding: 2px 6px;
-            border-radius: 3px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
         }
 
         .meta-info {
@@ -470,6 +584,253 @@
         }
 
         .meta-info strong {
+            color: var(--text-secondary);
+        }
+
+        /* Progress tracking styles */
+        .progress-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .progress-title {
+            color: var(--accent-blue);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .progress-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .progress-step {
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            margin-bottom: 8px;
+        }
+
+        .progress-step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .progress-step-header:hover {
+            background: var(--bg-hover);
+        }
+
+        .progress-step.active {
+            border-color: var(--accent-blue);
+            background: rgba(0, 122, 204, 0.1);
+        }
+
+        .progress-step.completed {
+            border-color: var(--accent-green);
+            background: rgba(78, 201, 176, 0.1);
+        }
+
+        .progress-step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .progress-step-icon.pending {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .progress-step-icon.active {
+            background: var(--accent-blue);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .progress-step-icon.completed {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .progress-step-info {
+            flex: 1;
+        }
+
+        .progress-step-name {
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .progress-step-description {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .progress-step-time {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-family: monospace;
+        }
+
+        .progress-step-arrow {
+            color: var(--text-muted);
+            transition: transform 0.2s;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .progress-step-arrow.expanded {
+            transform: rotate(180deg);
+        }
+
+        .progress-step-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .progress-step-content.expanded {
+            max-height: 500px;
+        }
+
+        .progress-step-reasoning {
+            padding: 16px;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre-line;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .progress-step-status {
+            padding: 12px 16px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+
+        /* Enhanced source links */
+        .sources-enhanced {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .sources-enhanced h4 {
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .source-item-enhanced {
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--accent-blue);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .source-item-enhanced:hover {
+            background: var(--bg-hover);
+            transform: translateX(2px);
+        }
+
+        .source-item-enhanced:last-child {
+            margin-bottom: 0;
+        }
+
+        .source-provider-enhanced {
+            color: var(--accent-orange);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+        }
+
+        .source-title-enhanced {
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .source-link-enhanced {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.2s ease;
+        }
+
+        .source-link-enhanced:hover {
+            color: var(--accent-green);
+            text-decoration: underline;
+        }
+
+        .source-link-enhanced::after {
+            content: "↗";
+            font-size: 0.8em;
+        }
+
+        /* Servers info section */
+        .servers-section {
+            display: none;
+        }
+
+        .servers-section h3 {
+            color: var(--accent-green);
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .servers-list {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             color: var(--text-secondary);
         }
 
@@ -491,10 +852,233 @@
             background: var(--border-hover);
         }
 
+        /* Agent Reasoning Dropdown */
+        .agent-reasoning {
+            margin-top: 16px;
+        }
+
+        .reasoning-toggle {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .reasoning-toggle:hover {
+            border-color: var(--accent-blue);
+            background: var(--bg-secondary);
+        }
+
+        .reasoning-toggle.active {
+            border-color: var(--accent-blue);
+            background: var(--bg-secondary);
+        }
+
+        .reasoning-title {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reasoning-arrow {
+            color: var(--text-muted);
+            transition: transform 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .reasoning-arrow.expanded {
+            transform: rotate(180deg);
+        }
+
+        .reasoning-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .reasoning-content.expanded {
+            max-height: 600px; /* Adjust based on content */
+        }
+
+        .reasoning-list {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            padding: 0;
+        }
+
+        .reasoning-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 16px;
+        }
+
+        .reasoning-item:last-child {
+            border-bottom: none;
+        }
+
+        .reasoning-agent {
+            font-weight: 600;
+            color: var(--accent-blue);
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            text-transform: capitalize;
+        }
+
+        .reasoning-text {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            line-height: 1.4;
+            white-space: pre-line;
+        }
+
+        /* Live agent boxes styles */
+        .live-agents-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .live-agents-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .live-agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 16px;
+        }
+
+        .agent-box {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .agent-box[data-status="active"] {
+            border-color: var(--warning);
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+        }
+
+        .agent-box[data-status="processing"] {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 122, 204, 0.3);
+        }
+
+        .agent-box[data-status="completed"] {
+            border-color: var(--success);
+        }
+
+        .agent-box-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .agent-box-icon {
+            font-size: 24px;
+        }
+
+        .agent-box-title {
+            flex: 1;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .agent-box-status {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .agent-box-content {
+            padding: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .agent-box-loading {
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .agent-output {
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 11px;
+            line-height: 1.4;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+        }
+
+        .final-synthesis-section {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Responsive design */
         @media (max-width: 768px) {
-            .container {
-                padding: 12px;
+            .main-layout {
+                flex-direction: column;
+                margin: 8px;
+            }
+            
+            .header {
+                margin: 8px;
+            }
+            
+            .content-column {
+                padding: 0;
+            }
+            
+            .query-section,
+            .response-section {
+                margin: 8px;
+            }
+            
+            .headlines-column {
+                max-height: 40vh;
             }
             
             .query-form {
@@ -505,57 +1089,85 @@
                 width: 100%;
             }
             
+            .live-agents-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .agent-box-content {
+                max-height: 200px;
+            }
         }
     </style>
+    
+    <!-- Markdown and DOMPurify libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
 </head>
 <body>
     <div class="container">
+        <!-- Full-width header at top -->
         <div class="header">
-            <h1>🤖 AI News & Research Assistant</h1>
+            <h1>LLM NEWS</h1>
             <p>Intelligent analysis across news sources and academic research</p>
         </div>
 
-        <div id="status" class="status-bar" style="display: none;">
-            <div class="status-indicator"></div>
-            <span>Server online • All providers available</span>
-        </div>
+        <!-- Two-column layout -->
+        <div class="main-layout">
+            <!-- Left column: Main content (4/5 width) -->
+            <div class="content-column">
+                <div class="query-section">
+                    <form class="query-form" id="queryForm">
+                        <input 
+                            type="text" 
+                            class="query-input" 
+                            id="queryInput" 
+                            placeholder="Ask about AI trends, latest news, research papers..."
+                            required
+                        >
+                        <select class="style-select" id="styleSelect">
+                            <option value="bullet-points">Bullet Points</option>
+                            <option value="professional">Professional</option>
+                            <option value="technical">Technical</option>
+                            <option value="conversational">Conversational</option>
+                        </select>
+                        <button type="submit" class="ask-btn" id="askBtn">Ask AI</button>
+                    </form>
+                </div>
 
-        <div class="query-section">
-            <form class="query-form" id="queryForm">
-                <input 
-                    type="text" 
-                    class="query-input" 
-                    id="queryInput" 
-                    placeholder="Ask about AI trends, latest news, research papers..."
-                    required
-                >
-                <select class="style-select" id="styleSelect">
-                    <option value="bullet-points">Bullet Points</option>
-                    <option value="professional">Professional</option>
-                    <option value="technical">Technical</option>
-                    <option value="conversational">Conversational</option>
-                </select>
-                <button type="submit" class="ask-btn" id="askBtn">Ask AI</button>
-            </form>
-        </div>
+                <div class="response-section">
+                    <div id="response">
+                        <div style="text-align: center; color: var(--text-muted); padding: 40px;">
+                            <p>Ask a question to get started with AI-powered analysis</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="response-section">
-            <div id="response">
-                <div style="text-align: center; color: var(--text-muted); padding: 40px;">
-                    <p>Ask a question to get started with AI-powered analysis</p>
+            <!-- Right column: Headlines (1/5 width, scrollable) -->
+            <div class="headlines-column">
+                <div class="headlines-section" id="headlinesSection">
+                    <div class="headlines-header">
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                            <h1 style="margin: 0;">Headlines</h1>
+                            <button class="refresh-btn" onclick="refreshHeadlines()">Refresh</button>
+                        </div>
+                    </div>
+                    <div id="headlines">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Loading latest headlines...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="headlines-section" id="headlinesSection">
-            <div class="headlines-header">
-                <h2>📰 Latest Headlines & Research</h2>
-                <button class="refresh-btn" onclick="refreshHeadlines()">🔄 Refresh</button>
-            </div>
-            <div id="headlines">
+        <div class="servers-section" id="serversSection">
+            <h3>Online Providers</h3>
+            <div class="servers-list" id="serversList">
                 <div class="loading">
                     <div class="spinner"></div>
-                    <p>Loading latest headlines...</p>
+                    <p>Loading service status...</p>
                 </div>
             </div>
         </div>
@@ -563,29 +1175,48 @@
 
     <script>
         let isLoading = false;
-
-        // Check server status on load
-        async function checkStatus() {
-            try {
-                const response = await fetch('/health');
-                const data = await response.json();
-                if (data.status === 'ok') {
-                    const statusEl = document.getElementById('status');
-                    statusEl.style.display = 'flex';
-                    statusEl.innerHTML = `
-                        <div class="status-indicator"></div>
-                        <span>Server online • Providers: ${data.providers.join(', ')}</span>
-                    `;
-                }
-            } catch (error) {
-                const statusEl = document.getElementById('status');
-                statusEl.style.display = 'flex';
-                statusEl.innerHTML = `
-                    <div class="status-indicator error"></div>
-                    <span>Server offline • Check connection</span>
-                `;
+        let progressInterval = null;
+        let currentProgressStep = 0;
+        
+        // Define the expected multi-agent execution steps
+        const progressSteps = [
+            {
+                id: 'coordinator',
+                name: 'Query Analysis',
+                description: 'Analyzing query intent and planning execution strategy'
+            },
+            {
+                id: 'news',
+                name: 'News Gathering',
+                description: 'Fetching latest articles from multiple sources'
+            },
+            {
+                id: 'sentiment',
+                name: 'Sentiment Analysis',
+                description: 'Analyzing sentiment and emotional tone'
+            },
+            {
+                id: 'trend',
+                name: 'Trend Detection',
+                description: 'Identifying patterns and emerging trends'
+            },
+            {
+                id: 'bias',
+                name: 'Bias Analysis',
+                description: 'Evaluating diverse perspectives and coverage'
+            },
+            {
+                id: 'personalization',
+                name: 'Personalization',
+                description: 'Tailoring results to user preferences'
+            },
+            {
+                id: 'synthesis',
+                name: 'Response Synthesis',
+                description: 'Creating final comprehensive report'
             }
-        }
+        ];
+
 
         // Handle form submission
         document.getElementById('queryForm').addEventListener('submit', async (e) => {
@@ -595,6 +1226,302 @@
                 await askQuestion(query);
             }
         });
+
+        // Show live agent processing boxes
+        function showLiveAgentBoxes() {
+            const responseDiv = document.getElementById('response');
+            
+            const agents = [
+                { id: 'coordinator', name: 'Coordinator Agent', icon: '', description: 'Analyzing query intent and planning strategy...' },
+                { id: 'news', name: 'News Agent', icon: '', description: 'Fetching articles from multiple sources...' },
+                { id: 'specialists', name: 'Specialist Agents', icon: '', description: 'Running sentiment, trend, and bias analysis in parallel...' },
+                { id: 'personalization', name: 'Personalization Agent', icon: '', description: 'Ranking and filtering results for you...' },
+                { id: 'synthesis', name: 'Synthesis Agent', icon: '', description: 'Creating comprehensive final report...' }
+            ];
+            
+            const boxesHtml = agents.map(agent => `
+                <div class="agent-box" id="box-${agent.id}">
+                    <div class="agent-box-header">
+                        <div class="agent-box-icon">${agent.icon}</div>
+                        <div class="agent-box-title">${agent.name}</div>
+                        <div class="agent-box-status" id="status-${agent.id}">Waiting...</div>
+                    </div>
+                    <div class="agent-box-content" id="content-${agent.id}">
+                        <div class="agent-box-loading">${agent.description}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            responseDiv.innerHTML = `
+                <div class="live-agents-container">
+                    <div class="live-agents-header">
+                        <div style="font-size: 20px; font-weight: 600; color: var(--accent-blue);">
+                            Multi-Agent Processing
+                        </div>
+                        <div id="overallTimer" style="color: var(--text-secondary);">0s</div>
+                    </div>
+                    <div class="live-agents-grid">
+                        ${boxesHtml}
+                    </div>
+                </div>
+            `;
+            
+            // Start simulated progress
+            simulateAgentProgress();
+        }
+
+        // Simulate agent progress with realistic timing
+        function simulateAgentProgress() {
+            const startTime = Date.now();
+            const timerInterval = setInterval(() => {
+                const timerEl = document.getElementById('overallTimer');
+                if (timerEl) {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    timerEl.textContent = `${elapsed}s`;
+                }
+            }, 1000);
+            
+            // Store for cleanup
+            window.currentTimerInterval = timerInterval;
+            
+            // Simulate progress through agents
+            const agentSequence = [
+                { id: 'coordinator', delay: 500, duration: 1500 },
+                { id: 'news', delay: 2000, duration: 2000 },
+                { id: 'specialists', delay: 4000, duration: 2500 },
+                { id: 'personalization', delay: 6500, duration: 1500 },
+                { id: 'synthesis', delay: 8000, duration: 3000 }
+            ];
+            
+            agentSequence.forEach(agent => {
+                setTimeout(() => {
+                    updateAgentBoxStatus(agent.id, 'active');
+                }, agent.delay);
+                
+                setTimeout(() => {
+                    updateAgentBoxStatus(agent.id, 'processing');
+                }, agent.delay + agent.duration / 2);
+            });
+        }
+
+        // Update agent box status
+        function updateAgentBoxStatus(agentId, status) {
+            const statusEl = document.getElementById(`status-${agentId}`);
+            const boxEl = document.getElementById(`box-${agentId}`);
+            
+            if (statusEl && boxEl) {
+                boxEl.setAttribute('data-status', status);
+                
+                if (status === 'active') {
+                    statusEl.textContent = 'Active';
+                    statusEl.style.color = 'var(--warning)';
+                } else if (status === 'processing') {
+                    statusEl.textContent = 'Processing...';
+                    statusEl.style.color = 'var(--accent-blue)';
+                } else if (status === 'completed') {
+                    statusEl.textContent = 'Completed';
+                    statusEl.style.color = 'var(--success)';
+                }
+            }
+        }
+
+        // Populate agent box with actual data
+        function populateAgentBox(agentId, data, reasoning) {
+            console.log(`[populateAgentBox] Called for ${agentId}`, { data, reasoning });
+            
+            const contentEl = document.getElementById(`content-${agentId}`);
+            const statusEl = document.getElementById(`status-${agentId}`);
+            
+            if (!contentEl) {
+                console.error(`[populateAgentBox] Content element not found for ${agentId}`);
+                return;
+            }
+            
+            if (contentEl) {
+                let displayText = '';
+                
+                if (reasoning) {
+                    displayText += `=== REASONING ===\n${reasoning}\n\n`;
+                }
+                
+                displayText += `=== RAW OUTPUT ===\n${JSON.stringify(data, null, 2)}`;
+                
+                contentEl.innerHTML = `<pre class="agent-output">${displayText}</pre>`;
+                updateAgentBoxStatus(agentId, 'completed');
+                console.log(`[populateAgentBox] Successfully populated ${agentId}`);
+            }
+        }
+
+        // Show progress display
+        function showProgressDisplay() {
+            const responseDiv = document.getElementById('response');
+            
+            const progressHtml = `
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <div class="progress-title"><img src="logo.svg" alt="AI" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 6px;"> Multi-Agent Analysis in Progress</div>
+                        <div class="progress-step-time" id="progressTimer">0s</div>
+                    </div>
+                    <div class="progress-steps" id="progressSteps">
+                        ${progressSteps.map((step, index) => `
+                            <div class="progress-step" data-step="${step.id}">
+                                <div class="progress-step-header" onclick="toggleProgressStep('${step.id}')">
+                                    <div class="progress-step-icon pending" id="step-icon-${step.id}">${index + 1}</div>
+                                    <div class="progress-step-info">
+                                        <div class="progress-step-name">${step.name}</div>
+                                        <div class="progress-step-description">${step.description}</div>
+                                    </div>
+                                    <div class="progress-step-arrow" id="step-arrow-${step.id}">▼</div>
+                                </div>
+                                <div class="progress-step-content" id="step-content-${step.id}">
+                                    <div class="progress-step-reasoning" id="step-reasoning-${step.id}">
+                                        Waiting for agent data...
+                                    </div>
+                                    <div class="progress-step-status" id="step-status-${step.id}">
+                                        Status: Pending
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            responseDiv.innerHTML = progressHtml;
+            
+            // Start progress animation
+            startProgressAnimation();
+        }
+
+        // Start progress animation
+        function startProgressAnimation() {
+            currentProgressStep = 0;
+            let startTime = Date.now();
+            let timerInterval = null;
+            
+            // Update timer
+            const timerEl = document.getElementById('progressTimer');
+            timerInterval = setInterval(() => {
+                if (timerEl) {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    timerEl.textContent = `${elapsed}s`;
+                }
+            }, 1000);
+            
+            // Simulate progress through steps with realistic timing
+            progressInterval = setInterval(() => {
+                if (currentProgressStep < progressSteps.length) {
+                    const stepId = progressSteps[currentProgressStep].id;
+                    updateProgressStep(currentProgressStep, 'active');
+                    
+                    // Update with placeholder text while active
+                    updateProgressStepReasoning(stepId, `Processing: ${progressSteps[currentProgressStep].description}...`);
+                    
+                    // Complete previous step (except for first one)
+                    if (currentProgressStep > 0) {
+                        updateProgressStep(currentProgressStep - 1, 'completed');
+                    }
+                    
+                    currentProgressStep++;
+                } else {
+                    // Complete all remaining steps
+                    for (let i = 0; i < progressSteps.length; i++) {
+                        updateProgressStep(i, 'completed');
+                    }
+                    clearInterval(progressInterval);
+                    if (timerInterval) clearInterval(timerInterval);
+                    progressInterval = null;
+                }
+            }, 500 + Math.random() * 1000); // Random timing between 0.5-1.5s per step
+            
+            // Store timer interval for cleanup
+            window.currentTimerInterval = timerInterval;
+        }
+
+        // Update progress step status
+        function updateProgressStep(stepIndex, status) {
+            if (stepIndex >= 0 && stepIndex < progressSteps.length) {
+                const stepId = progressSteps[stepIndex].id;
+                const stepElement = document.querySelector(`[data-step="${stepId}"]`);
+                const iconElement = document.getElementById(`step-icon-${stepId}`);
+                const statusElement = document.getElementById(`step-status-${stepId}`);
+                
+                if (stepElement && iconElement) {
+                    // Remove all status classes
+                    stepElement.classList.remove('pending', 'active', 'completed');
+                    iconElement.classList.remove('pending', 'active', 'completed');
+                    
+                    // Add new status class
+                    stepElement.classList.add(status);
+                    iconElement.classList.add(status);
+                    
+                    // Update icon and status text
+                    if (status === 'completed') {
+                        iconElement.textContent = '✓';
+                        if (statusElement) statusElement.textContent = 'Status: Completed';
+                    } else if (status === 'active') {
+                        iconElement.textContent = '⏱';
+                        if (statusElement) statusElement.textContent = 'Status: Active - Processing...';
+                    } else {
+                        if (statusElement) statusElement.textContent = 'Status: Pending';
+                    }
+                }
+            }
+        }
+
+        // Update progress step with actual agent data
+        function updateProgressStepReasoning(stepId, data, reasoning = null) {
+            const reasoningElement = document.getElementById(`step-reasoning-${stepId}`);
+            if (reasoningElement && data) {
+                let displayText = '';
+                
+                // Handle string input (placeholder text)
+                if (typeof data === 'string') {
+                    displayText = data;
+                } else {
+                    // Show both reasoning (if available) and the complete raw data as JSON
+                    if (reasoning) {
+                        displayText = `REASONING:\n${reasoning}\n\n--- RAW DATA ---\n`;
+                    }
+                    
+                    // Add the complete, unprocessed raw data as JSON
+                    try {
+                        displayText += JSON.stringify(data, null, 2);
+                    } catch (error) {
+                        displayText += 'Error displaying data: ' + error.message;
+                    }
+                }
+                
+                reasoningElement.textContent = displayText || 'No data available yet...';
+            }
+        }
+
+        // Toggle progress step dropdown
+        function toggleProgressStep(stepId) {
+            const content = document.getElementById(`step-content-${stepId}`);
+            const arrow = document.getElementById(`step-arrow-${stepId}`);
+            
+            if (content && arrow) {
+                content.classList.toggle('expanded');
+                arrow.classList.toggle('expanded');
+            }
+        }
+
+        // Clear progress display
+        function clearProgressDisplay() {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+            
+            // Clear timer interval if it exists
+            if (window.currentTimerInterval) {
+                clearInterval(window.currentTimerInterval);
+                window.currentTimerInterval = null;
+            }
+            
+            currentProgressStep = 0;
+        }
 
         // Ask question function
         async function askQuestion(query) {
@@ -609,22 +1536,21 @@
             askBtn.disabled = true;
             askBtn.textContent = 'Analyzing...';
             
-            responseDiv.innerHTML = `
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <p>Analyzing query and gathering data from multiple sources...</p>
-                </div>
-            `;
+            // Show live agent processing boxes
+            showLiveAgentBoxes();
 
             try {
                 const response = await fetch('/ask', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
                     },
                     body: JSON.stringify({ 
                         query,
-                        style: selectedStyle 
+                        style: selectedStyle,
+                        timestamp: Date.now() // Add timestamp to help with debugging
                     })
                 });
 
@@ -637,11 +1563,16 @@
 
                 const data = await response.json();
                 console.log('Received response data:', data);
+                console.log('Metadata:', data.metadata);
+                console.log('Agent reasoning data:', data.agentReasoning);
+                console.log('Sources data:', data.sources);
+                console.log('Detailed results:', data.detailedResults);
 
                 if (response.ok) {
-                    displayResponse(data);
+                    displayResponse(data, clearProgressDisplay); // Clear progress after showing response
                 } else {
                     displayError(data.error || 'Something went wrong');
+                    clearProgressDisplay();
                 }
             } catch (error) {
                 console.error('Fetch request failed:', error);
@@ -650,122 +1581,60 @@
                 isLoading = false;
                 askBtn.disabled = false;
                 askBtn.textContent = 'Ask AI';
+                clearProgressDisplay();
             }
         }
 
-        // Format response text with proper HTML and Markdown support
+        // Format response text using marked and DOMPurify for proper markdown rendering
         function formatResponseText(text) {
-            // Remove any leading markdown code block markers and clean up the text
-            text = text.replace(/^```markdown\s*/i, '').replace(/```\s*$/, '').trim();
-            
-            // Split the text into lines for processing
-            let lines = text.split('\n');
-            let formattedHtml = '';
-            let currentList = null; // Track if we're in a list and what type ('ul' or 'ol')
-            let currentListItems = [];
-            
-            function closeCurrentList() {
-                if (currentList && currentListItems.length > 0) {
-                    formattedHtml += `<${currentList}>`;
-                    currentListItems.forEach(item => {
-                        formattedHtml += `<li>${formatInlineMarkdown(item)}</li>`;
-                    });
-                    formattedHtml += `</${currentList}>`;
-                    currentList = null;
-                    currentListItems = [];
-                }
-            }
-            
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i].trim();
+            try {
+                // Remove any leading markdown code block markers and clean up the text
+                text = text.replace(/^```markdown\s*/i, '').replace(/```\s*$/, '').trim();
                 
-                if (!line) {
-                    // Empty line - close current list and continue
-                    closeCurrentList();
-                    continue;
-                }
+                // Configure marked with options for better rendering
+                const markedOptions = {
+                    breaks: true,  // Convert line breaks to <br>
+                    gfm: true,     // GitHub Flavored Markdown
+                    headerIds: false, // Don't generate IDs for headers
+                    mangle: false, // Don't mangle email addresses
+                    sanitize: false, // We'll use DOMPurify instead
+                    smartypants: false
+                };
                 
-                // Handle headings
-                if (/^###?\s/.test(line)) {
-                    closeCurrentList();
-                    if (/^###\s/.test(line)) {
-                        const heading = line.replace(/^###\s+/, '').trim();
-                        formattedHtml += `<h4>${escapeHtml(heading)}</h4>`;
-                    } else {
-                        const heading = line.replace(/^##\s+/, '').trim();
-                        formattedHtml += `<h3>${escapeHtml(heading)}</h3>`;
-                    }
-                    continue;
-                }
+                // Set marked options
+                marked.setOptions(markedOptions);
                 
-                // Handle bullet lists - check for dash/asterisk at the beginning of the line
-                if (/^[-•*]\s/.test(line)) {
-                    if (currentList !== 'ul') {
-                        closeCurrentList();
-                        currentList = 'ul';
-                        currentListItems = [];
-                    }
-                    const cleaned = line.replace(/^[-•*]\s+/, '').trim();
-                    if (cleaned) {
-                        currentListItems.push(cleaned);
-                    }
-                }
-                // Handle numbered lists - check for number followed by dot at the beginning
-                else if (/^\d+\.\s/.test(line)) {
-                    if (currentList !== 'ol') {
-                        closeCurrentList();
-                        currentList = 'ol';
-                        currentListItems = [];
-                    }
-                    const cleaned = line.replace(/^\d+\.\s+/, '').trim();
-                    if (cleaned) {
-                        currentListItems.push(cleaned);
-                    }
-                }
-                // Regular line
-                else {
-                    closeCurrentList();
-                    
-                    // Add as paragraph, but don't combine with next lines automatically
-                    // This prevents list items from being merged into paragraphs
-                    if (line.trim()) {
-                        formattedHtml += `<p>${formatInlineMarkdown(line)}</p>`;
-                    }
-                }
+                // Convert markdown to HTML using marked
+                const rawHtml = marked.parse(text);
+                
+                // Sanitize the HTML using DOMPurify to prevent XSS attacks
+                const cleanHtml = DOMPurify.sanitize(rawHtml, {
+                    ADD_ATTR: ['target', 'rel'], // Allow target and rel attributes for links
+                    ALLOWED_ATTR: [
+                        'href', 'target', 'rel', 'class', 'id', 'src', 'alt', 
+                        'width', 'height', 'title', 'style'
+                    ],
+                    ALLOWED_TAGS: [
+                        'p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                        'strong', 'b', 'em', 'i', 'code', 'pre',
+                        'ul', 'ol', 'li', 'blockquote',
+                        'a', 'img', 'table', 'thead', 'tbody', 'tr', 'th', 'td',
+                        'div', 'span', 'hr'
+                    ]
+                });
+                
+                return cleanHtml;
+            } catch (error) {
+                console.error('Error processing markdown:', error);
+                // Fallback to simple HTML escaping if markdown processing fails
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
             }
-            
-            // Close any remaining list
-            closeCurrentList();
-            
-            return formattedHtml || `<p>${formatInlineMarkdown(text)}</p>`;
-        }
-        
-        // Helper function to format inline markdown (bold, italic, code, links)
-        function formatInlineMarkdown(text) {
-            // Don't process text that already contains HTML tags
-            if (/<[^>]+>/.test(text)) {
-                // Still process links and code blocks that might be in HTML
-                return text
-                    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>') // Links [text](url)
-                    .replace(/`([^`]+?)`/g, '<code>$1</code>'); // Code `text`
-            }
-            
-            return text
-                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')                    // Bold **text**
-                .replace(/\*(?!\*)(.+?)\*/g, '<em>$1</em>')                        // Italic *text* (not **)
-                .replace(/`([^`]+?)`/g, '<code>$1</code>')                        // Code `text`
-                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>'); // Links [text](url)
-        }
-        
-        // Helper function to escape HTML characters
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
         }
 
         // Display AI response
-        function displayResponse(data) {
+        function displayResponse(data, onComplete) {
             const responseDiv = document.getElementById('response');
             
             // Handle both multi-agent and legacy response formats
@@ -783,13 +1652,28 @@
             let sourcesHtml = '';
             if (data.sources && data.sources.length > 0) {
                 sourcesHtml = `
-                    <div class="sources">
-                        <h4>📚 Sources</h4>
+                    <div class="sources-enhanced">
+                        <h4>Article Sources</h4>
                         ${data.sources.map(source => `
-                            <div class="source-item">
-                                <div class="source-provider">${source.provider}</div>
-                                ${source.title ? `<div class="source-title">${source.title}</div>` : ''}
-                                ${source.url ? `<a href="${source.url}" target="_blank" class="source-link">View source →</a>` : ''}
+                            <div class="source-item-enhanced">
+                                <div class="source-provider-enhanced">${source.provider || 'Unknown'}</div>
+                                ${source.title ? `<div class="source-title-enhanced">${source.title}</div>` : ''}
+                                ${source.url ? `<a href="${source.url}" target="_blank" class="source-link-enhanced">Read full article</a>` : '<span style="color: var(--text-muted); font-size: 0.8rem;">URL not available</span>'}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (data.detailedResults && data.detailedResults.news && data.detailedResults.news.articles) {
+                // Fallback: extract sources from detailed results if available
+                const articles = data.detailedResults.news.articles;
+                sourcesHtml = `
+                    <div class="sources-enhanced">
+                        <h4>Article Sources</h4>
+                        ${articles.slice(0, 10).map(article => `
+                            <div class="source-item-enhanced">
+                                <div class="source-provider-enhanced">${article.source || 'Unknown'}</div>
+                                <div class="source-title-enhanced">${article.title || 'Untitled'}</div>
+                                ${article.url ? `<a href="${article.url}" target="_blank" class="source-link-enhanced">Read full article</a>` : '<span style="color: var(--text-muted); font-size: 0.8rem;">URL not available</span>'}
                             </div>
                         `).join('')}
                     </div>
@@ -801,14 +1685,20 @@
             if (data.metadata) {
                 // Multi-agent format
                 const systemType = data.metadata.system === 'multi-agent' ? 'Multi-Agent' : 'Legacy';
-                const agentsExecuted = data.metadata.agentsExecuted ? data.metadata.agentsExecuted.join(', ') : 'N/A';
+                const agentsExecuted = data.metadata.agentsExecuted ? data.metadata.agentsExecuted.length : 0;
                 const executionTime = data.metadata.executionTimeMs ? `${Math.round(data.metadata.executionTimeMs/1000)}s` : 'N/A';
+                const estimatedCost = data.metadata.estimatedCost ? `$${data.metadata.estimatedCost.toFixed(4)}` : 'N/A';
+                
+                // Get source count
+                const sourceCount = data.sources ? data.sources.length : (data.detailedResults?.news?.articles?.length || 0);
                 
                 metaInfo = `
                     <div class="meta-info">
-                        System: <strong>${systemType}</strong> • 
-                        Agents: <strong>${agentsExecuted}</strong> • 
-                        Time: <strong>${executionTime}</strong> • 
+                        <strong>${systemType} System</strong> • 
+                        <strong>${agentsExecuted}</strong> agents executed • 
+                        <strong>${executionTime}</strong> execution time • 
+                        <strong>${sourceCount}</strong> sources analyzed •
+                        <strong>${estimatedCost}</strong> estimated cost • 
                         ${data.timestamp ? new Date(data.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}
                     </div>
                 `;
@@ -830,16 +1720,141 @@
                 `;
             }
 
-            responseDiv.innerHTML = `
-                <div class="response">
-                    <h3>🤖 AI Analysis</h3>
-                    <div class="response-content">
-                        ${formattedResponse}
+            // Debug: Log the full data structure
+            console.log('=== DEBUGGING AGENT DATA ===');
+            console.log('Full data:', data);
+            console.log('DetailedResults:', data.detailedResults);
+            console.log('DetailedResults keys:', data.detailedResults ? Object.keys(data.detailedResults) : 'NO DETAILED RESULTS');
+            console.log('Agent reasoning:', data.agentReasoning);
+            console.log('Agent reasoning keys:', data.agentReasoning ? Object.keys(data.agentReasoning) : 'NO REASONING');
+            
+            // Populate the live agent boxes with actual data
+            // NOTE: The actual agent data is in detailedResults, not metadata!
+            const agentData = data.detailedResults || {};
+            
+            if (agentData) {
+                // Coordinator
+                console.log('Coordinator data:', agentData.coordination);
+                if (agentData.coordination) {
+                    populateAgentBox('coordinator', agentData.coordination, data.agentReasoning?.coordinator);
+                } else {
+                    console.warn('No coordination data found');
+                }
+                
+                // News Agent
+                console.log('News data:', agentData.news);
+                if (agentData.news) {
+                    populateAgentBox('news', agentData.news, data.agentReasoning?.news);
+                } else {
+                    console.warn('No news data found');
+                }
+                
+                // Specialists (combine sentiment, trend, bias)
+                const specialistsData = {};
+                if (agentData.sentiment) specialistsData.sentiment = agentData.sentiment;
+                if (agentData.trend) specialistsData.trend = agentData.trend;
+                if (agentData.bias) specialistsData.bias = agentData.bias;
+                
+                console.log('Specialists data:', specialistsData);
+                if (Object.keys(specialistsData).length > 0) {
+                    const specialistsReasoning = [
+                        data.agentReasoning?.sentiment,
+                        data.agentReasoning?.trend,
+                        data.agentReasoning?.bias
+                    ].filter(r => r).join('\n\n---\n\n');
+                    
+                    populateAgentBox('specialists', specialistsData, specialistsReasoning || null);
+                } else {
+                    console.warn('No specialists data found');
+                }
+                
+                // Personalization
+                console.log('Personalization data:', agentData.personalization);
+                if (agentData.personalization) {
+                    populateAgentBox('personalization', agentData.personalization, data.agentReasoning?.personalization);
+                } else {
+                    console.warn('No personalization data found');
+                }
+                
+                // Synthesis - show the final response
+                console.log('Synthesis data exists:', !!data.synthesizedResponse);
+                if (data.synthesizedResponse) {
+                    const synthesisData = {
+                        responseLength: data.synthesizedResponse.length,
+                        preview: data.synthesizedResponse.substring(0, 200) + '...'
+                    };
+                    populateAgentBox('synthesis', synthesisData, data.agentReasoning?.synthesis);
+                } else {
+                    console.warn('No synthesis data found');
+                }
+            } else {
+                console.error('No detailedResults found in response!');
+            }
+            
+            // After populating all boxes, scroll down to show the final synthesis below
+            setTimeout(() => {
+                // Add final synthesis section after the agent boxes
+                const container = document.querySelector('.live-agents-container');
+                if (container) {
+                    const synthesisSection = document.createElement('div');
+                    synthesisSection.className = 'final-synthesis-section';
+                    synthesisSection.innerHTML = `
+                        <div style="margin-top: 24px; padding-top: 24px; border-top: 2px solid var(--border-color);">
+                            <h2 style="color: var(--accent-blue); margin-bottom: 16px;">
+                                Final Synthesis
+                            </h2>
+                            <div class="response-content">
+                                ${formattedResponse}
+                            </div>
+                            ${sourcesHtml}
+                            ${metaInfo}
+                        </div>
+                    `;
+                    container.appendChild(synthesisSection);
+                    
+                    // Smooth scroll to synthesis
+                    synthesisSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 500);
+
+            // Build agent reasoning dropdown if available
+            let reasoningHtml = '';
+            console.log('Checking agent reasoning:', data.agentReasoning);
+            if (data.agentReasoning && Object.keys(data.agentReasoning).length > 0) {
+                const reasoningItems = Object.entries(data.agentReasoning)
+                    .map(([agent, reasoning]) => `
+                        <div class="reasoning-item">
+                            <div class="reasoning-agent">${agent}</div>
+                            <div class="reasoning-text">${reasoning || 'No reasoning provided'}</div>
+                        </div>
+                    `).join('');
+
+                reasoningHtml = `
+                    <div class="agent-reasoning">
+                        <div class="reasoning-toggle" onclick="toggleReasoning()">
+                            <div class="reasoning-title">
+                                Complete Agent Thought Process (${Object.keys(data.agentReasoning).length} models)
+                            </div>
+                            <div class="reasoning-arrow">▾</div>
+                        </div>
+                        <div class="reasoning-content">
+                            <div class="reasoning-list">
+                                ${reasoningItems}
+                            </div>
+                        </div>
                     </div>
-                    ${sourcesHtml}
-                    ${metaInfo}
-                </div>
-            `;
+                `;
+            }
+
+            // Execute callback after response is fully rendered
+            if (onComplete && typeof onComplete === 'function') {
+                onComplete();
+            }
+            
+            // Stop the timer
+            if (window.currentTimerInterval) {
+                clearInterval(window.currentTimerInterval);
+            }
         }
 
         // Display error
@@ -847,10 +1862,32 @@
             const responseDiv = document.getElementById('response');
             responseDiv.innerHTML = `
                 <div class="response error">
-                    <h3>❌ Error</h3>
+                    <h3>Error</h3>
                     <p>${message}</p>
                 </div>
             `;
+        }
+
+        // Toggle agent reasoning dropdown
+        function toggleReasoning() {
+            const toggle = event.currentTarget;
+            const content = toggle.nextElementSibling;
+            const arrow = toggle.querySelector('.reasoning-arrow');
+            
+            toggle.classList.toggle('active');
+            content.classList.toggle('expanded');
+            arrow.classList.toggle('expanded');
+        }
+
+        // Toggle intermediate agents dropdown
+        function toggleIntermediate() {
+            const toggle = event.currentTarget;
+            const content = toggle.nextElementSibling;
+            const arrow = toggle.querySelector('.reasoning-arrow');
+            
+            toggle.classList.toggle('active');
+            content.classList.toggle('expanded');
+            arrow.classList.toggle('expanded');
         }
 
         // Load headlines
@@ -858,7 +1895,7 @@
             const headlinesDiv = document.getElementById('headlines');
             
             try {
-                const response = await fetch('/headlines?limit=12');
+                const response = await fetch('/headlines?limit=24');
                 const data = await response.json();
 
                 if (response.ok && data.headlines) {
@@ -871,6 +1908,26 @@
             }
         }
 
+        // Helper function to format URLs properly, especially for Arxiv
+        function formatHeadlineUrl(headline) {
+            if (!headline.url) return '#';
+            
+            // If it's already a full URL, return as is
+            if (headline.url.startsWith('http://') || headline.url.startsWith('https://')) {
+                return headline.url;
+            }
+            
+            // Handle Arxiv URLs specifically
+            if (headline.source === 'arxiv' || headline.provider === 'arxiv') {
+                // If it's just an ID (like "2401.12345v1"), construct full Arxiv URL
+                if (headline.url && !headline.url.includes('arxiv.org') && !headline.url.includes('localhost')) {
+                    return `https://arxiv.org/abs/${headline.url}`;
+                }
+            }
+            
+            return headline.url;
+        }
+
         // Display headlines
         function displayHeadlines(headlines) {
             const headlinesDiv = document.getElementById('headlines');
@@ -880,19 +1937,51 @@
                 return;
             }
 
+            // Randomize the order of headlines using Fisher-Yates shuffle
+            const shuffledHeadlines = [...headlines];
+            for (let i = shuffledHeadlines.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledHeadlines[i], shuffledHeadlines[j]] = [shuffledHeadlines[j], shuffledHeadlines[i]];
+            }
+
             const html = `
-                <div class="headlines-grid">
-                    ${headlines.map(h => `
-                        <div class="headline-card" onclick="window.open('${h.url}', '_blank')">
-                            <div class="headline-source ${h.source}">${h.source}</div>
-                            <div class="headline-title">${h.title}</div>
-                            <div class="headline-description">${h.description ? h.description.substring(0, 150) + '...' : ''}</div>
-                            <div class="headline-meta">
+                <div class="headlines-list">
+                    ${shuffledHeadlines.map((h, index) => {
+                        const properUrl = formatHeadlineUrl(h);
+                        
+                        // Determine the source class for styling based on provider
+                        let sourceClass = '';
+                        let displaySource = h.source;
+                        
+                        if (h.provider) {
+                            // Use provider for styling
+                            sourceClass = h.provider.toLowerCase();
+                        } else {
+                            // Fallback: determine from source name
+                            if (h.source.toLowerCase().includes('new york times')) {
+                                sourceClass = 'nytimes';
+                            } else if (h.source.toLowerCase() === 'the guardian' || h.source.toLowerCase() === 'guardian') {
+                                sourceClass = 'guardian';
+                            } else if (h.source.toLowerCase() === 'arxiv') {
+                                sourceClass = 'arxiv';
+                            } else {
+                                sourceClass = 'newsapi';
+                            }
+                        }
+                        
+                        return `
+                        <div class="headline-card" onclick="window.open('${properUrl}', '_blank')">
+                            <div class="headline-header">
+                                <span style="color: var(--text-muted); font-weight: 600; min-width: 30px;">#${index + 1}</span>
+                                <div class="headline-source ${sourceClass}">${displaySource}</div>
                                 <span class="headline-category">${h.category}</span>
-                                <span>${timeAgo(h.publishedAt || h.fetchedAt)}</span>
+                                <span style="color: var(--text-muted); font-size: 0.85rem; margin-left: auto;">${timeAgo(h.publishedAt || h.fetchedAt)}</span>
                             </div>
+                            <div class="headline-title">${h.title}</div>
+                            ${h.description ? `<div class="headline-description">${h.description.substring(0, 200)}${h.description.length > 200 ? '...' : ''}</div>` : ''}
                         </div>
-                    `).join('')}
+                        `;
+                    }).join('')}
                 </div>
             `;
             
@@ -926,9 +2015,32 @@
             return date.toLocaleDateString();
         }
 
+        // Load servers information
+        async function loadServers() {
+            const serversListEl = document.getElementById('serversList');
+            
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+
+                if (response.ok && data.providers) {
+                    // Display providers in the same format as the status bar
+                    serversListEl.innerHTML = `
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                            Providers: ${data.providers.join(', ')}
+                        </div>
+                    `;
+                } else {
+                    serversListEl.innerHTML = '<p style="color: var(--text-muted);">Unable to load service status</p>';
+                }
+            } catch (error) {
+                serversListEl.innerHTML = '<p style="color: var(--text-muted);">Service status unavailable</p>';
+            }
+        }
+
         // Initialize
-        checkStatus();
         loadHeadlines();
+        loadServers();
         
         // Auto-refresh headlines every 5 minutes
         setInterval(loadHeadlines, 5 * 60 * 1000);

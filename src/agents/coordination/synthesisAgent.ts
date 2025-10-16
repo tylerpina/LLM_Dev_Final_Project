@@ -40,7 +40,7 @@ export class SynthesisAgent extends BaseAgent<string> {
 
     // News articles
     if (rawData.news?.articles && rawData.news.articles.length > 0) {
-      const articles = rawData.news.articles.slice(0, 10); // Top 10 articles
+      const articles = rawData.news.articles.slice(0, 20); // Top 20 articles - increased coverage
       parts.push("=== NEWS ARTICLES ===");
       articles.forEach((article: any, idx: number) => {
         parts.push(

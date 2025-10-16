@@ -1283,6 +1283,11 @@
             
             // Store for cleanup
             window.currentTimerInterval = timerInterval;
+            window.simulationTimeouts = window.simulationTimeouts || [];
+            
+            // Clear any existing timeouts first
+            window.simulationTimeouts.forEach(timeout => clearTimeout(timeout));
+            window.simulationTimeouts = [];
             
             // Simulate progress through agents
             const agentSequence = [
@@ -1294,13 +1299,15 @@
             ];
             
             agentSequence.forEach(agent => {
-                setTimeout(() => {
+                const timeout1 = setTimeout(() => {
                     updateAgentBoxStatus(agent.id, 'active');
                 }, agent.delay);
                 
-                setTimeout(() => {
+                const timeout2 = setTimeout(() => {
                     updateAgentBoxStatus(agent.id, 'processing');
                 }, agent.delay + agent.duration / 2);
+                
+                window.simulationTimeouts.push(timeout1, timeout2);
             });
         }
 
@@ -1520,6 +1527,12 @@
                 window.currentTimerInterval = null;
             }
             
+            // Clear all simulation timeouts
+            if (window.simulationTimeouts) {
+                window.simulationTimeouts.forEach(timeout => clearTimeout(timeout));
+                window.simulationTimeouts = [];
+            }
+            
             currentProgressStep = 0;
         }
 
@@ -1727,6 +1740,12 @@
             console.log('DetailedResults keys:', data.detailedResults ? Object.keys(data.detailedResults) : 'NO DETAILED RESULTS');
             console.log('Agent reasoning:', data.agentReasoning);
             console.log('Agent reasoning keys:', data.agentReasoning ? Object.keys(data.agentReasoning) : 'NO REASONING');
+            
+            // Clear simulation timeouts since we have real data
+            if (window.simulationTimeouts) {
+                window.simulationTimeouts.forEach(timeout => clearTimeout(timeout));
+                window.simulationTimeouts = [];
+            }
             
             // Populate the live agent boxes with actual data
             // NOTE: The actual agent data is in detailedResults, not metadata!

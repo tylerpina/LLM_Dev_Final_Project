@@ -73,8 +73,8 @@ if (process.env.OPENAI_API_KEY) {
   multiAgentOrchestrator = new MultiAgentOrchestrator(
     process.env.OPENAI_API_KEY,
     mcpServer,
-    personalizationService,
-    databaseService
+    personalizationService
+    //databaseService - commented out because not using database yet - TODO: add back in
   );
   logger.info("Multi-agent orchestrator initialized", {
     enabled: USE_MULTI_AGENT,

@@ -1,4 +1,4 @@
-import { ApiRegistry, createNewsApiProvider, createGuardianProvider, createArxivProvider, createNYTimesProvider } from '../services/apiRegistry';
+import { ApiRegistry, createNewsApiProvider, createGuardianProvider, createArxivProvider} from '../services/apiRegistry';
 
 export interface McpRequest {
   method: string;
@@ -28,9 +28,10 @@ export class UniversalMcpServer {
     }
     
     // Register NYTimes if key provided
-    if (nyTimesApiKey) {
+    // Commented out because not using NYTimes
+    /* if (nyTimesApiKey) {
       this.registry.register(createNYTimesProvider(nyTimesApiKey));
-    }
+    } */
     
     // Register ArXiv (no API key needed)
     this.registry.register(createArxivProvider());

@@ -177,7 +177,7 @@ app.post("/ask", async (req, res) => {
         },
         sources: result.sources,
         detailedResults: result.metadata,
-        agentReasoning: result.agentReasoning,
+       //agentReasoning: result.agentReasoning, // commented out because not using agent reasoning yet - TODO: add back in
         timestamp: result.timestamp,
       });
     } else {

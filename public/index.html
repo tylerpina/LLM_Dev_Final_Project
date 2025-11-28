@@ -6,6 +6,7 @@
     <title>AI News & Research Assistant</title>
     <style>
         :root {
+            /* Default dark theme */
             --bg-primary: #1e1e1e;
             --bg-secondary: #252526;
             --bg-tertiary: #2d2d30;
@@ -22,6 +23,44 @@
             --success: #4ade80;
             --error: #f87171;
             --warning: #fbbf24;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #252526;
+            --bg-tertiary: #2d2d30;
+            --bg-hover: #2a2d2e;
+            --text-primary: #cccccc;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-blue: #007acc;
+            --accent-green: #4ec9b0;
+            --accent-orange: #ce9178;
+            --accent-purple: #c586c0;
+            --border-color: #3e3e42;
+            --border-hover: #464647;
+            --success: #4ade80;
+            --error: #f87171;
+            --warning: #fbbf24;
+        }
+
+        :root[data-theme="light"] {
+            --bg-primary: #f7f8fa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #eef1f5;
+            --bg-hover: #e4e9f0;
+            --text-primary: #1f2933;
+            --text-secondary: #3d4a5c;
+            --text-muted: #6b7280;
+            --accent-blue: #2563eb;
+            --accent-green: #059669;
+            --accent-orange: #ea580c;
+            --accent-purple: #7c3aed;
+            --border-color: #d1d9e6;
+            --border-hover: #b5c2d6;
+            --success: #16a34a;
+            --error: #dc2626;
+            --warning: #d97706;
         }
 
         * {
@@ -1098,6 +1137,23 @@
             }
         }
     </style>
+    <script>
+        // Load saved theme preference before page renders to prevent flash
+        (function() {
+            try {
+                const savedTheme = localStorage.getItem('llm-news-theme');
+                if (savedTheme === 'light' || savedTheme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', savedTheme);
+                } else {
+                    // Default to dark if no saved theme
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch (err) {
+                console.warn('Unable to load saved theme preference:', err);
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
     
     <!-- Markdown and DOMPurify libraries -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -1129,6 +1185,10 @@
                             <option value="professional">Professional</option>
                             <option value="technical">Technical</option>
                             <option value="conversational">Conversational</option>
+                        </select>
+                        <select class="style-select" id="themeSelect" aria-label="Theme selector">
+                            <option value="dark">Dark</option>
+                            <option value="light">Light</option>
                         </select>
                         <button type="submit" class="ask-btn" id="askBtn">Ask AI</button>
                     </form>
@@ -1177,6 +1237,47 @@
         let isLoading = false;
         let progressInterval = null;
         let currentProgressStep = 0;
+        const THEME_STORAGE_KEY = 'llm-news-theme';
+
+        // ================= THEME FUNCTIONALITY =================
+        
+        function applyTheme(theme) {
+            // Only allow 'dark' or 'light'
+            const normalized = (theme === 'light' || theme === 'dark') ? theme : 'dark';
+            document.documentElement.setAttribute('data-theme', normalized);
+            try {
+                localStorage.setItem(THEME_STORAGE_KEY, normalized);
+            } catch (err) {
+                console.warn('Unable to persist theme preference:', err);
+            }
+        }
+
+        function initializeThemeSelector() {
+            const themeSelect = document.getElementById('themeSelect');
+            if (!themeSelect) return;
+
+            // Load saved theme or default to dark
+            let savedTheme = 'dark';
+            try {
+                const stored = localStorage.getItem(THEME_STORAGE_KEY);
+                if (stored === 'light' || stored === 'dark') {
+                    savedTheme = stored;
+                }
+            } catch (err) {
+                console.warn('Unable to read saved theme preference:', err);
+            }
+
+            // Apply theme and set selector value
+            applyTheme(savedTheme);
+            themeSelect.value = savedTheme;
+
+            // Listen for theme changes
+            themeSelect.addEventListener('change', (event) => {
+                applyTheme(event.target.value);
+            });
+        }
+
+        // ================= END THEME FUNCTIONALITY =================
         
         // Define the expected multi-agent execution steps
         const progressSteps = [
@@ -2039,6 +2140,7 @@
         }
 
         // Initialize
+        initializeThemeSelector();
         loadHeadlines();
         loadServers();
         

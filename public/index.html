@@ -42,6 +42,9 @@
             --success: #4ade80;
             --error: #f87171;
             --warning: #fbbf24;
+            /* Customizable primary and secondary colors */
+            --primary-color: #007acc;
+            --secondary-color: #4ec9b0;
         }
 
         :root[data-theme="light"] {
@@ -61,6 +64,9 @@
             --success: #16a34a;
             --error: #dc2626;
             --warning: #d97706;
+            /* Customizable primary and secondary colors */
+            --primary-color: #2563eb;
+            --secondary-color: #059669;
         }
 
         * {
@@ -135,7 +141,7 @@
             font-size: 2rem;
             font-weight: 600;
             margin-bottom: 8px;
-            color: var(--accent-blue);
+            color: var(--primary-color);
         }
 
         .header p {
@@ -172,7 +178,7 @@
         }
 
         .query-input:focus {
-            border-color: var(--accent-blue);
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
         }
 
@@ -193,13 +199,248 @@
         }
 
         .style-select:focus {
-            border-color: var(--accent-blue);
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        .color-palette-btn {
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .color-palette-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary-color);
+        }
+
+        .color-palette-btn .color-preview {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid var(--border-color);
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-color) 50%, var(--secondary-color) 50%);
+        }
+
+        /* Color Palette Modal */
+        .color-palette-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .color-palette-modal.active {
+            display: flex;
+        }
+
+        .color-palette-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-palette-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .color-palette-header h3 {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .close-palette-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .close-palette-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .color-picker-group {
+            margin-bottom: 24px;
+        }
+
+        .color-picker-label {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .color-picker-input {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            background: none;
+            padding: 0;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .color-picker-input::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .color-picker-input::-webkit-color-swatch {
+            border: none;
+            border-radius: 6px;
+        }
+
+        .color-picker-input::-moz-color-swatch {
+            border: none;
+            border-radius: 6px;
+        }
+
+        .color-picker-text {
+            flex: 1;
+            padding: 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: monospace;
+        }
+
+        .color-picker-text:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-color) 20%, transparent);
+        }
+
+        .color-presets {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .color-presets h4 {
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 12px;
+        }
+
+        .preset-color {
+            width: 100%;
+            aspect-ratio: 1;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .preset-color:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-color);
+            z-index: 1;
+        }
+
+        .preset-color.active {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 30%, transparent);
+        }
+
+        .palette-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .palette-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .palette-btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .palette-btn-primary:hover {
+            background: color-mix(in srgb, var(--primary-color) 85%, black);
+        }
+
+        .palette-btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .palette-btn-secondary:hover {
+            background: var(--bg-hover);
         }
 
         .ask-btn {
             padding: 12px 24px;
-            background: var(--accent-blue);
+            background: var(--primary-color);
             color: white;
             border: none;
             border-radius: 6px;
@@ -211,7 +452,7 @@
         }
 
         .ask-btn:hover:not(:disabled) {
-            background: #005a9e;
+            background: color-mix(in srgb, var(--primary-color) 85%, black);
             transform: translateY(-1px);
         }
 
@@ -274,16 +515,16 @@
         }
 
         .response-content ul li::marker {
-            color: var(--accent-blue);
+            color: var(--primary-color);
         }
 
         .response-content ol li::marker {
-            color: var(--accent-green);
+            color: var(--secondary-color);
             font-weight: 600;
         }
 
         .response-content strong {
-            color: var(--accent-green);
+            color: var(--secondary-color);
             font-weight: 600;
         }
 
@@ -302,7 +543,7 @@
         }
 
         .response-content h3 {
-            color: var(--accent-green);
+            color: var(--secondary-color);
             margin: 24px 0 16px 0;
             font-size: 1.3em;
             font-weight: 600;
@@ -311,14 +552,14 @@
         }
 
         .response-content h4 {
-            color: var(--accent-blue);
+            color: var(--primary-color);
             margin: 20px 0 12px 0;
             font-size: 1.1em;
             font-weight: 600;
         }
 
         .response-content blockquote {
-            border-left: 3px solid var(--accent-blue);
+            border-left: 3px solid var(--primary-color);
             padding-left: 16px;
             margin: 16px 0;
             color: var(--text-secondary);
@@ -350,18 +591,18 @@
         }
 
         .response-content a {
-            color: var(--accent-blue);
+            color: var(--primary-color);
             text-decoration: none;
         }
 
         .response-content a:hover {
-            color: var(--accent-green);
+            color: var(--secondary-color);
             text-decoration: underline;
         }
 
         .response-content h1,
         .response-content h2 {
-            color: var(--accent-green);
+            color: var(--secondary-color);
             margin: 32px 0 16px 0;
             font-weight: 600;
             border-bottom: 2px solid var(--border-color);
@@ -500,7 +741,7 @@
         }
 
         .headlines-header h2 {
-            color: var(--accent-green);
+            color: var(--secondary-color);
             font-size: 1.1rem;
             margin: 0;
         }
@@ -519,7 +760,7 @@
 
         .refresh-btn:hover {
             background: var(--bg-hover);
-            border-color: var(--accent-blue);
+            border-color: var(--primary-color);
         }
 
         .headlines-list {
@@ -542,7 +783,7 @@
         }
 
         .headline-card:hover {
-            border-color: var(--accent-blue);
+            border-color: var(--primary-color);
             background: var(--bg-hover);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
@@ -556,7 +797,7 @@
 
         .headline-source {
             display: inline-block;
-            background: var(--accent-blue);
+            background: var(--primary-color);
             color: white;
             padding: 4px 8px;
             border-radius: 4px;
@@ -567,7 +808,7 @@
         }
 
         .headline-source.newsapi {
-            background: var(--accent-blue);
+            background: var(--primary-color);
         }
 
         .headline-source.guardian {
@@ -575,7 +816,7 @@
         }
 
         .headline-source.arxiv {
-            background: var(--accent-green);
+            background: var(--secondary-color);
         }
 
         .headline-source.nytimes,
@@ -643,7 +884,7 @@
         }
 
         .progress-title {
-            color: var(--accent-blue);
+            color: var(--primary-color);
             font-size: 1.1rem;
             font-weight: 600;
         }
@@ -677,13 +918,13 @@
         }
 
         .progress-step.active {
-            border-color: var(--accent-blue);
-            background: rgba(0, 122, 204, 0.1);
+            border-color: var(--primary-color);
+            background: color-mix(in srgb, var(--primary-color) 10%, transparent);
         }
 
         .progress-step.completed {
-            border-color: var(--accent-green);
-            background: rgba(78, 201, 176, 0.1);
+            border-color: var(--secondary-color);
+            background: color-mix(in srgb, var(--secondary-color) 10%, transparent);
         }
 
         .progress-step-icon {
@@ -705,13 +946,13 @@
         }
 
         .progress-step-icon.active {
-            background: var(--accent-blue);
+            background: var(--primary-color);
             color: white;
             animation: pulse 2s infinite;
         }
 
         .progress-step-icon.completed {
-            background: var(--accent-green);
+            background: var(--secondary-color);
             color: white;
         }
 
@@ -910,12 +1151,12 @@
         }
 
         .reasoning-toggle:hover {
-            border-color: var(--accent-blue);
+            border-color: var(--primary-color);
             background: var(--bg-secondary);
         }
 
         .reasoning-toggle.active {
-            border-color: var(--accent-blue);
+            border-color: var(--primary-color);
             background: var(--bg-secondary);
         }
 
@@ -967,7 +1208,7 @@
 
         .reasoning-agent {
             font-weight: 600;
-            color: var(--accent-blue);
+            color: var(--primary-color);
             font-size: 0.85rem;
             margin-bottom: 4px;
             text-transform: capitalize;
@@ -1018,8 +1259,8 @@
         }
 
         .agent-box[data-status="processing"] {
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 10px rgba(0, 122, 204, 0.3);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px color-mix(in srgb, var(--primary-color) 30%, transparent);
         }
 
         .agent-box[data-status="completed"] {
@@ -1190,6 +1431,10 @@
                             <option value="dark">Dark</option>
                             <option value="light">Light</option>
                         </select>
+                        <button type="button" class="color-palette-btn" id="colorPaletteBtn" title="Customize Colors">
+                            <span class="color-preview"></span>
+                            <span>Colors</span>
+                        </button>
                         <button type="submit" class="ask-btn" id="askBtn">Ask AI</button>
                     </form>
                 </div>
@@ -1233,6 +1478,51 @@
         </div>
     </div>
 
+    <!-- Color Palette Modal -->
+    <div class="color-palette-modal" id="colorPaletteModal">
+        <div class="color-palette-panel">
+            <div class="color-palette-header">
+                <h3>Customize Color Palette</h3>
+                <button class="close-palette-btn" id="closePaletteBtn" aria-label="Close">×</button>
+            </div>
+            
+            <div class="color-picker-group">
+                <label class="color-picker-label" for="primaryColorPicker">Primary Color</label>
+                <div class="color-picker-wrapper">
+                    <input type="color" id="primaryColorPicker" class="color-picker-input" value="#007acc">
+                    <input type="text" id="primaryColorText" class="color-picker-text" value="#007acc" placeholder="#007acc">
+                </div>
+            </div>
+
+            <div class="color-picker-group">
+                <label class="color-picker-label" for="secondaryColorPicker">Secondary Color</label>
+                <div class="color-picker-wrapper">
+                    <input type="color" id="secondaryColorPicker" class="color-picker-input" value="#4ec9b0">
+                    <input type="text" id="secondaryColorText" class="color-picker-text" value="#4ec9b0" placeholder="#4ec9b0">
+                </div>
+            </div>
+
+            <div class="color-presets">
+                <h4>Color Presets</h4>
+                <div class="preset-grid">
+                    <div class="preset-color" data-primary="#007acc" data-secondary="#4ec9b0" style="background: linear-gradient(135deg, #007acc 50%, #4ec9b0 50%);" title="Default Blue & Teal"></div>
+                    <div class="preset-color" data-primary="#2563eb" data-secondary="#059669" style="background: linear-gradient(135deg, #2563eb 50%, #059669 50%);" title="Bright Blue & Green"></div>
+                    <div class="preset-color" data-primary="#7c3aed" data-secondary="#ec4899" style="background: linear-gradient(135deg, #7c3aed 50%, #ec4899 50%);" title="Purple & Pink"></div>
+                    <div class="preset-color" data-primary="#ea580c" data-secondary="#f59e0b" style="background: linear-gradient(135deg, #ea580c 50%, #f59e0b 50%);" title="Orange & Amber"></div>
+                    <div class="preset-color" data-primary="#dc2626" data-secondary="#f59e0b" style="background: linear-gradient(135deg, #dc2626 50%, #f59e0b 50%);" title="Red & Yellow"></div>
+                    <div class="preset-color" data-primary="#0891b2" data-secondary="#10b981" style="background: linear-gradient(135deg, #0891b2 50%, #10b981 50%);" title="Cyan & Emerald"></div>
+                    <div class="preset-color" data-primary="#6366f1" data-secondary="#8b5cf6" style="background: linear-gradient(135deg, #6366f1 50%, #8b5cf6 50%);" title="Indigo & Violet"></div>
+                    <div class="preset-color" data-primary="#14b8a6" data-secondary="#06b6d4" style="background: linear-gradient(135deg, #14b8a6 50%, #06b6d4 50%);" title="Teal & Cyan"></div>
+                </div>
+            </div>
+
+            <div class="palette-actions">
+                <button class="palette-btn palette-btn-secondary" id="resetColorsBtn">Reset to Default</button>
+                <button class="palette-btn palette-btn-primary" id="applyColorsBtn">Apply Colors</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let isLoading = false;
         let progressInterval = null;
@@ -1250,6 +1540,14 @@
             } catch (err) {
                 console.warn('Unable to persist theme preference:', err);
             }
+            
+            // Update colors if no custom colors are saved
+            const savedPrimary = localStorage.getItem('llm-news-primary-color');
+            if (!savedPrimary) {
+                const defaults = getDefaultColors(normalized);
+                applyCustomColors(defaults.primary, defaults.secondary);
+            }
+            updateColorPreview();
         }
 
         function initializeThemeSelector() {
@@ -1278,6 +1576,213 @@
         }
 
         // ================= END THEME FUNCTIONALITY =================
+
+        // ================= COLOR PALETTE FUNCTIONALITY =================
+        
+        // Get default colors based on current theme
+        function getDefaultColors(theme) {
+            const defaults = {
+                dark: { primary: '#007acc', secondary: '#4ec9b0' },
+                light: { primary: '#2563eb', secondary: '#059669' }
+            };
+            return defaults[theme] || defaults.dark;
+        }
+
+        // Apply custom colors
+        function applyCustomColors(primaryColor, secondaryColor) {
+            const root = document.documentElement;
+            root.style.setProperty('--primary-color', primaryColor);
+            root.style.setProperty('--secondary-color', secondaryColor);
+            
+            // Update accent colors to use primary/secondary
+            root.style.setProperty('--accent-blue', primaryColor);
+            root.style.setProperty('--accent-green', secondaryColor);
+            
+            // Save to localStorage
+            try {
+                localStorage.setItem('llm-news-primary-color', primaryColor);
+                localStorage.setItem('llm-news-secondary-color', secondaryColor);
+            } catch (err) {
+                console.warn('Unable to save color preferences:', err);
+            }
+            
+            // Update color preview
+            updateColorPreview();
+        }
+
+        // Update color preview in button
+        function updateColorPreview() {
+            const preview = document.querySelector('.color-preview');
+            if (preview) {
+                const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+                const secondary = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim();
+                preview.style.background = `linear-gradient(135deg, ${primary} 50%, ${secondary} 50%)`;
+            }
+        }
+
+        // Load saved colors
+        function loadSavedColors() {
+            try {
+                const savedPrimary = localStorage.getItem('llm-news-primary-color');
+                const savedSecondary = localStorage.getItem('llm-news-secondary-color');
+                
+                if (savedPrimary && savedSecondary) {
+                    applyCustomColors(savedPrimary, savedSecondary);
+                    return { primary: savedPrimary, secondary: savedSecondary };
+                }
+            } catch (err) {
+                console.warn('Unable to load saved colors:', err);
+            }
+            
+            // Use defaults based on current theme
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const defaults = getDefaultColors(currentTheme);
+            applyCustomColors(defaults.primary, defaults.secondary);
+            return defaults;
+        }
+
+        // Initialize color palette modal
+        function initializeColorPalette() {
+            const modal = document.getElementById('colorPaletteModal');
+            const openBtn = document.getElementById('colorPaletteBtn');
+            const closeBtn = document.getElementById('closePaletteBtn');
+            const primaryPicker = document.getElementById('primaryColorPicker');
+            const secondaryPicker = document.getElementById('secondaryColorPicker');
+            const primaryText = document.getElementById('primaryColorText');
+            const secondaryText = document.getElementById('secondaryColorText');
+            const applyBtn = document.getElementById('applyColorsBtn');
+            const resetBtn = document.getElementById('resetColorsBtn');
+            const presetColors = document.querySelectorAll('.preset-color');
+
+            // Load saved colors into pickers
+            const savedColors = loadSavedColors();
+            if (primaryPicker && primaryText) {
+                primaryPicker.value = savedColors.primary;
+                primaryText.value = savedColors.primary;
+            }
+            if (secondaryPicker && secondaryText) {
+                secondaryPicker.value = savedColors.secondary;
+                secondaryText.value = savedColors.secondary;
+            }
+
+            // Open modal
+            if (openBtn) {
+                openBtn.addEventListener('click', () => {
+                    if (modal) modal.classList.add('active');
+                });
+            }
+
+            // Close modal
+            function closeModal() {
+                if (modal) modal.classList.remove('active');
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeModal);
+            }
+
+            // Close on backdrop click
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal();
+                });
+            }
+
+            // Sync color picker with text input (primary)
+            if (primaryPicker && primaryText) {
+                primaryPicker.addEventListener('input', (e) => {
+                    primaryText.value = e.target.value;
+                });
+                primaryText.addEventListener('input', (e) => {
+                    const value = e.target.value.trim();
+                    if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                        primaryPicker.value = value;
+                    }
+                });
+            }
+
+            // Sync color picker with text input (secondary)
+            if (secondaryPicker && secondaryText) {
+                secondaryPicker.addEventListener('input', (e) => {
+                    secondaryText.value = e.target.value;
+                });
+                secondaryText.addEventListener('input', (e) => {
+                    const value = e.target.value.trim();
+                    if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                        secondaryPicker.value = value;
+                    }
+                });
+            }
+
+            // Apply colors
+            if (applyBtn) {
+                applyBtn.addEventListener('click', () => {
+                    const primary = primaryPicker?.value || savedColors.primary;
+                    const secondary = secondaryPicker?.value || savedColors.secondary;
+                    applyCustomColors(primary, secondary);
+                    closeModal();
+                });
+            }
+
+            // Reset to defaults
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                    const defaults = getDefaultColors(currentTheme);
+                    
+                    if (primaryPicker) primaryPicker.value = defaults.primary;
+                    if (primaryText) primaryText.value = defaults.primary;
+                    if (secondaryPicker) secondaryPicker.value = defaults.secondary;
+                    if (secondaryText) secondaryText.value = defaults.secondary;
+                    
+                    applyCustomColors(defaults.primary, defaults.secondary);
+                    
+                    // Remove saved colors
+                    try {
+                        localStorage.removeItem('llm-news-primary-color');
+                        localStorage.removeItem('llm-news-secondary-color');
+                    } catch (err) {
+                        console.warn('Unable to clear color preferences:', err);
+                    }
+                });
+            }
+
+            // Preset colors
+            presetColors.forEach(preset => {
+                preset.addEventListener('click', () => {
+                    const primary = preset.getAttribute('data-primary');
+                    const secondary = preset.getAttribute('data-secondary');
+                    
+                    if (primary && secondary) {
+                        if (primaryPicker) primaryPicker.value = primary;
+                        if (primaryText) primaryText.value = primary;
+                        if (secondaryPicker) secondaryPicker.value = secondary;
+                        if (secondaryText) secondaryText.value = secondary;
+                        
+                        // Visual feedback
+                        presetColors.forEach(p => p.classList.remove('active'));
+                        preset.classList.add('active');
+                    }
+                });
+            });
+
+            // Update preview when theme changes
+            const themeSelect = document.getElementById('themeSelect');
+            if (themeSelect) {
+                themeSelect.addEventListener('change', () => {
+                    // Only update if no custom colors are saved
+                    const savedPrimary = localStorage.getItem('llm-news-primary-color');
+                    if (!savedPrimary) {
+                        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                        const defaults = getDefaultColors(currentTheme);
+                        applyCustomColors(defaults.primary, defaults.secondary);
+                    }
+                    updateColorPreview();
+                });
+            }
+        }
+
+        // ================= END COLOR PALETTE FUNCTIONALITY =================
         
         // Define the expected multi-agent execution steps
         const progressSteps = [
@@ -2141,6 +2646,11 @@
 
         // Initialize
         initializeThemeSelector();
+        // Load colors after theme is set
+        setTimeout(() => {
+            loadSavedColors();
+            initializeColorPalette();
+        }, 100);
         loadHeadlines();
         loadServers();
         

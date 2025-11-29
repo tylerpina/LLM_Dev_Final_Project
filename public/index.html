@@ -125,8 +125,81 @@
             overflow-y: auto;
             overflow-x: hidden;
             padding: 0;
+            min-width: 0; /* Allow flex shrinking */
         }
         
+        .history-column {
+            flex: 1;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            overflow: hidden;
+            min-width: 300px;
+            max-width: 400px;
+            display: none; /* Hidden by default */
+        }
+
+        .history-column.visible {
+            display: flex;
+        }
+
+        .history-toggle-btn {
+            position: fixed;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            padding: 12px 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+        }
+
+        .history-toggle-btn:hover {
+            background: color-mix(in srgb, var(--primary-color) 85%, black);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .history-toggle-btn.active {
+            left: 312px; /* Adjust based on sidebar width */
+        }
+
+        @media (max-width: 768px) {
+            .history-toggle-btn {
+                position: relative;
+                left: auto;
+                top: auto;
+                transform: none;
+                margin: 8px;
+                border-radius: 8px;
+            }
+
+            .history-toggle-btn.active {
+                left: auto;
+            }
+
+            .history-column {
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 80%;
+                max-width: 400px;
+                z-index: 200;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+            }
+        }
+
         .headlines-column {
             flex: 1;
             display: flex;
@@ -1337,6 +1410,281 @@
             }
         }
 
+        /* Query History Styles */
+        .history-section {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .history-header h2 {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .history-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .history-tab {
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .history-tab:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary-color);
+        }
+
+        .history-tab.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .history-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .history-item:hover {
+            border-color: var(--primary-color);
+            background: var(--bg-hover);
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .history-query {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            flex: 1;
+            margin-right: 8px;
+            word-break: break-word;
+        }
+
+        .history-item-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .history-action-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .history-action-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .history-item-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .history-item-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .saved-search-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .saved-search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .saved-search-name {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .saved-search-query {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+
+        .saved-search-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .save-search-btn {
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .save-search-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary-color);
+        }
+
+        .save-search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .save-search-modal.active {
+            display: flex;
+        }
+
+        .save-search-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .save-search-panel h3 {
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .save-search-panel input {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .save-search-panel input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        .save-search-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .save-search-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .save-search-actions .cancel-btn {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .save-search-actions .save-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .save-search-actions .save-btn:hover {
+            background: color-mix(in srgb, var(--primary-color) 85%, black);
+        }
+
         /* Responsive design */
         @media (max-width: 768px) {
             .main-layout {
@@ -1357,6 +1705,7 @@
                 margin: 8px;
             }
             
+            .history-column,
             .headlines-column {
                 max-height: 40vh;
             }
@@ -1408,9 +1757,34 @@
             <p>Intelligent analysis across news sources and academic research</p>
         </div>
 
-        <!-- Two-column layout -->
+        <!-- History Toggle Button -->
+        <button class="history-toggle-btn" id="historyToggleBtn" title="Show History">
+            📜
+        </button>
+
+        <!-- Three-column layout -->
         <div class="main-layout">
-            <!-- Left column: Main content (4/5 width) -->
+            <!-- Left column: Query History (1/6 width) -->
+            <div class="history-column" id="historyColumn">
+                <div class="history-section">
+                    <div class="history-header">
+                        <h2>History</h2>
+                        <button class="history-action-btn" id="clearHistoryBtn" title="Clear History">🗑️</button>
+                    </div>
+                    <div class="history-tabs">
+                        <button class="history-tab active" data-tab="history">Recent</button>
+                        <button class="history-tab" data-tab="saved">Saved</button>
+                    </div>
+                    <div class="history-content" id="historyContent">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Loading history...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle column: Main content (4/6 width) -->
             <div class="content-column">
                 <div class="query-section">
                     <form class="query-form" id="queryForm">
@@ -1519,6 +1893,18 @@
             <div class="palette-actions">
                 <button class="palette-btn palette-btn-secondary" id="resetColorsBtn">Reset to Default</button>
                 <button class="palette-btn palette-btn-primary" id="applyColorsBtn">Apply Colors</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Search Modal -->
+    <div class="save-search-modal" id="saveSearchModal">
+        <div class="save-search-panel">
+            <h3>Save Search</h3>
+            <input type="text" id="saveSearchNameInput" placeholder="Enter a name for this search..." autofocus>
+            <div class="save-search-actions">
+                <button class="cancel-btn" id="cancelSaveSearchBtn">Cancel</button>
+                <button class="save-btn" id="confirmSaveSearchBtn">Save</button>
             </div>
         </div>
     </div>
@@ -2156,6 +2542,7 @@
                     body: JSON.stringify({ 
                         query,
                         style: selectedStyle,
+                        userId: USER_ID,
                         timestamp: Date.now() // Add timestamp to help with debugging
                     })
                 });
@@ -2176,6 +2563,10 @@
 
                 if (response.ok) {
                     displayResponse(data, clearProgressDisplay); // Clear progress after showing response
+                    // Refresh query history after successful query
+                    if (currentTab === 'history') {
+                        loadQueryHistory();
+                    }
                 } else {
                     displayError(data.error || 'Something went wrong');
                     clearProgressDisplay();
@@ -2644,6 +3035,413 @@
             }
         }
 
+        // ================= QUERY HISTORY & SAVED SEARCHES FUNCTIONALITY =================
+        
+        const USER_ID = localStorage.getItem('llm-news-user-id') || `user-${Date.now()}`;
+        if (!localStorage.getItem('llm-news-user-id')) {
+            localStorage.setItem('llm-news-user-id', USER_ID);
+        }
+
+        let currentTab = 'history';
+        let pendingQueryToSave = null;
+
+        // Load query history
+        async function loadQueryHistory() {
+            const content = document.getElementById('historyContent');
+            if (!content) return;
+
+            try {
+                const response = await fetch(`/queries/history?userId=${USER_ID}&limit=50`);
+                const data = await response.json();
+
+                if (response.ok && data.history) {
+                    displayQueryHistory(data.history);
+                } else {
+                    content.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><p>No query history yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Failed to load query history:', error);
+                content.innerHTML = '<div class="empty-state"><p style="color: var(--error);">Failed to load history</p></div>';
+            }
+        }
+
+        // Display query history
+        function displayQueryHistory(history) {
+            const content = document.getElementById('historyContent');
+            if (!content) return;
+
+            if (history.length === 0) {
+                content.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><p>No query history yet</p><p style="font-size: 0.85rem; margin-top: 8px;">Your queries will appear here</p></div>';
+                return;
+            }
+
+            const html = `
+                <div class="history-list">
+                    ${history.map(item => {
+                        const date = new Date(item.timestamp);
+                        const timeAgo = getTimeAgo(date);
+                        const agents = item.agentsExecuted ? JSON.parse(item.agentsExecuted).length : 0;
+                        
+                        return `
+                            <div class="history-item" onclick="rerunQuery('${item.query.replace(/'/g, "\\'")}', '${item.style || ''}')">
+                                <div class="history-item-header">
+                                    <div class="history-query" title="${item.query}">${item.query.length > 60 ? item.query.substring(0, 60) + '...' : item.query}</div>
+                                    <div class="history-item-actions" onclick="event.stopPropagation()">
+                                        <button class="history-action-btn" onclick="saveQueryAsSearch(${item.id}, '${item.query.replace(/'/g, "\\'")}', '${item.style || ''}')" title="Save as search">⭐</button>
+                                        <button class="history-action-btn" onclick="deleteQueryHistory(${item.id}, event)" title="Delete">🗑️</button>
+                                    </div>
+                                </div>
+                                <div class="history-item-meta">
+                                    <span>🕒 ${timeAgo}</span>
+                                    ${item.executionTimeMs ? `<span>⏱ ${Math.round(item.executionTimeMs / 1000)}s</span>` : ''}
+                                    ${agents > 0 ? `<span>🤖 ${agents} agents</span>` : ''}
+                                    ${item.sourcesCount ? `<span>📰 ${item.sourcesCount} sources</span>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+            content.innerHTML = html;
+        }
+
+        // Load saved searches
+        async function loadSavedSearches() {
+            const content = document.getElementById('historyContent');
+            if (!content) return;
+
+            try {
+                const response = await fetch(`/queries/saved?userId=${USER_ID}`);
+                const data = await response.json();
+
+                if (response.ok && data.searches) {
+                    displaySavedSearches(data.searches);
+                } else {
+                    content.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⭐</div><p>No saved searches yet</p><p style="font-size: 0.85rem; margin-top: 8px;">Save queries from history to access them quickly</p></div>';
+                }
+            } catch (error) {
+                console.error('Failed to load saved searches:', error);
+                content.innerHTML = '<div class="empty-state"><p style="color: var(--error);">Failed to load saved searches</p></div>';
+            }
+        }
+
+        // Display saved searches
+        function displaySavedSearches(searches) {
+            const content = document.getElementById('historyContent');
+            if (!content) return;
+
+            if (searches.length === 0) {
+                content.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⭐</div><p>No saved searches yet</p><p style="font-size: 0.85rem; margin-top: 8px;">Save queries from history to access them quickly</p></div>';
+                return;
+            }
+
+            const html = `
+                <div class="history-list">
+                    ${searches.map(search => {
+                        const created = new Date(search.createdAt);
+                        const lastUsed = search.lastUsed ? new Date(search.lastUsed) : null;
+                        
+                        return `
+                            <div class="saved-search-item">
+                                <div class="saved-search-header">
+                                    <div class="saved-search-name">${search.name}</div>
+                                    <div class="history-item-actions">
+                                        <button class="history-action-btn" onclick="editSavedSearch(${search.id}, '${search.name.replace(/'/g, "\\'")}', '${search.query.replace(/'/g, "\\'")}', '${search.style || ''}')" title="Edit">✏️</button>
+                                        <button class="history-action-btn" onclick="deleteSavedSearch(${search.id}, event)" title="Delete">🗑️</button>
+                                    </div>
+                                </div>
+                                <div class="saved-search-query" onclick="rerunQuery('${search.query.replace(/'/g, "\\'")}', '${search.style || ''}')" style="cursor: pointer;">${search.query}</div>
+                                <div class="saved-search-meta">
+                                    <span>Created: ${created.toLocaleDateString()}</span>
+                                    ${lastUsed ? `<span>Used ${search.useCount} times</span>` : '<span>Never used</span>'}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+            content.innerHTML = html;
+        }
+
+        // Switch between history and saved tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            const tabs = document.querySelectorAll('.history-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
+
+            if (tab === 'history') {
+                loadQueryHistory();
+            } else {
+                loadSavedSearches();
+            }
+        }
+
+        // Re-run a query from history
+        async function rerunQuery(query, style) {
+            const queryInput = document.getElementById('queryInput');
+            const styleSelect = document.getElementById('styleSelect');
+            
+            if (queryInput) {
+                queryInput.value = query;
+            }
+            if (styleSelect && style) {
+                styleSelect.value = style;
+            }
+            
+            // Trigger form submission
+            if (queryInput) {
+                queryInput.form?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }
+        }
+
+        // Delete query from history
+        async function deleteQueryHistory(id, event) {
+            if (event) event.stopPropagation();
+            
+            if (!confirm('Delete this query from history?')) return;
+
+            try {
+                const response = await fetch(`/queries/history/${id}?userId=${USER_ID}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadQueryHistory();
+                } else {
+                    alert('Failed to delete query');
+                }
+            } catch (error) {
+                console.error('Failed to delete query:', error);
+                alert('Failed to delete query');
+            }
+        }
+
+        // Save query as search
+        function saveQueryAsSearch(historyId, query, style) {
+            pendingQueryToSave = { query, style };
+            const modal = document.getElementById('saveSearchModal');
+            const nameInput = document.getElementById('saveSearchNameInput');
+            
+            if (modal && nameInput) {
+                modal.classList.add('active');
+                nameInput.value = query.substring(0, 50);
+                nameInput.focus();
+            }
+        }
+
+        // Save search from modal
+        async function confirmSaveSearch() {
+            const nameInput = document.getElementById('saveSearchNameInput');
+            const modal = document.getElementById('saveSearchModal');
+            
+            if (!nameInput || !pendingQueryToSave) return;
+
+            const name = nameInput.value.trim();
+            if (!name) {
+                alert('Please enter a name for this search');
+                return;
+            }
+
+            try {
+                const response = await fetch('/queries/saved', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: USER_ID,
+                        name,
+                        query: pendingQueryToSave.query,
+                        style: pendingQueryToSave.style
+                    })
+                });
+
+                if (response.ok) {
+                    modal?.classList.remove('active');
+                    nameInput.value = '';
+                    pendingQueryToSave = null;
+                    if (currentTab === 'saved') {
+                        loadSavedSearches();
+                    }
+                } else {
+                    alert('Failed to save search');
+                }
+            } catch (error) {
+                console.error('Failed to save search:', error);
+                alert('Failed to save search');
+            }
+        }
+
+        // Delete saved search
+        async function deleteSavedSearch(id, event) {
+            if (event) event.stopPropagation();
+            
+            if (!confirm('Delete this saved search?')) return;
+
+            try {
+                const response = await fetch(`/queries/saved/${id}?userId=${USER_ID}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadSavedSearches();
+                } else {
+                    alert('Failed to delete saved search');
+                }
+            } catch (error) {
+                console.error('Failed to delete saved search:', error);
+                alert('Failed to delete saved search');
+            }
+        }
+
+        // Edit saved search
+        function editSavedSearch(id, currentName, currentQuery, currentStyle) {
+            const newName = prompt('Enter new name:', currentName);
+            if (!newName || newName.trim() === currentName) return;
+
+            fetch(`/queries/saved/${id}?userId=${USER_ID}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: USER_ID,
+                    name: newName.trim()
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    loadSavedSearches();
+                } else {
+                    alert('Failed to update saved search');
+                }
+            })
+            .catch(err => {
+                console.error('Failed to update saved search:', err);
+                alert('Failed to update saved search');
+            });
+        }
+
+        // Clear all history
+        async function clearAllHistory() {
+            if (!confirm('Clear all query history? This cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`/queries/history?userId=${USER_ID}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadQueryHistory();
+                } else {
+                    alert('Failed to clear history');
+                }
+            } catch (error) {
+                console.error('Failed to clear history:', error);
+                alert('Failed to clear history');
+            }
+        }
+
+        // Get time ago string
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diff = now - date;
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+
+            if (seconds < 60) return 'just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            if (days < 7) return `${days}d ago`;
+            return date.toLocaleDateString();
+        }
+
+        // Toggle history sidebar
+        function toggleHistorySidebar() {
+            const historyColumn = document.getElementById('historyColumn');
+            const toggleBtn = document.getElementById('historyToggleBtn');
+            
+            if (historyColumn && toggleBtn) {
+                const isVisible = historyColumn.classList.contains('visible');
+                
+                if (isVisible) {
+                    historyColumn.classList.remove('visible');
+                    toggleBtn.classList.remove('active');
+                    toggleBtn.title = 'Show History';
+                    toggleBtn.textContent = '📜';
+                } else {
+                    historyColumn.classList.add('visible');
+                    toggleBtn.classList.add('active');
+                    toggleBtn.title = 'Hide History';
+                    toggleBtn.textContent = '✕';
+                }
+            }
+        }
+
+        // Initialize history functionality
+        function initializeHistory() {
+            // History toggle button
+            const toggleBtn = document.getElementById('historyToggleBtn');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', toggleHistorySidebar);
+            }
+
+            // Tab switching
+            document.querySelectorAll('.history-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchTab(tab.getAttribute('data-tab'));
+                });
+            });
+
+            // Clear history button
+            const clearBtn = document.getElementById('clearHistoryBtn');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', clearAllHistory);
+            }
+
+            // Save search modal
+            const modal = document.getElementById('saveSearchModal');
+            const cancelBtn = document.getElementById('cancelSaveSearchBtn');
+            const confirmBtn = document.getElementById('confirmSaveSearchBtn');
+            const nameInput = document.getElementById('saveSearchNameInput');
+
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', () => {
+                    if (modal) modal.classList.remove('active');
+                    if (nameInput) nameInput.value = '';
+                    pendingQueryToSave = null;
+                });
+            }
+
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', confirmSaveSearch);
+            }
+
+            if (nameInput) {
+                nameInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        confirmSaveSearch();
+                    }
+                });
+            }
+
+            // Close modal on backdrop click
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                        if (nameInput) nameInput.value = '';
+                        pendingQueryToSave = null;
+                    }
+                });
+            }
+
+            // Load initial history
+            loadQueryHistory();
+        }
+
+        // ================= END QUERY HISTORY & SAVED SEARCHES FUNCTIONALITY =================
+
         // Initialize
         initializeThemeSelector();
         // Load colors after theme is set
@@ -2651,6 +3449,7 @@
             loadSavedColors();
             initializeColorPalette();
         }, 100);
+        initializeHistory();
         loadHeadlines();
         loadServers();
         

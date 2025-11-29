@@ -13,6 +13,28 @@ export interface Headline {
   category: string;
 }
 
+export interface QueryHistory {
+  id: number;
+  userId: string;
+  query: string;
+  style?: string | null;
+  timestamp: string;
+  executionTimeMs?: number | null;
+  agentsExecuted?: string | null;
+  sourcesCount?: number | null;
+}
+
+export interface SavedSearch {
+  id: number;
+  userId: string;
+  name: string;
+  query: string;
+  style?: string;
+  createdAt: string;
+  lastUsed?: string;
+  useCount: number;
+}
+
 export class DatabaseService {
   private db: Database.Database;
 
@@ -44,10 +66,40 @@ export class DatabaseService {
       );
     `);
 
-    // Create index for faster queries
+    // Create query history table
+    this.db.exec(`
+      CREATE TABLE IF NOT EXISTS query_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        userId TEXT NOT NULL,
+        query TEXT NOT NULL,
+        style TEXT,
+        timestamp TEXT NOT NULL,
+        executionTimeMs INTEGER,
+        agentsExecuted TEXT,
+        sourcesCount INTEGER
+      );
+    `);
+
+    // Create saved searches table
+    this.db.exec(`
+      CREATE TABLE IF NOT EXISTS saved_searches (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        userId TEXT NOT NULL,
+        name TEXT NOT NULL,
+        query TEXT NOT NULL,
+        style TEXT,
+        createdAt TEXT NOT NULL,
+        lastUsed TEXT,
+        useCount INTEGER DEFAULT 0
+      );
+    `);
+
+    // Create indexes for faster queries
     this.db.exec(`
       CREATE INDEX IF NOT EXISTS idx_fetchedAt ON headlines(fetchedAt DESC);
       CREATE INDEX IF NOT EXISTS idx_source ON headlines(source);
+      CREATE INDEX IF NOT EXISTS idx_query_history_user_timestamp ON query_history(userId, timestamp DESC);
+      CREATE INDEX IF NOT EXISTS idx_saved_searches_user ON saved_searches(userId);
     `);
   }
 
@@ -195,6 +247,243 @@ export class DatabaseService {
   close(): void {
     this.db.close();
     logger.info('Database connection closed');
+  }
+
+  // ================= QUERY HISTORY METHODS =================
+
+  /**
+   * Save a query to history
+   */
+  saveQueryHistory(history: Omit<QueryHistory, 'id'>): number {
+    const stmt = this.db.prepare(`
+      INSERT INTO query_history (userId, query, style, timestamp, executionTimeMs, agentsExecuted, sourcesCount)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    const result = stmt.run(
+      history.userId,
+      history.query,
+      history.style || null,
+      history.timestamp,
+      history.executionTimeMs || null,
+      history.agentsExecuted || null,
+      history.sourcesCount || null
+    );
+
+    return result.lastInsertRowid as number;
+  }
+
+  /**
+   * Get query history for a user
+   */
+  getQueryHistory(userId: string, limit: number = 50): QueryHistory[] {
+    const stmt = this.db.prepare(`
+      SELECT * FROM query_history
+      WHERE userId = ?
+      ORDER BY timestamp DESC
+      LIMIT ?
+    `);
+
+    return stmt.all(userId, limit) as QueryHistory[];
+  }
+
+  /**
+   * Search query history
+   */
+  searchQueryHistory(userId: string, searchTerm: string, limit: number = 20): QueryHistory[] {
+    const stmt = this.db.prepare(`
+      SELECT * FROM query_history
+      WHERE userId = ? AND query LIKE ?
+      ORDER BY timestamp DESC
+      LIMIT ?
+    `);
+
+    const term = `%${searchTerm}%`;
+    return stmt.all(userId, term, limit) as QueryHistory[];
+  }
+
+  /**
+   * Delete a query from history
+   */
+  deleteQueryHistory(id: number, userId: string): boolean {
+    const stmt = this.db.prepare(`
+      DELETE FROM query_history
+      WHERE id = ? AND userId = ?
+    `);
+
+    const result = stmt.run(id, userId);
+    return result.changes > 0;
+  }
+
+  /**
+   * Clear all query history for a user
+   */
+  clearQueryHistory(userId: string): number {
+    const stmt = this.db.prepare(`
+      DELETE FROM query_history
+      WHERE userId = ?
+    `);
+
+    const result = stmt.run(userId);
+    return result.changes;
+  }
+
+  /**
+   * Get query history stats
+   */
+  getQueryHistoryStats(userId: string): {
+    total: number;
+    today: number;
+    thisWeek: number;
+    averageExecutionTime: number;
+  } {
+    const total = this.db.prepare(`
+      SELECT COUNT(*) as count FROM query_history WHERE userId = ?
+    `).get(userId) as { count: number };
+
+    const today = this.db.prepare(`
+      SELECT COUNT(*) as count FROM query_history
+      WHERE userId = ? AND date(timestamp) = date('now')
+    `).get(userId) as { count: number };
+
+    const thisWeek = this.db.prepare(`
+      SELECT COUNT(*) as count FROM query_history
+      WHERE userId = ? AND datetime(timestamp) >= datetime('now', '-7 days')
+    `).get(userId) as { count: number };
+
+    const avgTime = this.db.prepare(`
+      SELECT AVG(executionTimeMs) as avg FROM query_history
+      WHERE userId = ? AND executionTimeMs IS NOT NULL
+    `).get(userId) as { avg: number | null };
+
+    return {
+      total: total.count,
+      today: today.count,
+      thisWeek: thisWeek.count,
+      averageExecutionTime: avgTime.avg ? Math.round(avgTime.avg) : 0,
+    };
+  }
+
+  // ================= SAVED SEARCHES METHODS =================
+
+  /**
+   * Save a search
+   */
+  saveSearch(search: Omit<SavedSearch, 'id' | 'useCount'>): number {
+    const stmt = this.db.prepare(`
+      INSERT INTO saved_searches (userId, name, query, style, createdAt, lastUsed, useCount)
+      VALUES (?, ?, ?, ?, ?, ?, 0)
+    `);
+
+    const result = stmt.run(
+      search.userId,
+      search.name,
+      search.query,
+      search.style || null,
+      search.createdAt,
+      search.lastUsed || null
+    );
+
+    return result.lastInsertRowid as number;
+  }
+
+  /**
+   * Get all saved searches for a user
+   */
+  getSavedSearches(userId: string): SavedSearch[] {
+    const stmt = this.db.prepare(`
+      SELECT * FROM saved_searches
+      WHERE userId = ?
+      ORDER BY lastUsed DESC, createdAt DESC
+    `);
+
+    return stmt.all(userId) as SavedSearch[];
+  }
+
+  /**
+   * Get a saved search by ID
+   */
+  getSavedSearch(id: number, userId: string): SavedSearch | null {
+    const stmt = this.db.prepare(`
+      SELECT * FROM saved_searches
+      WHERE id = ? AND userId = ?
+    `);
+
+    const result = stmt.get(id, userId) as SavedSearch | undefined;
+    return result || null;
+  }
+
+  /**
+   * Update a saved search
+   */
+  updateSavedSearch(id: number, userId: string, updates: Partial<Pick<SavedSearch, 'name' | 'query' | 'style'>>): boolean {
+    const fields: string[] = [];
+    const values: any[] = [];
+
+    if (updates.name !== undefined) {
+      fields.push('name = ?');
+      values.push(updates.name);
+    }
+    if (updates.query !== undefined) {
+      fields.push('query = ?');
+      values.push(updates.query);
+    }
+    if (updates.style !== undefined) {
+      fields.push('style = ?');
+      values.push(updates.style);
+    }
+
+    if (fields.length === 0) return false;
+
+    values.push(id, userId);
+    const stmt = this.db.prepare(`
+      UPDATE saved_searches
+      SET ${fields.join(', ')}
+      WHERE id = ? AND userId = ?
+    `);
+
+    const result = stmt.run(...values);
+    return result.changes > 0;
+  }
+
+  /**
+   * Increment use count and update last used
+   */
+  useSavedSearch(id: number, userId: string): boolean {
+    const stmt = this.db.prepare(`
+      UPDATE saved_searches
+      SET useCount = useCount + 1, lastUsed = ?
+      WHERE id = ? AND userId = ?
+    `);
+
+    const result = stmt.run(new Date().toISOString(), id, userId);
+    return result.changes > 0;
+  }
+
+  /**
+   * Delete a saved search
+   */
+  deleteSavedSearch(id: number, userId: string): boolean {
+    const stmt = this.db.prepare(`
+      DELETE FROM saved_searches
+      WHERE id = ? AND userId = ?
+    `);
+
+    const result = stmt.run(id, userId);
+    return result.changes > 0;
+  }
+
+  /**
+   * Clean old query history (keep last N days)
+   */
+  cleanOldQueryHistory(daysToKeep: number = 30): number {
+    const stmt = this.db.prepare(`
+      DELETE FROM query_history
+      WHERE datetime(timestamp) < datetime('now', '-' || ? || ' days')
+    `);
+
+    const result = stmt.run(daysToKeep);
+    return result.changes;
   }
 }
 

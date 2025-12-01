@@ -44,11 +44,59 @@ export class DatabaseService {
       );
     `);
 
+    // Create users table
+    this.db.exec(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT NOT NULL UNIQUE,
+        name TEXT,
+        preferences TEXT,
+        createdAt TEXT DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     // Create index for faster queries
     this.db.exec(`
       CREATE INDEX IF NOT EXISTS idx_fetchedAt ON headlines(fetchedAt DESC);
       CREATE INDEX IF NOT EXISTS idx_source ON headlines(source);
     `);
+  }
+
+  /**
+   * Add a new user
+   */
+  addUser(email: string, name?: string, preferences?: string): number {
+    try {
+      const stmt = this.db.prepare(`
+        INSERT INTO users (email, name, preferences)
+        VALUES (?, ?, ?)
+      `);
+      const result = stmt.run(email, name, preferences);
+      return result.lastInsertRowid as number;
+    } catch (error: any) {
+      if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+        logger.warn(`User with email ${email} already exists`);
+        const existing = this.getUserByEmail(email);
+        return existing ? existing.id : -1;
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Get user by email
+   */
+  getUserByEmail(email: string): any {
+    const stmt = this.db.prepare('SELECT * FROM users WHERE email = ?');
+    return stmt.get(email);
+  }
+
+  /**
+   * Get all users
+   */
+  getAllUsers(): any[] {
+    const stmt = this.db.prepare('SELECT * FROM users');
+    return stmt.all();
   }
 
   /**

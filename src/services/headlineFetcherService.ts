@@ -2,16 +2,27 @@ import * as cron from 'node-cron';
 import { DatabaseService, Headline } from './databaseService';
 import { UniversalMcpServer } from '../mcp/universalMcp';
 import { logger } from '../utils/logger';
+import { EmbeddingService } from './embeddingService';
+import { VectorStore, VectorDocument } from './vectorStore';
 
 export class HeadlineFetcherService {
   private db: DatabaseService;
   private mcpServer: UniversalMcpServer;
   private cronJob?: ReturnType<typeof cron.schedule>;
   private isFetching: boolean = false;
+  private embeddingService?: EmbeddingService;
+  private vectorStore?: VectorStore;
 
-  constructor(db: DatabaseService, mcpServer: UniversalMcpServer) {
+  constructor(
+    db: DatabaseService, 
+    mcpServer: UniversalMcpServer,
+    embeddingService?: EmbeddingService,
+    vectorStore?: VectorStore
+  ) {
     this.db = db;
     this.mcpServer = mcpServer;
+    this.embeddingService = embeddingService;
+    this.vectorStore = vectorStore;
   }
 
   /**
@@ -96,6 +107,29 @@ export class HeadlineFetcherService {
           count: insertedCount,
           duration: Date.now() - startTime 
         });
+
+        // Generate embeddings and add to vector store
+        if (this.embeddingService && this.vectorStore) {
+          try {
+            // Limit to a reasonable number to avoid API rate limits/costs
+            const headlinesToEmbed = headlines.slice(0, 20); 
+            const texts = headlinesToEmbed.map(h => `${h.title} ${h.description || ''}`);
+            
+            const embeddings = await this.embeddingService.generateEmbeddings(texts);
+            
+            const vectorDocs: VectorDocument[] = embeddings.map((emb, i) => ({
+              id: headlinesToEmbed[i].url || `headline-${Date.now()}-${i}`,
+              embedding: emb.embedding,
+              metadata: { ...headlinesToEmbed[i] },
+              document: texts[i]
+            }));
+
+            this.vectorStore.add(vectorDocs);
+            logger.info('Added headlines to vector store', { count: vectorDocs.length });
+          } catch (err) {
+            logger.error('Failed to generate embeddings for headlines', err);
+          }
+        }
       } else {
         logger.warn('No headlines fetched from any source');
       }
@@ -198,4 +232,3 @@ export class HeadlineFetcherService {
     return this.db.getRecentHeadlines(1).length;
   }
 }
-

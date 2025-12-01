@@ -9,6 +9,8 @@ import { DatabaseService } from "./services/databaseService";
 import { HeadlineFetcherService } from "./services/headlineFetcherService";
 import { MultiAgentOrchestrator } from "./agents/orchestrator";
 import { agentMonitor } from "./agents/monitor";
+import { NotificationService } from "./services/notificationService";
+import { DailyRoundupService } from "./services/dailyRoundupService";
 import logger from "./utils/logger";
 
 dotenv.config();
@@ -79,6 +81,20 @@ if (process.env.OPENAI_API_KEY) {
   logger.info("Multi-agent orchestrator initialized", {
     enabled: USE_MULTI_AGENT,
   });
+}
+
+// Initialize notification services
+const notificationService = new NotificationService();
+let dailyRoundupService: DailyRoundupService | null = null;
+
+if (multiAgentOrchestrator) {
+  dailyRoundupService = new DailyRoundupService(
+    multiAgentOrchestrator,
+    notificationService
+  );
+  // Start scheduler (9 AM daily default)
+  dailyRoundupService.startScheduler();
+  logger.info("Daily Roundup Service initialized");
 }
 
 // Initialize headline fetcher
@@ -289,6 +305,34 @@ app.get("/agents/costs", (_req, res) => {
     res.status(500).json({ error: err?.message || "Unknown error" });
   }
 });
+
+// ================= NOTIFICATION ENDPOINTS =================
+
+app.post("/notifications/roundup", async (req, res) => {
+  try {
+    if (!dailyRoundupService) {
+      return res.status(503).json({ error: "Daily Roundup Service not available (Multi-Agent system disabled)" });
+    }
+
+    const { userId } = req.body;
+    logger.info("Manual daily roundup requested", { userId });
+    
+    const result = await dailyRoundupService.generateAndSendRoundup(userId || "test_user");
+    
+    res.json(result);
+  } catch (err: any) {
+    logger.error("Manual roundup failed", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/notifications/history/:userId", (req, res) => {
+  const { userId } = req.params;
+  const history = notificationService.getHistory(userId);
+  res.json({ userId, history });
+});
+
+// ================= END NOTIFICATION ENDPOINTS =================
 
 // ================= PERSONALIZATION ENDPOINTS =================
 

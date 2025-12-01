@@ -7,6 +7,7 @@ import { EmbeddingService } from "./services/embeddingService";
 import { PersonalizationService } from "./services/personalizationService";
 import { DatabaseService } from "./services/databaseService";
 import { HeadlineFetcherService } from "./services/headlineFetcherService";
+import { VectorStore } from "./services/vectorStore";
 import { MultiAgentOrchestrator } from "./agents/orchestrator";
 import { agentMonitor } from "./agents/monitor";
 import logger from "./utils/logger";
@@ -35,16 +36,8 @@ logger.info("MCP Server initialized with providers:", {
   hasArxiv: mcpServer.getAvailableProviders().includes('arxiv')
 });
 
-// Initialize OpenAI-powered query router with bullet-point style by default
-const queryRouter = new IntelligentQueryRouter(
-  process.env.OPENAI_API_KEY || "",
-  mcpServer,
-  {
-    responseStyle: "bullet-points",
-    includeGreeting: false,
-    maxResponseLength: 2500, // Increased for more detailed responses and comprehensive coverage
-  }
-);
+// Initialize Vector Store
+const vectorStore = new VectorStore();
 
 // Initialize personalization services
 let embeddingService: EmbeddingService | null = null;
@@ -62,6 +55,19 @@ if (process.env.OPENAI_API_KEY) {
       logger.error("Failed to initialize personalization service:", err)
     );
 }
+
+// Initialize OpenAI-powered query router with bullet-point style by default
+const queryRouter = new IntelligentQueryRouter(
+  process.env.OPENAI_API_KEY || "",
+  mcpServer,
+  {
+    responseStyle: "bullet-points",
+    includeGreeting: false,
+    maxResponseLength: 2500, // Increased for more detailed responses and comprehensive coverage
+  },
+  vectorStore,
+  embeddingService || undefined
+);
 
 // Initialize database first
 const databaseService = new DatabaseService();
@@ -84,7 +90,9 @@ if (process.env.OPENAI_API_KEY) {
 // Initialize headline fetcher
 const headlineFetcherService = new HeadlineFetcherService(
   databaseService,
-  mcpServer
+  mcpServer,
+  embeddingService || undefined,
+  vectorStore
 );
 
 // Start fetching headlines every hour

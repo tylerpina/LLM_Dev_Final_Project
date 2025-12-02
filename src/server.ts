@@ -159,14 +159,19 @@ app.post("/ask", async (req, res) => {
   const startTime = Date.now();
   const { query, style, userId, useMultiAgent } = req.body;
 
-  // Determine which system to use - force multi-agent for now to test
-  const shouldUseMultiAgent = true; // Force multi-agent system usage
+  // Determine which system to use.
+  // Explicit request overrides the env flag; otherwise fallback to env configuration.
+  const shouldUseMultiAgent =
+    typeof useMultiAgent === "boolean" ? useMultiAgent : USE_MULTI_AGENT;
+  const canRunMultiAgent = shouldUseMultiAgent && !!multiAgentOrchestrator;
 
   logger.info("AI query received", {
     query,
     style,
     userId,
+    useMultiAgentRequest: useMultiAgent,
     useMultiAgent: shouldUseMultiAgent,
+    canRunMultiAgent,
     USE_MULTI_AGENT_ENV: USE_MULTI_AGENT,
     hasOrchestrator: !!multiAgentOrchestrator,
     timestamp: new Date().toISOString(),
@@ -178,8 +183,14 @@ app.post("/ask", async (req, res) => {
       return res.status(400).json({ error: "Query is required" });
     }
 
+    if (shouldUseMultiAgent && !multiAgentOrchestrator) {
+      logger.warn(
+        "Multi-agent system requested but orchestrator unavailable. Falling back to legacy flow."
+      );
+    }
+
     // Use multi-agent system if enabled and available
-    if (shouldUseMultiAgent && multiAgentOrchestrator) {
+    if (canRunMultiAgent && multiAgentOrchestrator) {
       const result = await multiAgentOrchestrator.processQuery(
         query,
         userId || "anonymous"
@@ -193,6 +204,21 @@ app.post("/ask", async (req, res) => {
         estimatedCost: `$${result.estimatedCost.toFixed(4)}`,
       });
 
+      // Save query to history
+      try {
+        databaseService.saveQueryHistory({
+          userId: userId || "anonymous",
+          query,
+          style: style || undefined,
+          timestamp: new Date().toISOString(),
+          executionTimeMs: result.executionTimeMs,
+          agentsExecuted: JSON.stringify(result.agentsExecuted),
+          sourcesCount: result.sources.length,
+        });
+      } catch (err) {
+        logger.warn("Failed to save query to history", { error: err });
+      }
+
       res.json({
         synthesizedResponse: result.synthesizedResponse,
         metadata: {
@@ -203,7 +229,7 @@ app.post("/ask", async (req, res) => {
         },
         sources: result.sources,
         detailedResults: result.metadata,
-       //agentReasoning: result.agentReasoning, // commented out because not using agent reasoning yet - TODO: add back in
+        agentReasoning: result.agentReasoning,
         timestamp: result.timestamp,
       });
     } else {
@@ -234,6 +260,21 @@ app.post("/ask", async (req, res) => {
         intent: response.analysis.intent,
         style: queryRouter.getPromptConfig().responseStyle,
       });
+
+      // Save query to history
+      try {
+        databaseService.saveQueryHistory({
+          userId: userId || "anonymous",
+          query,
+          style: style || undefined,
+          timestamp: new Date().toISOString(),
+          executionTimeMs: duration,
+          agentsExecuted: undefined,
+          sourcesCount: response.sources?.length || 0,
+        });
+      } catch (err) {
+        logger.warn("Failed to save query to history", { error: err });
+      }
 
       res.json({
         ...response,
@@ -686,6 +727,259 @@ app.post("/headlines/fetch", async (_req, res) => {
 });
 
 // ================= END HEADLINES ENDPOINTS =================
+
+// ================= QUERY HISTORY ENDPOINTS =================
+
+// Get query history for a user
+app.get("/queries/history", (req, res) => {
+  try {
+    const userId = (req.query.userId as string) || "anonymous";
+    const limit = parseInt(req.query.limit as string) || 50;
+    const search = req.query.search as string;
+
+    let history;
+    if (search) {
+      history = databaseService.searchQueryHistory(userId, search, limit);
+    } else {
+      history = databaseService.getQueryHistory(userId, limit);
+    }
+
+    logger.info("Query history retrieved", { userId, count: history.length });
+
+    res.json({
+      success: true,
+      history,
+      count: history.length,
+    });
+  } catch (err: any) {
+    logger.error("Failed to get query history:", err);
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
+
+// Get query history stats
+app.get("/queries/history/stats", (req, res) => {
+  try {
+    const userId = (req.query.userId as string) || "anonymous";
+    const stats = databaseService.getQueryHistoryStats(userId);
+
+    logger.info("Query history stats retrieved", { userId });
+
+    res.json({
+      success: true,
+      stats,
+    });
+  } catch (err: any) {
+    logger.error("Failed to get query history stats:", err);
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
+
+// Delete a query from history
+app.delete("/queries/history/:id", (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const userId = (req.query.userId as string) || "anonymous";
+
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Invalid query ID" });
+    }
+
+    const deleted = databaseService.deleteQueryHistory(id, userId);
+
+    if (deleted) {
+      logger.info("Query deleted from history", { id, userId });
+      res.json({ success: true, message: "Query deleted successfully" });
+    } else {
+      res.status(404).json({ error: "Query not found" });
+    }
+  } catch (err: any) {
+    logger.error("Failed to delete query:", err);
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
+
+// Clear all query history for a user
+app.delete("/queries/history", (req, res) => {
+  try {
+    const userId = (req.query.userId as string) || "anonymous";
+    const deleted = databaseService.clearQueryHistory(userId);
+
+    logger.info("Query history cleared", { userId, deleted });
+
+    res.json({
+      success: true,
+      message: "Query history cleared successfully",
+      deleted,
+    });
+  } catch (err: any) {
+    logger.error("Failed to clear query history:", err);
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
+
+// ================= END QUERY HISTORY ENDPOINTS =================
+
+// ================= SAVED SEARCHES ENDPOINTS =================
+
+// Get all saved searches for a user
+app.get("/queries/saved", (req, res) => {
+  try {
+    const userId = (req.query.userId as string) || "anonymous";
+    const searches = databaseService.getSavedSearches(userId);
+
+    logger.info("Saved searches retrieved", { userId, count: searches.length });
+
+    res.json({
+      success: true,
+      searches,
+      count: searches.length,
+    });
+  } catch (err: any) {
+    logger.error("Failed to get saved searches:", err);
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
+
+// Get a specific saved search
+app.get("/queries/saved/:id", (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const userId = (req.query.userId as string) || "anonymous";
+
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Invalid search ID" });
+    }
+
+    const search = databaseService.getSavedSearch(id, userId);
+
+    if (search) {
+      logger.info("Saved search retrieved", { id, userId });
+      res.json({ success: true, search });
+    } else {
+      res.status(404).json({ error: "Saved search not found" });
+    }
+  } catch (err: any) {
+    logger.error("Failed to get saved search:", err);
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
+
+// Save a new search
+app.post("/queries/saved", (req, res) => {
+  try {
+    const { userId, name, query, style } = req.body;
+
+    if (!userId || !name || !query) {
+      return res.status(400).json({
+        error: "userId, name, and query are required",
+      });
+    }
+
+    const id = databaseService.saveSearch({
+      userId,
+      name,
+      query,
+      style: style || undefined,
+      createdAt: new Date().toISOString(),
+    });
+
+    logger.info("Search saved", { id, userId, name });
+
+    res.json({
+      success: true,
+      id,
+      message: "Search saved successfully",
+    });
+  } catch (err: any) {
+    logger.error("Failed to save search:", err);
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
+
+// Update a saved search
+app.put("/queries/saved/:id", (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const userId = (req.query.userId as string) || req.body.userId || "anonymous";
+    const { name, query, style } = req.body;
+
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Invalid search ID" });
+    }
+
+    const updated = databaseService.updateSavedSearch(id, userId, {
+      name,
+      query,
+      style,
+    });
+
+    if (updated) {
+      logger.info("Saved search updated", { id, userId });
+      res.json({ success: true, message: "Search updated successfully" });
+    } else {
+      res.status(404).json({ error: "Saved search not found" });
+    }
+  } catch (err: any) {
+    logger.error("Failed to update saved search:", err);
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
+
+// Delete a saved search
+app.delete("/queries/saved/:id", (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const userId = (req.query.userId as string) || "anonymous";
+
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Invalid search ID" });
+    }
+
+    const deleted = databaseService.deleteSavedSearch(id, userId);
+
+    if (deleted) {
+      logger.info("Saved search deleted", { id, userId });
+      res.json({ success: true, message: "Search deleted successfully" });
+    } else {
+      res.status(404).json({ error: "Saved search not found" });
+    }
+  } catch (err: any) {
+    logger.error("Failed to delete saved search:", err);
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
+
+// Use a saved search (increments use count)
+app.post("/queries/saved/:id/use", (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const userId = (req.query.userId as string) || req.body.userId || "anonymous";
+
+    if (isNaN(id)) {
+      return res.status(400).json({ error: "Invalid search ID" });
+    }
+
+    const used = databaseService.useSavedSearch(id, userId);
+
+    if (used) {
+      const search = databaseService.getSavedSearch(id, userId);
+      logger.info("Saved search used", { id, userId });
+      res.json({
+        success: true,
+        search,
+        message: "Search marked as used",
+      });
+    } else {
+      res.status(404).json({ error: "Saved search not found" });
+    }
+  } catch (err: any) {
+    logger.error("Failed to use saved search:", err);
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
+
+// ================= END SAVED SEARCHES ENDPOINTS =================
 
 // Prompt management endpoints
 app.get("/prompts/config", (_req, res) => {

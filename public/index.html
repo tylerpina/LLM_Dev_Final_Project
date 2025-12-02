@@ -6,6 +6,7 @@
     <title>AI News & Research Assistant</title>
     <style>
         :root {
+            /* Default dark theme */
             --bg-primary: #1e1e1e;
             --bg-secondary: #252526;
             --bg-tertiary: #2d2d30;
@@ -22,6 +23,50 @@
             --success: #4ade80;
             --error: #f87171;
             --warning: #fbbf24;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #252526;
+            --bg-tertiary: #2d2d30;
+            --bg-hover: #2a2d2e;
+            --text-primary: #cccccc;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --accent-blue: #007acc;
+            --accent-green: #4ec9b0;
+            --accent-orange: #ce9178;
+            --accent-purple: #c586c0;
+            --border-color: #3e3e42;
+            --border-hover: #464647;
+            --success: #4ade80;
+            --error: #f87171;
+            --warning: #fbbf24;
+            /* Customizable primary and secondary colors */
+            --primary-color: #007acc;
+            --secondary-color: #4ec9b0;
+        }
+
+        :root[data-theme="light"] {
+            --bg-primary: #f7f8fa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #eef1f5;
+            --bg-hover: #e4e9f0;
+            --text-primary: #1f2933;
+            --text-secondary: #3d4a5c;
+            --text-muted: #6b7280;
+            --accent-blue: #2563eb;
+            --accent-green: #059669;
+            --accent-orange: #ea580c;
+            --accent-purple: #7c3aed;
+            --border-color: #d1d9e6;
+            --border-hover: #b5c2d6;
+            --success: #16a34a;
+            --error: #dc2626;
+            --warning: #d97706;
+            /* Customizable primary and secondary colors */
+            --primary-color: #2563eb;
+            --secondary-color: #059669;
         }
 
         * {
@@ -80,8 +125,81 @@
             overflow-y: auto;
             overflow-x: hidden;
             padding: 0;
+            min-width: 0; /* Allow flex shrinking */
         }
         
+        .history-column {
+            flex: 1;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            overflow: hidden;
+            min-width: 300px;
+            max-width: 400px;
+            display: none; /* Hidden by default */
+        }
+
+        .history-column.visible {
+            display: flex;
+        }
+
+        .history-toggle-btn {
+            position: fixed;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            padding: 12px 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+        }
+
+        .history-toggle-btn:hover {
+            background: color-mix(in srgb, var(--primary-color) 85%, black);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .history-toggle-btn.active {
+            left: 312px; /* Adjust based on sidebar width */
+        }
+
+        @media (max-width: 768px) {
+            .history-toggle-btn {
+                position: relative;
+                left: auto;
+                top: auto;
+                transform: none;
+                margin: 8px;
+                border-radius: 8px;
+            }
+
+            .history-toggle-btn.active {
+                left: auto;
+            }
+
+            .history-column {
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 80%;
+                max-width: 400px;
+                z-index: 200;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+            }
+        }
+
         .headlines-column {
             flex: 1;
             display: flex;
@@ -96,7 +214,7 @@
             font-size: 2rem;
             font-weight: 600;
             margin-bottom: 8px;
-            color: var(--accent-blue);
+            color: var(--primary-color);
         }
 
         .header p {
@@ -133,7 +251,7 @@
         }
 
         .query-input:focus {
-            border-color: var(--accent-blue);
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
         }
 
@@ -154,13 +272,248 @@
         }
 
         .style-select:focus {
-            border-color: var(--accent-blue);
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        .color-palette-btn {
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .color-palette-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary-color);
+        }
+
+        .color-palette-btn .color-preview {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid var(--border-color);
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-color) 50%, var(--secondary-color) 50%);
+        }
+
+        /* Color Palette Modal */
+        .color-palette-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .color-palette-modal.active {
+            display: flex;
+        }
+
+        .color-palette-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .color-palette-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .color-palette-header h3 {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .close-palette-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .close-palette-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .color-picker-group {
+            margin-bottom: 24px;
+        }
+
+        .color-picker-label {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .color-picker-input {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            background: none;
+            padding: 0;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .color-picker-input::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        .color-picker-input::-webkit-color-swatch {
+            border: none;
+            border-radius: 6px;
+        }
+
+        .color-picker-input::-moz-color-swatch {
+            border: none;
+            border-radius: 6px;
+        }
+
+        .color-picker-text {
+            flex: 1;
+            padding: 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: monospace;
+        }
+
+        .color-picker-text:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-color) 20%, transparent);
+        }
+
+        .color-presets {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .color-presets h4 {
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 12px;
+        }
+
+        .preset-color {
+            width: 100%;
+            aspect-ratio: 1;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .preset-color:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-color);
+            z-index: 1;
+        }
+
+        .preset-color.active {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 30%, transparent);
+        }
+
+        .palette-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .palette-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .palette-btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .palette-btn-primary:hover {
+            background: color-mix(in srgb, var(--primary-color) 85%, black);
+        }
+
+        .palette-btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .palette-btn-secondary:hover {
+            background: var(--bg-hover);
         }
 
         .ask-btn {
             padding: 12px 24px;
-            background: var(--accent-blue);
+            background: var(--primary-color);
             color: white;
             border: none;
             border-radius: 6px;
@@ -172,7 +525,7 @@
         }
 
         .ask-btn:hover:not(:disabled) {
-            background: #005a9e;
+            background: color-mix(in srgb, var(--primary-color) 85%, black);
             transform: translateY(-1px);
         }
 
@@ -235,16 +588,16 @@
         }
 
         .response-content ul li::marker {
-            color: var(--accent-blue);
+            color: var(--primary-color);
         }
 
         .response-content ol li::marker {
-            color: var(--accent-green);
+            color: var(--secondary-color);
             font-weight: 600;
         }
 
         .response-content strong {
-            color: var(--accent-green);
+            color: var(--secondary-color);
             font-weight: 600;
         }
 
@@ -263,7 +616,7 @@
         }
 
         .response-content h3 {
-            color: var(--accent-green);
+            color: var(--secondary-color);
             margin: 24px 0 16px 0;
             font-size: 1.3em;
             font-weight: 600;
@@ -272,14 +625,14 @@
         }
 
         .response-content h4 {
-            color: var(--accent-blue);
+            color: var(--primary-color);
             margin: 20px 0 12px 0;
             font-size: 1.1em;
             font-weight: 600;
         }
 
         .response-content blockquote {
-            border-left: 3px solid var(--accent-blue);
+            border-left: 3px solid var(--primary-color);
             padding-left: 16px;
             margin: 16px 0;
             color: var(--text-secondary);
@@ -311,18 +664,18 @@
         }
 
         .response-content a {
-            color: var(--accent-blue);
+            color: var(--primary-color);
             text-decoration: none;
         }
 
         .response-content a:hover {
-            color: var(--accent-green);
+            color: var(--secondary-color);
             text-decoration: underline;
         }
 
         .response-content h1,
         .response-content h2 {
-            color: var(--accent-green);
+            color: var(--secondary-color);
             margin: 32px 0 16px 0;
             font-weight: 600;
             border-bottom: 2px solid var(--border-color);
@@ -461,7 +814,7 @@
         }
 
         .headlines-header h2 {
-            color: var(--accent-green);
+            color: var(--secondary-color);
             font-size: 1.1rem;
             margin: 0;
         }
@@ -480,7 +833,7 @@
 
         .refresh-btn:hover {
             background: var(--bg-hover);
-            border-color: var(--accent-blue);
+            border-color: var(--primary-color);
         }
 
         .headlines-list {
@@ -503,7 +856,7 @@
         }
 
         .headline-card:hover {
-            border-color: var(--accent-blue);
+            border-color: var(--primary-color);
             background: var(--bg-hover);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
@@ -517,7 +870,7 @@
 
         .headline-source {
             display: inline-block;
-            background: var(--accent-blue);
+            background: var(--primary-color);
             color: white;
             padding: 4px 8px;
             border-radius: 4px;
@@ -528,7 +881,7 @@
         }
 
         .headline-source.newsapi {
-            background: var(--accent-blue);
+            background: var(--primary-color);
         }
 
         .headline-source.guardian {
@@ -536,7 +889,7 @@
         }
 
         .headline-source.arxiv {
-            background: var(--accent-green);
+            background: var(--secondary-color);
         }
 
         .headline-source.nytimes,
@@ -604,7 +957,7 @@
         }
 
         .progress-title {
-            color: var(--accent-blue);
+            color: var(--primary-color);
             font-size: 1.1rem;
             font-weight: 600;
         }
@@ -638,13 +991,13 @@
         }
 
         .progress-step.active {
-            border-color: var(--accent-blue);
-            background: rgba(0, 122, 204, 0.1);
+            border-color: var(--primary-color);
+            background: color-mix(in srgb, var(--primary-color) 10%, transparent);
         }
 
         .progress-step.completed {
-            border-color: var(--accent-green);
-            background: rgba(78, 201, 176, 0.1);
+            border-color: var(--secondary-color);
+            background: color-mix(in srgb, var(--secondary-color) 10%, transparent);
         }
 
         .progress-step-icon {
@@ -666,13 +1019,13 @@
         }
 
         .progress-step-icon.active {
-            background: var(--accent-blue);
+            background: var(--primary-color);
             color: white;
             animation: pulse 2s infinite;
         }
 
         .progress-step-icon.completed {
-            background: var(--accent-green);
+            background: var(--secondary-color);
             color: white;
         }
 
@@ -871,12 +1224,12 @@
         }
 
         .reasoning-toggle:hover {
-            border-color: var(--accent-blue);
+            border-color: var(--primary-color);
             background: var(--bg-secondary);
         }
 
         .reasoning-toggle.active {
-            border-color: var(--accent-blue);
+            border-color: var(--primary-color);
             background: var(--bg-secondary);
         }
 
@@ -928,7 +1281,7 @@
 
         .reasoning-agent {
             font-weight: 600;
-            color: var(--accent-blue);
+            color: var(--primary-color);
             font-size: 0.85rem;
             margin-bottom: 4px;
             text-transform: capitalize;
@@ -979,8 +1332,8 @@
         }
 
         .agent-box[data-status="processing"] {
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 10px rgba(0, 122, 204, 0.3);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px color-mix(in srgb, var(--primary-color) 30%, transparent);
         }
 
         .agent-box[data-status="completed"] {
@@ -1057,6 +1410,281 @@
             }
         }
 
+        /* Query History Styles */
+        .history-section {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .history-header h2 {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .history-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .history-tab {
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .history-tab:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary-color);
+        }
+
+        .history-tab.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .history-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .history-item:hover {
+            border-color: var(--primary-color);
+            background: var(--bg-hover);
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .history-query {
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            flex: 1;
+            margin-right: 8px;
+            word-break: break-word;
+        }
+
+        .history-item-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .history-action-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .history-action-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .history-item-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .history-item-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .saved-search-item {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .saved-search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .saved-search-name {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .saved-search-query {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+
+        .saved-search-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .save-search-btn {
+            padding: 8px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .save-search-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary-color);
+        }
+
+        .save-search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .save-search-modal.active {
+            display: flex;
+        }
+
+        .save-search-panel {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .save-search-panel h3 {
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .save-search-panel input {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .save-search-panel input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.2);
+        }
+
+        .save-search-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .save-search-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .save-search-actions .cancel-btn {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .save-search-actions .save-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .save-search-actions .save-btn:hover {
+            background: color-mix(in srgb, var(--primary-color) 85%, black);
+        }
+
         /* Responsive design */
         @media (max-width: 768px) {
             .main-layout {
@@ -1077,6 +1705,7 @@
                 margin: 8px;
             }
             
+            .history-column,
             .headlines-column {
                 max-height: 40vh;
             }
@@ -1098,6 +1727,23 @@
             }
         }
     </style>
+    <script>
+        // Load saved theme preference before page renders to prevent flash
+        (function() {
+            try {
+                const savedTheme = localStorage.getItem('llm-news-theme');
+                if (savedTheme === 'light' || savedTheme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', savedTheme);
+                } else {
+                    // Default to dark if no saved theme
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch (err) {
+                console.warn('Unable to load saved theme preference:', err);
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
     
     <!-- Markdown and DOMPurify libraries -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -1111,9 +1757,34 @@
             <p>Intelligent analysis across news sources and academic research</p>
         </div>
 
-        <!-- Two-column layout -->
+        <!-- History Toggle Button -->
+        <button class="history-toggle-btn" id="historyToggleBtn" title="Show History">
+            📜
+        </button>
+
+        <!-- Three-column layout -->
         <div class="main-layout">
-            <!-- Left column: Main content (4/5 width) -->
+            <!-- Left column: Query History (1/6 width) -->
+            <div class="history-column" id="historyColumn">
+                <div class="history-section">
+                    <div class="history-header">
+                        <h2>History</h2>
+                        <button class="history-action-btn" id="clearHistoryBtn" title="Clear History">🗑️</button>
+                    </div>
+                    <div class="history-tabs">
+                        <button class="history-tab active" data-tab="history">Recent</button>
+                        <button class="history-tab" data-tab="saved">Saved</button>
+                    </div>
+                    <div class="history-content" id="historyContent">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Loading history...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle column: Main content (4/6 width) -->
             <div class="content-column">
                 <div class="query-section">
                     <form class="query-form" id="queryForm">
@@ -1130,6 +1801,14 @@
                             <option value="technical">Technical</option>
                             <option value="conversational">Conversational</option>
                         </select>
+                        <select class="style-select" id="themeSelect" aria-label="Theme selector">
+                            <option value="dark">Dark</option>
+                            <option value="light">Light</option>
+                        </select>
+                        <button type="button" class="color-palette-btn" id="colorPaletteBtn" title="Customize Colors">
+                            <span class="color-preview"></span>
+                            <span>Colors</span>
+                        </button>
                         <button type="submit" class="ask-btn" id="askBtn">Ask AI</button>
                     </form>
                 </div>
@@ -1173,10 +1852,323 @@
         </div>
     </div>
 
+    <!-- Color Palette Modal -->
+    <div class="color-palette-modal" id="colorPaletteModal">
+        <div class="color-palette-panel">
+            <div class="color-palette-header">
+                <h3>Customize Color Palette</h3>
+                <button class="close-palette-btn" id="closePaletteBtn" aria-label="Close">×</button>
+            </div>
+            
+            <div class="color-picker-group">
+                <label class="color-picker-label" for="primaryColorPicker">Primary Color</label>
+                <div class="color-picker-wrapper">
+                    <input type="color" id="primaryColorPicker" class="color-picker-input" value="#007acc">
+                    <input type="text" id="primaryColorText" class="color-picker-text" value="#007acc" placeholder="#007acc">
+                </div>
+            </div>
+
+            <div class="color-picker-group">
+                <label class="color-picker-label" for="secondaryColorPicker">Secondary Color</label>
+                <div class="color-picker-wrapper">
+                    <input type="color" id="secondaryColorPicker" class="color-picker-input" value="#4ec9b0">
+                    <input type="text" id="secondaryColorText" class="color-picker-text" value="#4ec9b0" placeholder="#4ec9b0">
+                </div>
+            </div>
+
+            <div class="color-presets">
+                <h4>Color Presets</h4>
+                <div class="preset-grid">
+                    <div class="preset-color" data-primary="#007acc" data-secondary="#4ec9b0" style="background: linear-gradient(135deg, #007acc 50%, #4ec9b0 50%);" title="Default Blue & Teal"></div>
+                    <div class="preset-color" data-primary="#2563eb" data-secondary="#059669" style="background: linear-gradient(135deg, #2563eb 50%, #059669 50%);" title="Bright Blue & Green"></div>
+                    <div class="preset-color" data-primary="#7c3aed" data-secondary="#ec4899" style="background: linear-gradient(135deg, #7c3aed 50%, #ec4899 50%);" title="Purple & Pink"></div>
+                    <div class="preset-color" data-primary="#ea580c" data-secondary="#f59e0b" style="background: linear-gradient(135deg, #ea580c 50%, #f59e0b 50%);" title="Orange & Amber"></div>
+                    <div class="preset-color" data-primary="#dc2626" data-secondary="#f59e0b" style="background: linear-gradient(135deg, #dc2626 50%, #f59e0b 50%);" title="Red & Yellow"></div>
+                    <div class="preset-color" data-primary="#0891b2" data-secondary="#10b981" style="background: linear-gradient(135deg, #0891b2 50%, #10b981 50%);" title="Cyan & Emerald"></div>
+                    <div class="preset-color" data-primary="#6366f1" data-secondary="#8b5cf6" style="background: linear-gradient(135deg, #6366f1 50%, #8b5cf6 50%);" title="Indigo & Violet"></div>
+                    <div class="preset-color" data-primary="#14b8a6" data-secondary="#06b6d4" style="background: linear-gradient(135deg, #14b8a6 50%, #06b6d4 50%);" title="Teal & Cyan"></div>
+                </div>
+            </div>
+
+            <div class="palette-actions">
+                <button class="palette-btn palette-btn-secondary" id="resetColorsBtn">Reset to Default</button>
+                <button class="palette-btn palette-btn-primary" id="applyColorsBtn">Apply Colors</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Search Modal -->
+    <div class="save-search-modal" id="saveSearchModal">
+        <div class="save-search-panel">
+            <h3>Save Search</h3>
+            <input type="text" id="saveSearchNameInput" placeholder="Enter a name for this search..." autofocus>
+            <div class="save-search-actions">
+                <button class="cancel-btn" id="cancelSaveSearchBtn">Cancel</button>
+                <button class="save-btn" id="confirmSaveSearchBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         let isLoading = false;
         let progressInterval = null;
         let currentProgressStep = 0;
+        const THEME_STORAGE_KEY = 'llm-news-theme';
+
+        // ================= THEME FUNCTIONALITY =================
+        
+        function applyTheme(theme) {
+            // Only allow 'dark' or 'light'
+            const normalized = (theme === 'light' || theme === 'dark') ? theme : 'dark';
+            document.documentElement.setAttribute('data-theme', normalized);
+            try {
+                localStorage.setItem(THEME_STORAGE_KEY, normalized);
+            } catch (err) {
+                console.warn('Unable to persist theme preference:', err);
+            }
+            
+            // Update colors if no custom colors are saved
+            const savedPrimary = localStorage.getItem('llm-news-primary-color');
+            if (!savedPrimary) {
+                const defaults = getDefaultColors(normalized);
+                applyCustomColors(defaults.primary, defaults.secondary);
+            }
+            updateColorPreview();
+        }
+
+        function initializeThemeSelector() {
+            const themeSelect = document.getElementById('themeSelect');
+            if (!themeSelect) return;
+
+            // Load saved theme or default to dark
+            let savedTheme = 'dark';
+            try {
+                const stored = localStorage.getItem(THEME_STORAGE_KEY);
+                if (stored === 'light' || stored === 'dark') {
+                    savedTheme = stored;
+                }
+            } catch (err) {
+                console.warn('Unable to read saved theme preference:', err);
+            }
+
+            // Apply theme and set selector value
+            applyTheme(savedTheme);
+            themeSelect.value = savedTheme;
+
+            // Listen for theme changes
+            themeSelect.addEventListener('change', (event) => {
+                applyTheme(event.target.value);
+            });
+        }
+
+        // ================= END THEME FUNCTIONALITY =================
+
+        // ================= COLOR PALETTE FUNCTIONALITY =================
+        
+        // Get default colors based on current theme
+        function getDefaultColors(theme) {
+            const defaults = {
+                dark: { primary: '#007acc', secondary: '#4ec9b0' },
+                light: { primary: '#2563eb', secondary: '#059669' }
+            };
+            return defaults[theme] || defaults.dark;
+        }
+
+        // Apply custom colors
+        function applyCustomColors(primaryColor, secondaryColor) {
+            const root = document.documentElement;
+            root.style.setProperty('--primary-color', primaryColor);
+            root.style.setProperty('--secondary-color', secondaryColor);
+            
+            // Update accent colors to use primary/secondary
+            root.style.setProperty('--accent-blue', primaryColor);
+            root.style.setProperty('--accent-green', secondaryColor);
+            
+            // Save to localStorage
+            try {
+                localStorage.setItem('llm-news-primary-color', primaryColor);
+                localStorage.setItem('llm-news-secondary-color', secondaryColor);
+            } catch (err) {
+                console.warn('Unable to save color preferences:', err);
+            }
+            
+            // Update color preview
+            updateColorPreview();
+        }
+
+        // Update color preview in button
+        function updateColorPreview() {
+            const preview = document.querySelector('.color-preview');
+            if (preview) {
+                const primary = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+                const secondary = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim();
+                preview.style.background = `linear-gradient(135deg, ${primary} 50%, ${secondary} 50%)`;
+            }
+        }
+
+        // Load saved colors
+        function loadSavedColors() {
+            try {
+                const savedPrimary = localStorage.getItem('llm-news-primary-color');
+                const savedSecondary = localStorage.getItem('llm-news-secondary-color');
+                
+                if (savedPrimary && savedSecondary) {
+                    applyCustomColors(savedPrimary, savedSecondary);
+                    return { primary: savedPrimary, secondary: savedSecondary };
+                }
+            } catch (err) {
+                console.warn('Unable to load saved colors:', err);
+            }
+            
+            // Use defaults based on current theme
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const defaults = getDefaultColors(currentTheme);
+            applyCustomColors(defaults.primary, defaults.secondary);
+            return defaults;
+        }
+
+        // Initialize color palette modal
+        function initializeColorPalette() {
+            const modal = document.getElementById('colorPaletteModal');
+            const openBtn = document.getElementById('colorPaletteBtn');
+            const closeBtn = document.getElementById('closePaletteBtn');
+            const primaryPicker = document.getElementById('primaryColorPicker');
+            const secondaryPicker = document.getElementById('secondaryColorPicker');
+            const primaryText = document.getElementById('primaryColorText');
+            const secondaryText = document.getElementById('secondaryColorText');
+            const applyBtn = document.getElementById('applyColorsBtn');
+            const resetBtn = document.getElementById('resetColorsBtn');
+            const presetColors = document.querySelectorAll('.preset-color');
+
+            // Load saved colors into pickers
+            const savedColors = loadSavedColors();
+            if (primaryPicker && primaryText) {
+                primaryPicker.value = savedColors.primary;
+                primaryText.value = savedColors.primary;
+            }
+            if (secondaryPicker && secondaryText) {
+                secondaryPicker.value = savedColors.secondary;
+                secondaryText.value = savedColors.secondary;
+            }
+
+            // Open modal
+            if (openBtn) {
+                openBtn.addEventListener('click', () => {
+                    if (modal) modal.classList.add('active');
+                });
+            }
+
+            // Close modal
+            function closeModal() {
+                if (modal) modal.classList.remove('active');
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeModal);
+            }
+
+            // Close on backdrop click
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeModal();
+                });
+            }
+
+            // Sync color picker with text input (primary)
+            if (primaryPicker && primaryText) {
+                primaryPicker.addEventListener('input', (e) => {
+                    primaryText.value = e.target.value;
+                });
+                primaryText.addEventListener('input', (e) => {
+                    const value = e.target.value.trim();
+                    if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                        primaryPicker.value = value;
+                    }
+                });
+            }
+
+            // Sync color picker with text input (secondary)
+            if (secondaryPicker && secondaryText) {
+                secondaryPicker.addEventListener('input', (e) => {
+                    secondaryText.value = e.target.value;
+                });
+                secondaryText.addEventListener('input', (e) => {
+                    const value = e.target.value.trim();
+                    if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                        secondaryPicker.value = value;
+                    }
+                });
+            }
+
+            // Apply colors
+            if (applyBtn) {
+                applyBtn.addEventListener('click', () => {
+                    const primary = primaryPicker?.value || savedColors.primary;
+                    const secondary = secondaryPicker?.value || savedColors.secondary;
+                    applyCustomColors(primary, secondary);
+                    closeModal();
+                });
+            }
+
+            // Reset to defaults
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                    const defaults = getDefaultColors(currentTheme);
+                    
+                    if (primaryPicker) primaryPicker.value = defaults.primary;
+                    if (primaryText) primaryText.value = defaults.primary;
+                    if (secondaryPicker) secondaryPicker.value = defaults.secondary;
+                    if (secondaryText) secondaryText.value = defaults.secondary;
+                    
+                    applyCustomColors(defaults.primary, defaults.secondary);
+                    
+                    // Remove saved colors
+                    try {
+                        localStorage.removeItem('llm-news-primary-color');
+                        localStorage.removeItem('llm-news-secondary-color');
+                    } catch (err) {
+                        console.warn('Unable to clear color preferences:', err);
+                    }
+                });
+            }
+
+            // Preset colors
+            presetColors.forEach(preset => {
+                preset.addEventListener('click', () => {
+                    const primary = preset.getAttribute('data-primary');
+                    const secondary = preset.getAttribute('data-secondary');
+                    
+                    if (primary && secondary) {
+                        if (primaryPicker) primaryPicker.value = primary;
+                        if (primaryText) primaryText.value = primary;
+                        if (secondaryPicker) secondaryPicker.value = secondary;
+                        if (secondaryText) secondaryText.value = secondary;
+                        
+                        // Visual feedback
+                        presetColors.forEach(p => p.classList.remove('active'));
+                        preset.classList.add('active');
+                    }
+                });
+            });
+
+            // Update preview when theme changes
+            const themeSelect = document.getElementById('themeSelect');
+            if (themeSelect) {
+                themeSelect.addEventListener('change', () => {
+                    // Only update if no custom colors are saved
+                    const savedPrimary = localStorage.getItem('llm-news-primary-color');
+                    if (!savedPrimary) {
+                        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+                        const defaults = getDefaultColors(currentTheme);
+                        applyCustomColors(defaults.primary, defaults.secondary);
+                    }
+                    updateColorPreview();
+                });
+            }
+        }
+
+        // ================= END COLOR PALETTE FUNCTIONALITY =================
         
         // Define the expected multi-agent execution steps
         const progressSteps = [
@@ -1550,6 +2542,7 @@
                     body: JSON.stringify({ 
                         query,
                         style: selectedStyle,
+                        userId: USER_ID,
                         timestamp: Date.now() // Add timestamp to help with debugging
                     })
                 });
@@ -1570,6 +2563,10 @@
 
                 if (response.ok) {
                     displayResponse(data, clearProgressDisplay); // Clear progress after showing response
+                    // Refresh query history after successful query
+                    if (currentTab === 'history') {
+                        loadQueryHistory();
+                    }
                 } else {
                     displayError(data.error || 'Something went wrong');
                     clearProgressDisplay();
@@ -2038,7 +3035,421 @@
             }
         }
 
+        // ================= QUERY HISTORY & SAVED SEARCHES FUNCTIONALITY =================
+        
+        const USER_ID = localStorage.getItem('llm-news-user-id') || `user-${Date.now()}`;
+        if (!localStorage.getItem('llm-news-user-id')) {
+            localStorage.setItem('llm-news-user-id', USER_ID);
+        }
+
+        let currentTab = 'history';
+        let pendingQueryToSave = null;
+
+        // Load query history
+        async function loadQueryHistory() {
+            const content = document.getElementById('historyContent');
+            if (!content) return;
+
+            try {
+                const response = await fetch(`/queries/history?userId=${USER_ID}&limit=50`);
+                const data = await response.json();
+
+                if (response.ok && data.history) {
+                    displayQueryHistory(data.history);
+                } else {
+                    content.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><p>No query history yet</p></div>';
+                }
+            } catch (error) {
+                console.error('Failed to load query history:', error);
+                content.innerHTML = '<div class="empty-state"><p style="color: var(--error);">Failed to load history</p></div>';
+            }
+        }
+
+        // Display query history
+        function displayQueryHistory(history) {
+            const content = document.getElementById('historyContent');
+            if (!content) return;
+
+            if (history.length === 0) {
+                content.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><p>No query history yet</p><p style="font-size: 0.85rem; margin-top: 8px;">Your queries will appear here</p></div>';
+                return;
+            }
+
+            const html = `
+                <div class="history-list">
+                    ${history.map(item => {
+                        const date = new Date(item.timestamp);
+                        const timeAgo = getTimeAgo(date);
+                        const agents = item.agentsExecuted ? JSON.parse(item.agentsExecuted).length : 0;
+                        
+                        return `
+                            <div class="history-item" onclick="rerunQuery('${item.query.replace(/'/g, "\\'")}', '${item.style || ''}')">
+                                <div class="history-item-header">
+                                    <div class="history-query" title="${item.query}">${item.query.length > 60 ? item.query.substring(0, 60) + '...' : item.query}</div>
+                                    <div class="history-item-actions" onclick="event.stopPropagation()">
+                                        <button class="history-action-btn" onclick="saveQueryAsSearch(${item.id}, '${item.query.replace(/'/g, "\\'")}', '${item.style || ''}')" title="Save as search">⭐</button>
+                                        <button class="history-action-btn" onclick="deleteQueryHistory(${item.id}, event)" title="Delete">🗑️</button>
+                                    </div>
+                                </div>
+                                <div class="history-item-meta">
+                                    <span>🕒 ${timeAgo}</span>
+                                    ${item.executionTimeMs ? `<span>⏱ ${Math.round(item.executionTimeMs / 1000)}s</span>` : ''}
+                                    ${agents > 0 ? `<span>🤖 ${agents} agents</span>` : ''}
+                                    ${item.sourcesCount ? `<span>📰 ${item.sourcesCount} sources</span>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+            content.innerHTML = html;
+        }
+
+        // Load saved searches
+        async function loadSavedSearches() {
+            const content = document.getElementById('historyContent');
+            if (!content) return;
+
+            try {
+                const response = await fetch(`/queries/saved?userId=${USER_ID}`);
+                const data = await response.json();
+
+                if (response.ok && data.searches) {
+                    displaySavedSearches(data.searches);
+                } else {
+                    content.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⭐</div><p>No saved searches yet</p><p style="font-size: 0.85rem; margin-top: 8px;">Save queries from history to access them quickly</p></div>';
+                }
+            } catch (error) {
+                console.error('Failed to load saved searches:', error);
+                content.innerHTML = '<div class="empty-state"><p style="color: var(--error);">Failed to load saved searches</p></div>';
+            }
+        }
+
+        // Display saved searches
+        function displaySavedSearches(searches) {
+            const content = document.getElementById('historyContent');
+            if (!content) return;
+
+            if (searches.length === 0) {
+                content.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⭐</div><p>No saved searches yet</p><p style="font-size: 0.85rem; margin-top: 8px;">Save queries from history to access them quickly</p></div>';
+                return;
+            }
+
+            const html = `
+                <div class="history-list">
+                    ${searches.map(search => {
+                        const created = new Date(search.createdAt);
+                        const lastUsed = search.lastUsed ? new Date(search.lastUsed) : null;
+                        
+                        return `
+                            <div class="saved-search-item">
+                                <div class="saved-search-header">
+                                    <div class="saved-search-name">${search.name}</div>
+                                    <div class="history-item-actions">
+                                        <button class="history-action-btn" onclick="editSavedSearch(${search.id}, '${search.name.replace(/'/g, "\\'")}', '${search.query.replace(/'/g, "\\'")}', '${search.style || ''}')" title="Edit">✏️</button>
+                                        <button class="history-action-btn" onclick="deleteSavedSearch(${search.id}, event)" title="Delete">🗑️</button>
+                                    </div>
+                                </div>
+                                <div class="saved-search-query" onclick="rerunQuery('${search.query.replace(/'/g, "\\'")}', '${search.style || ''}')" style="cursor: pointer;">${search.query}</div>
+                                <div class="saved-search-meta">
+                                    <span>Created: ${created.toLocaleDateString()}</span>
+                                    ${lastUsed ? `<span>Used ${search.useCount} times</span>` : '<span>Never used</span>'}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+            content.innerHTML = html;
+        }
+
+        // Switch between history and saved tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            const tabs = document.querySelectorAll('.history-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`)?.classList.add('active');
+
+            if (tab === 'history') {
+                loadQueryHistory();
+            } else {
+                loadSavedSearches();
+            }
+        }
+
+        // Re-run a query from history
+        async function rerunQuery(query, style) {
+            const queryInput = document.getElementById('queryInput');
+            const styleSelect = document.getElementById('styleSelect');
+            
+            if (queryInput) {
+                queryInput.value = query;
+            }
+            if (styleSelect && style) {
+                styleSelect.value = style;
+            }
+            
+            // Trigger form submission
+            if (queryInput) {
+                queryInput.form?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }
+        }
+
+        // Delete query from history
+        async function deleteQueryHistory(id, event) {
+            if (event) event.stopPropagation();
+            
+            if (!confirm('Delete this query from history?')) return;
+
+            try {
+                const response = await fetch(`/queries/history/${id}?userId=${USER_ID}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadQueryHistory();
+                } else {
+                    alert('Failed to delete query');
+                }
+            } catch (error) {
+                console.error('Failed to delete query:', error);
+                alert('Failed to delete query');
+            }
+        }
+
+        // Save query as search
+        function saveQueryAsSearch(historyId, query, style) {
+            pendingQueryToSave = { query, style };
+            const modal = document.getElementById('saveSearchModal');
+            const nameInput = document.getElementById('saveSearchNameInput');
+            
+            if (modal && nameInput) {
+                modal.classList.add('active');
+                nameInput.value = query.substring(0, 50);
+                nameInput.focus();
+            }
+        }
+
+        // Save search from modal
+        async function confirmSaveSearch() {
+            const nameInput = document.getElementById('saveSearchNameInput');
+            const modal = document.getElementById('saveSearchModal');
+            
+            if (!nameInput || !pendingQueryToSave) return;
+
+            const name = nameInput.value.trim();
+            if (!name) {
+                alert('Please enter a name for this search');
+                return;
+            }
+
+            try {
+                const response = await fetch('/queries/saved', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: USER_ID,
+                        name,
+                        query: pendingQueryToSave.query,
+                        style: pendingQueryToSave.style
+                    })
+                });
+
+                if (response.ok) {
+                    modal?.classList.remove('active');
+                    nameInput.value = '';
+                    pendingQueryToSave = null;
+                    if (currentTab === 'saved') {
+                        loadSavedSearches();
+                    }
+                } else {
+                    alert('Failed to save search');
+                }
+            } catch (error) {
+                console.error('Failed to save search:', error);
+                alert('Failed to save search');
+            }
+        }
+
+        // Delete saved search
+        async function deleteSavedSearch(id, event) {
+            if (event) event.stopPropagation();
+            
+            if (!confirm('Delete this saved search?')) return;
+
+            try {
+                const response = await fetch(`/queries/saved/${id}?userId=${USER_ID}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadSavedSearches();
+                } else {
+                    alert('Failed to delete saved search');
+                }
+            } catch (error) {
+                console.error('Failed to delete saved search:', error);
+                alert('Failed to delete saved search');
+            }
+        }
+
+        // Edit saved search
+        function editSavedSearch(id, currentName, currentQuery, currentStyle) {
+            const newName = prompt('Enter new name:', currentName);
+            if (!newName || newName.trim() === currentName) return;
+
+            fetch(`/queries/saved/${id}?userId=${USER_ID}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: USER_ID,
+                    name: newName.trim()
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    loadSavedSearches();
+                } else {
+                    alert('Failed to update saved search');
+                }
+            })
+            .catch(err => {
+                console.error('Failed to update saved search:', err);
+                alert('Failed to update saved search');
+            });
+        }
+
+        // Clear all history
+        async function clearAllHistory() {
+            if (!confirm('Clear all query history? This cannot be undone.')) return;
+
+            try {
+                const response = await fetch(`/queries/history?userId=${USER_ID}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadQueryHistory();
+                } else {
+                    alert('Failed to clear history');
+                }
+            } catch (error) {
+                console.error('Failed to clear history:', error);
+                alert('Failed to clear history');
+            }
+        }
+
+        // Get time ago string
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diff = now - date;
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+
+            if (seconds < 60) return 'just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            if (days < 7) return `${days}d ago`;
+            return date.toLocaleDateString();
+        }
+
+        // Toggle history sidebar
+        function toggleHistorySidebar() {
+            const historyColumn = document.getElementById('historyColumn');
+            const toggleBtn = document.getElementById('historyToggleBtn');
+            
+            if (historyColumn && toggleBtn) {
+                const isVisible = historyColumn.classList.contains('visible');
+                
+                if (isVisible) {
+                    historyColumn.classList.remove('visible');
+                    toggleBtn.classList.remove('active');
+                    toggleBtn.title = 'Show History';
+                    toggleBtn.textContent = '📜';
+                } else {
+                    historyColumn.classList.add('visible');
+                    toggleBtn.classList.add('active');
+                    toggleBtn.title = 'Hide History';
+                    toggleBtn.textContent = '✕';
+                }
+            }
+        }
+
+        // Initialize history functionality
+        function initializeHistory() {
+            // History toggle button
+            const toggleBtn = document.getElementById('historyToggleBtn');
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', toggleHistorySidebar);
+            }
+
+            // Tab switching
+            document.querySelectorAll('.history-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchTab(tab.getAttribute('data-tab'));
+                });
+            });
+
+            // Clear history button
+            const clearBtn = document.getElementById('clearHistoryBtn');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', clearAllHistory);
+            }
+
+            // Save search modal
+            const modal = document.getElementById('saveSearchModal');
+            const cancelBtn = document.getElementById('cancelSaveSearchBtn');
+            const confirmBtn = document.getElementById('confirmSaveSearchBtn');
+            const nameInput = document.getElementById('saveSearchNameInput');
+
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', () => {
+                    if (modal) modal.classList.remove('active');
+                    if (nameInput) nameInput.value = '';
+                    pendingQueryToSave = null;
+                });
+            }
+
+            if (confirmBtn) {
+                confirmBtn.addEventListener('click', confirmSaveSearch);
+            }
+
+            if (nameInput) {
+                nameInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        confirmSaveSearch();
+                    }
+                });
+            }
+
+            // Close modal on backdrop click
+            if (modal) {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                        if (nameInput) nameInput.value = '';
+                        pendingQueryToSave = null;
+                    }
+                });
+            }
+
+            // Load initial history
+            loadQueryHistory();
+        }
+
+        // ================= END QUERY HISTORY & SAVED SEARCHES FUNCTIONALITY =================
+
         // Initialize
+        initializeThemeSelector();
+        // Load colors after theme is set
+        setTimeout(() => {
+            loadSavedColors();
+            initializeColorPalette();
+        }, 100);
+        initializeHistory();
         loadHeadlines();
         loadServers();
         

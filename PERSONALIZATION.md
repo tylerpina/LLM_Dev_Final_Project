@@ -212,10 +212,15 @@ Admin endpoint to retrieve all user profiles.
 
 ### Step 1: Setup
 
-Ensure you have the OpenAI API key set in your `.env` file:
+Ensure you have the OpenAI API key (and optional notification keys) set in your `.env` file:
 
 ```bash
 OPENAI_API_KEY=sk-...
+EMAIL_PROVIDER=ses
+AWS_SES_REGION=us-east-1
+DIGEST_SENDER_EMAIL=updates@yourdomain.com
+DIGEST_SENDER_NAME="LLM Daily Briefing"
+DIGEST_DEFAULT_RECIPIENTS=user1@example.com
 ```
 
 ### Step 2: Index Your Content
@@ -276,6 +281,23 @@ const response = await axios.get(
 const recommendations = response.data.recommendations;
 // Display recommendations to user
 ```
+
+## Email Digest Integration
+
+The new `DigestService` (`src/services/digestService.ts`) composes daily briefings by combining:
+
+- Recent headlines stored in `DatabaseService`
+- Personalized recommendations (when `PersonalizationService` data is available)
+
+The `DigestScheduler` (`src/services/digestScheduler.ts`) sends those digests through your configured email provider (AWS SES by default) on a daily cron schedule (default `DIGEST_SEND_HOUR = 09:00`). Trigger a digest manually with:
+
+```bash
+curl -X POST http://localhost:3000/notifications/digest \
+  -H "Content-Type: application/json" \
+  -d '{"userId": "user@example.com", "email": "user@example.com"}'
+```
+
+> Tip: If your `userId` is already a valid email address, you can omit the `email` field.
 
 ## Integration with Existing Endpoints
 

@@ -24,7 +24,8 @@ export class PersonalizationAgent extends BaseAgent<PersonalizationResult> {
   protected async process(
     context: AgentContext
   ): Promise<PersonalizationResult> {
-    const articles = context.rawData?.articles || [];
+    // Articles are nested under rawData.news.articles from the NewsAgent
+    const articles = context.rawData?.news?.articles || [];
 
     if (articles.length === 0) {
       this.log("warn", "No articles to personalize");

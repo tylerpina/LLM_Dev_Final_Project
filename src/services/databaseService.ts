@@ -85,7 +85,6 @@ export class DatabaseService {
         createdAt TEXT DEFAULT CURRENT_TIMESTAMP
       );
     `);
-
     // Create query history table
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS query_history (
@@ -121,43 +120,6 @@ export class DatabaseService {
       CREATE INDEX IF NOT EXISTS idx_query_history_user_timestamp ON query_history(userId, timestamp DESC);
       CREATE INDEX IF NOT EXISTS idx_saved_searches_user ON saved_searches(userId);
     `);
-  }
-
-  /**
-   * Add a new user
-   */
-  addUser(email: string, name?: string, preferences?: string): number {
-    try {
-      const stmt = this.db.prepare(`
-        INSERT INTO users (email, name, preferences)
-        VALUES (?, ?, ?)
-      `);
-      const result = stmt.run(email, name, preferences);
-      return result.lastInsertRowid as number;
-    } catch (error: any) {
-      if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
-        logger.warn(`User with email ${email} already exists`);
-        const existing = this.getUserByEmail(email);
-        return existing ? existing.id : -1;
-      }
-      throw error;
-    }
-  }
-
-  /**
-   * Get user by email
-   */
-  getUserByEmail(email: string): any {
-    const stmt = this.db.prepare('SELECT * FROM users WHERE email = ?');
-    return stmt.get(email);
-  }
-
-  /**
-   * Get all users
-   */
-  getAllUsers(): any[] {
-    const stmt = this.db.prepare('SELECT * FROM users');
-    return stmt.all();
   }
 
   /**

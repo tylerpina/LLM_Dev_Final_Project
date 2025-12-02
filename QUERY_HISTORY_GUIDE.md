@@ -1,4 +1,4 @@
-# Query History & Saved Searches - Usage Guide
+# Query History & Saved Searches - Usage Guide (DOCUMENTATION CREATED BY CURSOR)
 
 ## Overview
 

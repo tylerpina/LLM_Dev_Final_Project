@@ -1,6 +1,6 @@
 # LLM_Dev_Final_Project
 
-A TypeScript-powered news intelligence platform with **multi-agent AI orchestration**.
+A TypeScript-powered news intelligence platform with **multi-agent AI orchestration**. The system automatically **aggregates, analyzes, and summarizes news** from diverse online sources, generating **personalized insights** for each user. It leverages coordinated **AI agents for sentiment, bias, and trend detection**, along with an **LLM synthesizer** that compiles concise, context-aware summaries. Built for **professionals and students** who want quick, meaningful updates, the platform demonstrates scalable architecture, semantic search–based personalization, and seamless integration between frontend and backend components.
 
 ## 🚀 Features
 

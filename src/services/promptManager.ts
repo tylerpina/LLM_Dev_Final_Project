@@ -12,8 +12,9 @@ Analyze this user query and determine:
 1. Intent: news, research, analysis, trend, or general
 2. Which sources to query: newsapi, guardian, arxiv (can be multiple)
 3. Key search terms to extract
-4. How many results to fetch (1-10)
-5. Whether synthesis is needed
+4. Date range if specified (start and end dates in YYYY-MM-DD format, or null)
+5. How many results to fetch (1-10)
+6. Whether synthesis is needed
 
 Query: "{query}"
 
@@ -22,6 +23,10 @@ Respond with JSON only:
   "intent": "news|research|analysis|trend|general",
   "sources": ["newsapi", "guardian", "arxiv"],
   "searchTerms": ["term1", "term2"],
+  "dateRange": {
+    "startDate": "YYYY-MM-DD" | null,
+    "endDate": "YYYY-MM-DD" | null
+  },
   "maxResults": 5,
   "requiresSynthesis": true
 }`,

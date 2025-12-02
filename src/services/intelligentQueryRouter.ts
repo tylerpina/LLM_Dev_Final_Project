@@ -1,6 +1,8 @@
 import OpenAI from 'openai';
 import { UniversalMcpServer } from '../mcp/universalMcp';
 import { PromptManager, PromptConfig } from './promptManager';
+import { VectorStore } from './vectorStore';
+import { EmbeddingService } from './embeddingService';
 
 export interface QueryAnalysis {
   intent: 'news' | 'research' | 'analysis' | 'trend' | 'general';
@@ -8,6 +10,10 @@ export interface QueryAnalysis {
   searchTerms: string[];
   maxResults: number;
   requiresSynthesis: boolean;
+  dateRange?: {
+    startDate: string | null;
+    endDate: string | null;
+  };
 }
 
 export interface QueryResponse {
@@ -26,11 +32,21 @@ export class IntelligentQueryRouter {
   private openai: OpenAI;
   private mcpServer: UniversalMcpServer;
   private promptManager: PromptManager;
+  private vectorStore?: VectorStore;
+  private embeddingService?: EmbeddingService;
 
-  constructor(openaiKey: string, mcpServer: UniversalMcpServer, promptConfig?: Partial<PromptConfig>) {
+  constructor(
+    openaiKey: string, 
+    mcpServer: UniversalMcpServer, 
+    promptConfig?: Partial<PromptConfig>,
+    vectorStore?: VectorStore,
+    embeddingService?: EmbeddingService
+  ) {
     this.openai = new OpenAI({ apiKey: openaiKey });
     this.mcpServer = mcpServer;
     this.promptManager = new PromptManager(promptConfig);
+    this.vectorStore = vectorStore;
+    this.embeddingService = embeddingService;
   }
 
   async analyzeQuery(query: string): Promise<QueryAnalysis> {
@@ -41,10 +57,11 @@ export class IntelligentQueryRouter {
         model: 'gpt-4o-mini',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.1,
-        max_tokens: 300  // Increased for better analysis
+        max_tokens: 300
       });
 
-      const analysis = JSON.parse(response.choices[0].message.content || '{}');
+      const content = response.choices[0].message.content || '{}';
+      const analysis = JSON.parse(content.replace(/```json/g, '').replace(/```/g, '').trim());
       return analysis as QueryAnalysis;
     } catch (error) {
       // Fallback analysis
@@ -60,29 +77,79 @@ export class IntelligentQueryRouter {
 
   async executeQuery(analysis: QueryAnalysis): Promise<any[]> {
     const results: any[] = [];
+    const { dateRange } = analysis;
+
+    // Perform Semantic Search if available and relevant
+    if (this.vectorStore && this.embeddingService && (analysis.intent === 'research' || analysis.intent === 'analysis' || analysis.intent === 'general')) {
+      try {
+        const queryEmbedding = await this.embeddingService.generateEmbedding(analysis.searchTerms.join(' '));
+        const searchResults = this.vectorStore.query(queryEmbedding, analysis.maxResults);
+        
+        if (searchResults.length > 0) {
+          results.push({
+            provider: 'semantic-search',
+            data: searchResults,
+            timestamp: new Date().toISOString()
+          });
+        }
+      } catch (error) {
+        console.error('Error performing semantic search:', error);
+      }
+    }
 
     for (const source of analysis.sources) {
       try {
         let result;
         
         if (source === 'newsapi') {
-          result = await this.mcpServer.handle({
-            method: 'GET',
-            path: '/news/top-headlines',
-            query: {
+          if (dateRange?.startDate) {
+            const queryParams: Record<string, string> = {
               q: analysis.searchTerms.join(' '),
-              pageSize: analysis.maxResults.toString()
-            },
-            provider: 'newsapi'
-          });
+              pageSize: analysis.maxResults.toString(),
+              from: dateRange.startDate,
+              sortBy: 'relevancy'
+            };
+            
+            if (dateRange.endDate) {
+              queryParams.to = dateRange.endDate;
+            }
+
+            // Use /everything endpoint for date filtering
+            result = await this.mcpServer.handle({
+              method: 'GET',
+              path: '/news/everything',
+              query: queryParams,
+              provider: 'newsapi'
+            });
+          } else {
+            // Use top-headlines for general queries
+            result = await this.mcpServer.handle({
+              method: 'GET',
+              path: '/news/top-headlines',
+              query: {
+                q: analysis.searchTerms.join(' '),
+                pageSize: analysis.maxResults.toString()
+              },
+              provider: 'newsapi'
+            });
+          }
         } else if (source === 'guardian') {
+          const query: Record<string, string> = {
+            q: analysis.searchTerms.join(' '),
+            'page-size': analysis.maxResults.toString()
+          };
+          
+          if (dateRange?.startDate) {
+            query['from-date'] = dateRange.startDate;
+          }
+          if (dateRange?.endDate) {
+            query['to-date'] = dateRange.endDate;
+          }
+
           result = await this.mcpServer.handle({
             method: 'GET',
             path: '/guardian/search',
-            query: {
-              q: analysis.searchTerms.join(' '),
-              'page-size': analysis.maxResults.toString()
-            },
+            query,
             provider: 'guardian'
           });
         } else if (source === 'arxiv') {
@@ -119,6 +186,8 @@ export class IntelligentQueryRouter {
         return `Guardian: ${data.response?.results?.slice(0, 3).map((r: any) => `${r.webTitle}`).join('; ')}`;
       } else if (provider === 'arxiv') {
         return `ArXiv: ${data.feed?.entry?.slice(0, 3).map((e: any) => `${e.title}`).join('; ')}`;
+      } else if (provider === 'semantic-search') {
+        return `Local Context (Semantic): ${data.slice(0, 3).map((r: any) => r.document.substring(0, 100) + '...').join('; ')}`;
       }
       return `${provider}: Data available`;
     }).join('\n');
@@ -150,11 +219,25 @@ export class IntelligentQueryRouter {
     const synthesizedResponse = await this.synthesizeResponse(query, rawData);
     
     // Step 4: Extract source information
-    const sources = rawData.map(result => ({
-      provider: result.provider,
-      url: result.data?.articles?.[0]?.url || result.data?.response?.results?.[0]?.webUrl || result.data?.feed?.entry?.[0]?.links?.[0]?.href,
-      title: result.data?.articles?.[0]?.title || result.data?.response?.results?.[0]?.webTitle || result.data?.feed?.entry?.[0]?.title
-    }));
+    const sources = rawData.flatMap(result => {
+      if (result.provider === 'semantic-search') {
+        return result.data.map((item: any) => ({
+          provider: 'semantic-search',
+          url: item.metadata?.url,
+          title: item.metadata?.title
+        }));
+      }
+
+      const item = result.data?.articles?.[0] || result.data?.response?.results?.[0] || result.data?.feed?.entry?.[0];
+      if (item) {
+        return [{
+          provider: result.provider,
+          url: item.url || item.webUrl || item.links?.[0]?.href,
+          title: item.title || item.webTitle
+        }];
+      }
+      return [];
+    });
 
     return {
       analysis,

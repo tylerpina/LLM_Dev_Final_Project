@@ -7,8 +7,11 @@ import { EmbeddingService } from "./services/embeddingService";
 import { PersonalizationService } from "./services/personalizationService";
 import { DatabaseService } from "./services/databaseService";
 import { HeadlineFetcherService } from "./services/headlineFetcherService";
+import { VectorStore } from "./services/vectorStore";
 import { MultiAgentOrchestrator } from "./agents/orchestrator";
 import { agentMonitor } from "./agents/monitor";
+import { NotificationService } from "./services/notificationService";
+import { DailyRoundupService } from "./services/dailyRoundupService";
 import logger from "./utils/logger";
 
 dotenv.config();
@@ -35,16 +38,8 @@ logger.info("MCP Server initialized with providers:", {
   hasArxiv: mcpServer.getAvailableProviders().includes('arxiv')
 });
 
-// Initialize OpenAI-powered query router with bullet-point style by default
-const queryRouter = new IntelligentQueryRouter(
-  process.env.OPENAI_API_KEY || "",
-  mcpServer,
-  {
-    responseStyle: "bullet-points",
-    includeGreeting: false,
-    maxResponseLength: 2500, // Increased for more detailed responses and comprehensive coverage
-  }
-);
+// Initialize Vector Store
+const vectorStore = new VectorStore();
 
 // Initialize personalization services
 let embeddingService: EmbeddingService | null = null;
@@ -63,6 +58,19 @@ if (process.env.OPENAI_API_KEY) {
     );
 }
 
+// Initialize OpenAI-powered query router with bullet-point style by default
+const queryRouter = new IntelligentQueryRouter(
+  process.env.OPENAI_API_KEY || "",
+  mcpServer,
+  {
+    responseStyle: "bullet-points",
+    includeGreeting: false,
+    maxResponseLength: 2500, // Increased for more detailed responses and comprehensive coverage
+  },
+  vectorStore,
+  embeddingService || undefined
+);
+
 // Initialize database first
 const databaseService = new DatabaseService();
 
@@ -73,18 +81,34 @@ if (process.env.OPENAI_API_KEY) {
   multiAgentOrchestrator = new MultiAgentOrchestrator(
     process.env.OPENAI_API_KEY,
     mcpServer,
-    personalizationService,
-    databaseService
+    personalizationService
+    //databaseService - commented out because not using database yet - TODO: add back in
   );
   logger.info("Multi-agent orchestrator initialized", {
     enabled: USE_MULTI_AGENT,
   });
 }
 
+// Initialize notification services
+const notificationService = new NotificationService();
+let dailyRoundupService: DailyRoundupService | null = null;
+
+if (multiAgentOrchestrator) {
+  dailyRoundupService = new DailyRoundupService(
+    multiAgentOrchestrator,
+    notificationService
+  );
+  // Start scheduler (9 AM daily default)
+  dailyRoundupService.startScheduler();
+  logger.info("Daily Roundup Service initialized");
+}
+
 // Initialize headline fetcher
 const headlineFetcherService = new HeadlineFetcherService(
   databaseService,
-  mcpServer
+  mcpServer,
+  embeddingService || undefined,
+  vectorStore
 );
 
 // Start fetching headlines every hour
@@ -177,7 +201,7 @@ app.post("/ask", async (req, res) => {
         },
         sources: result.sources,
         detailedResults: result.metadata,
-        agentReasoning: result.agentReasoning,
+       //agentReasoning: result.agentReasoning, // commented out because not using agent reasoning yet - TODO: add back in
         timestamp: result.timestamp,
       });
     } else {
@@ -289,6 +313,34 @@ app.get("/agents/costs", (_req, res) => {
     res.status(500).json({ error: err?.message || "Unknown error" });
   }
 });
+
+// ================= NOTIFICATION ENDPOINTS =================
+
+app.post("/notifications/roundup", async (req, res) => {
+  try {
+    if (!dailyRoundupService) {
+      return res.status(503).json({ error: "Daily Roundup Service not available (Multi-Agent system disabled)" });
+    }
+
+    const { userId } = req.body;
+    logger.info("Manual daily roundup requested", { userId });
+    
+    const result = await dailyRoundupService.generateAndSendRoundup(userId || "test_user");
+    
+    res.json(result);
+  } catch (err: any) {
+    logger.error("Manual roundup failed", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/notifications/history/:userId", (req, res) => {
+  const { userId } = req.params;
+  const history = notificationService.getHistory(userId);
+  res.json({ userId, history });
+});
+
+// ================= END NOTIFICATION ENDPOINTS =================
 
 // ================= PERSONALIZATION ENDPOINTS =================
 

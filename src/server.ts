@@ -10,9 +10,15 @@ import { HeadlineFetcherService } from "./services/headlineFetcherService";
 import { VectorStore } from "./services/vectorStore";
 import { MultiAgentOrchestrator } from "./agents/orchestrator";
 import { agentMonitor } from "./agents/monitor";
-import { NotificationService } from "./services/notificationService";
+import {
+  NotificationService,
+  EmailProvider,
+} from "./services/notificationService";
 import { DailyRoundupService } from "./services/dailyRoundupService";
+import { DigestService } from "./services/digestService";
+import { DigestScheduler } from "./services/digestScheduler";
 import logger from "./utils/logger";
+import { triggerStartupDigest } from "./utils/startupDigest";
 
 dotenv.config();
 
@@ -52,7 +58,8 @@ let personalizationService: PersonalizationService | null = null;
 
 if (process.env.OPENAI_API_KEY) {
   embeddingService = new EmbeddingService(process.env.OPENAI_API_KEY);
-  personalizationService = new PersonalizationService(embeddingService, databaseService);
+  // Pass the global vectorStore so personalization can use indexed headlines for recommendations
+  personalizationService = new PersonalizationService(embeddingService, databaseService, vectorStore);
 
   // Initialize async
   personalizationService
@@ -92,7 +99,16 @@ if (process.env.OPENAI_API_KEY) {
 }
 
 // Initialize notification services
-const notificationService = new NotificationService();
+const notificationService = new NotificationService({
+  emailProvider: process.env.EMAIL_PROVIDER as EmailProvider | undefined,
+  sendgridApiKey: process.env.SENDGRID_API_KEY,
+  sesRegion: process.env.AWS_SES_REGION,
+  sesAccessKeyId: process.env.AWS_SES_ACCESS_KEY_ID,
+  sesSecretAccessKey: process.env.AWS_SES_SECRET_ACCESS_KEY,
+  sesConfigurationSetName: process.env.AWS_SES_CONFIG_SET,
+  defaultFromEmail: process.env.DIGEST_SENDER_EMAIL,
+  defaultFromName: process.env.DIGEST_SENDER_NAME || "LLM Daily Roundup",
+});
 let dailyRoundupService: DailyRoundupService | null = null;
 
 if (multiAgentOrchestrator) {
@@ -103,6 +119,22 @@ if (multiAgentOrchestrator) {
   // Start scheduler (9 AM daily default)
   dailyRoundupService.startScheduler();
   logger.info("Daily Roundup Service initialized");
+}
+
+const digestService = new DigestService(databaseService, personalizationService);
+let digestScheduler: DigestScheduler | null = null;
+
+if (notificationService.supportsEmail()) {
+  digestScheduler = new DigestScheduler(digestService, notificationService);
+  digestScheduler.start();
+  logger.info("Email digest scheduler initialized", {
+    cron: process.env.DIGEST_SEND_HOUR || "09:00",
+  });
+  triggerStartupDigest(digestScheduler);
+} else {
+  logger.warn(
+    "Email provider not configured. Digest scheduler will remain disabled."
+  );
 }
 
 // Initialize headline fetcher
@@ -203,6 +235,20 @@ app.post("/ask", async (req, res) => {
         agentsUsed: result.agentsExecuted.length,
         estimatedCost: `$${result.estimatedCost.toFixed(4)}`,
       });
+
+      // Track interaction for personalization
+      if (personalizationService && userId) {
+        try {
+          await personalizationService.trackInteraction({
+            userId,
+            query,
+            timestamp: new Date(),
+            interactionType: "query",
+          });
+        } catch (err) {
+          logger.warn("Failed to track interaction", { error: err });
+        }
+      }
 
       // Save query to history
       try {
@@ -374,6 +420,35 @@ app.post("/notifications/roundup", async (req, res) => {
   } catch (err: any) {
     logger.error("Manual roundup failed", err);
     res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/notifications/digest", async (req, res) => {
+  try {
+    if (!digestScheduler) {
+      return res.status(503).json({
+        error:
+          "Digest scheduler not available. Configure an email provider to enable digests.",
+      });
+    }
+
+    const { userId, email } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ error: "userId is required" });
+    }
+
+    const success = await digestScheduler.sendDigestNow(userId, email);
+
+    res.json({
+      success,
+      message: success
+        ? "Digest email sent successfully"
+        : "Digest email failed. Check logs for details.",
+    });
+  } catch (err: any) {
+    logger.error("Manual digest send failed", err);
+    res.status(500).json({ error: err?.message || "Unknown error" });
   }
 });
 

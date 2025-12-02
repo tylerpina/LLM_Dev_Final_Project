@@ -51,6 +51,16 @@ Make sure your `.env` file has:
 OPENAI_API_KEY=sk-your-key-here  # Required for personalization
 NEWSAPI_KEY=your-key              # For news content
 GUARDIAN_API_KEY=your-key         # For Guardian news
+EMAIL_PROVIDER=ses                        # ses | sendgrid (defaults based on provided keys)
+AWS_SES_REGION=us-east-1                  # Required for AWS SES
+AWS_SES_ACCESS_KEY_ID=your-access-key     # Optional if using IAM roles
+AWS_SES_SECRET_ACCESS_KEY=your-secret     # Optional if using IAM roles
+AWS_SES_CONFIG_SET=OptionalConfigSet      # Optional SES configuration set name
+SENDGRID_API_KEY=optional-sendgrid-key    # Only needed if you keep SendGrid as a fallback
+DIGEST_SENDER_EMAIL=updates@yourdomain.com # Verified sender/domain for digests
+DIGEST_SENDER_NAME="LLM Daily Briefing"    # Optional friendly sender name
+DIGEST_SEND_HOUR=09:00                     # Default (24h) send time for daily digests
+DIGEST_DEFAULT_RECIPIENTS=user1@example.com,user2@example.com # Optional fallback recipients
 ```
 
 ### 3. Start the Server
@@ -133,6 +143,21 @@ curl -X POST http://localhost:3000/personalize/search \
 ```bash
 curl http://localhost:3000/personalize/profile/user-123
 ```
+
+### 5. Send a Daily Digest Email
+
+With AWS SES (or your configured provider) set up (`EMAIL_PROVIDER`, AWS credentials/region, and a verified `DIGEST_SENDER_EMAIL`), you can trigger an email digest at any time:
+
+```bash
+curl -X POST http://localhost:3000/notifications/digest \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "user@example.com",
+    "email": "user@example.com"
+  }'
+```
+
+If `email` is omitted, the service will attempt to use the `userId` as the delivery address (useful when IDs are actual emails). Scheduled digests will automatically use `DIGEST_DEFAULT_RECIPIENTS` if provided.
 
 ## Files Created
 

@@ -40,11 +40,17 @@ export class PersonalizationService {
   private articlesStore: VectorStore;
   private userProfiles: Map<string, UserProfile> = new Map();
 
-  constructor(embeddingService: EmbeddingService, databaseService: DatabaseService) {
+  constructor(
+    embeddingService: EmbeddingService,
+    databaseService: DatabaseService,
+    sharedArticlesStore?: VectorStore
+  ) {
     this.embeddingService = embeddingService;
     this.databaseService = databaseService;
     this.userInteractionsStore = new VectorStore();
-    this.articlesStore = new VectorStore();
+    // Use shared articles store if provided (e.g., global headlines vector store)
+    // Otherwise create a private one
+    this.articlesStore = sharedArticlesStore || new VectorStore();
   }
 
   /**

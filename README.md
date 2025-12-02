@@ -22,6 +22,16 @@ A TypeScript-powered news intelligence platform with **multi-agent AI orchestrat
    OPENALEX_CONTACT_EMAIL=your_email     # Optional but recommended for OpenAlex.org
    OPENAI_API_KEY=your_openai_key        # Get from https://platform.openai.com/api-keys
    USE_MULTI_AGENT=true                  # Enable multi-agent system (recommended!)
+   EMAIL_PROVIDER=ses                    # ses | sendgrid (auto-detected if omitted)
+   AWS_SES_REGION=us-east-1              # Required for AWS SES
+   AWS_SES_ACCESS_KEY_ID=your_access_key # Optional if using IAM role
+   AWS_SES_SECRET_ACCESS_KEY=your_secret # Optional if using IAM role
+   AWS_SES_CONFIG_SET=OptionalConfigSet  # Optional SES configuration set
+   SENDGRID_API_KEY=optional_fallback    # Only needed if you prefer SendGrid
+   DIGEST_SENDER_EMAIL=updates@yourdomain.com  # Verified sender/domain
+   DIGEST_SENDER_NAME="LLM Daily Briefing"     # Optional friendly sender name
+   DIGEST_SEND_HOUR=09:00                # 24h format (server timezone)
+   DIGEST_DEFAULT_RECIPIENTS=user1@example.com,user2@example.com  # Optional fallback list
    ```
 
 2. Install dependencies:
@@ -83,6 +93,12 @@ A TypeScript-powered news intelligence platform with **multi-agent AI orchestrat
 - POST `/personalize/track` — Track user interactions (query, click, view, like)
 - GET `/personalize/profile/:userId` — Get user profile and interests
 - GET `/personalize/profiles` — Get all user profiles (admin)
+
+### 📬 Notification & Digest Endpoints
+
+- POST `/notifications/roundup` — Trigger an on-demand multi-agent roundup (console/dev)
+- POST `/notifications/digest` — Send the latest email digest (requires configured email provider)
+- GET `/notifications/history/:userId` — View notification send history for a user
 
 ## 🧠 Multi-Agent System
 
@@ -197,6 +213,15 @@ curl -X POST http://localhost:3000/personalize/search \
 # Personalization: Get user profile
 
 curl http://localhost:3000/personalize/profile/user123
+
+# Notifications: Send an email digest
+
+curl -X POST http://localhost:3000/notifications/digest \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": "user@example.com",
+    "email": "user@example.com"
+  }'
 
 ```
 

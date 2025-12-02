@@ -5,7 +5,7 @@ A TypeScript-powered news intelligence platform with **multi-agent AI orchestrat
 ## 🚀 Features
 
 - **Multi-Agent Intelligence System**: Parallel specialist agents for deep news analysis
-- **Multiple News Sources**: NewsAPI, The Guardian, NYTimes, ArXiv academic papers
+- **Multiple News Sources**: NewsAPI, The Guardian, NYTimes, ArXiv, and OpenAlex research graphs
 - **Vector-Based Personalization**: Learn user preferences over time
 - **Automatic Headline Fetching**: Background jobs keep content fresh
 - **AI-Powered Analysis**: Sentiment, trends, bias detection, and synthesis
@@ -19,6 +19,7 @@ A TypeScript-powered news intelligence platform with **multi-agent AI orchestrat
    NEWSAPI_KEY=your_newsapi_key          # Get from https://newsapi.org
    GUARDIAN_API_KEY=your_guardian_key    # Get from https://open-platform.theguardian.com
    NYTIMES_API_KEY=your_nytimes_key      # Get from https://developer.nytimes.com
+   OPENALEX_CONTACT_EMAIL=your_email     # Optional but recommended for OpenAlex.org
    OPENAI_API_KEY=your_openai_key        # Get from https://platform.openai.com/api-keys
    USE_MULTI_AGENT=true                  # Enable multi-agent system (recommended!)
    ```

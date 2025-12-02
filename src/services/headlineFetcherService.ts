@@ -110,6 +110,19 @@ export class HeadlineFetcherService {
         logger.error('Failed to fetch ArXiv papers', error);
       }
 
+      // Fetch from OpenAlex
+      if (this.isProviderAvailable('openalex')) {
+        try {
+          const openAlexWorks = await this.fetchOpenAlex(fetchedAt);
+          headlines.push(...openAlexWorks);
+          logger.info('Fetched OpenAlex works', { count: openAlexWorks.length });
+        } catch (error) {
+          logger.error('Failed to fetch OpenAlex works', error);
+        }
+      } else {
+        logger.warn('OpenAlex provider not configured, skipping fetch');
+      }
+
       // Fetch from NYTimes
       if (this.isProviderAvailable('nytimes')) {
         try {
@@ -283,6 +296,64 @@ export class HeadlineFetcherService {
         provider: 'arxiv'
       };
     });
+  }
+
+  /**
+   * Fetch recent works from OpenAlex
+   */
+  private async fetchOpenAlex(fetchedAt: string): Promise<Omit<Headline, 'id'>[]> {
+    if (!this.isProviderAvailable('openalex')) {
+      logger.debug('OpenAlex provider unavailable, skipping direct fetch');
+      return [];
+    }
+
+    const result = await this.mcpServer.handle({
+      method: 'GET',
+      path: '/openalex/works',
+      query: {
+        search: 'artificial intelligence OR machine learning OR robotics OR data science',
+        sort: 'publication_date:desc',
+        per_page: '8'
+      },
+      provider: 'openalex'
+    });
+
+    const works = result.data?.results || [];
+
+    return works.map((work: any) => ({
+      title: work.display_name || 'No title',
+      description: this.reconstructOpenAlexAbstract(work.abstract_inverted_index) || work.summary_stats?.overview || '',
+      source: work.primary_location?.source?.display_name || work.host_venue?.display_name || 'OpenAlex',
+      url: work.primary_location?.landing_page_url || work.primary_location?.pdf_url || work.host_venue?.url || work.id || '',
+      publishedAt: work.publication_date || fetchedAt,
+      fetchedAt,
+      category: 'research',
+      provider: 'openalex'
+    }));
+  }
+
+  private reconstructOpenAlexAbstract(index?: Record<string, number[]> | null): string {
+    if (!index) {
+      return '';
+    }
+
+    const positions: Array<{ word: string; position: number }> = [];
+    for (const [word, indices] of Object.entries(index)) {
+      indices.forEach(pos => positions.push({ word, position: pos }));
+    }
+
+    positions.sort((a, b) => a.position - b.position);
+
+    if (!positions.length) {
+      return '';
+    }
+
+    const words: string[] = [];
+    positions.forEach(({ word, position }) => {
+      words[position] = word;
+    });
+
+    return words.filter(Boolean).join(' ');
   }
 
   /**

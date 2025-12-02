@@ -26,7 +26,8 @@ const USE_MULTI_AGENT = process.env.USE_MULTI_AGENT === "true";
 const mcpServer = new UniversalMcpServer(
   process.env.NEWSAPI_KEY || "",
   process.env.GUARDIAN_API_KEY,
-  process.env.NYTIMES_API_KEY
+  process.env.NYTIMES_API_KEY,
+  process.env.OPENALEX_CONTACT_EMAIL || "mozaslan@mines.edu"
 );
 
 // Log available providers for debugging
@@ -35,7 +36,8 @@ logger.info("MCP Server initialized with providers:", {
   hasNewsAPI: mcpServer.getAvailableProviders().includes('newsapi'),
   hasGuardian: mcpServer.getAvailableProviders().includes('guardian'),
   hasNYTimes: mcpServer.getAvailableProviders().includes('nytimes'),
-  hasArxiv: mcpServer.getAvailableProviders().includes('arxiv')
+  hasArxiv: mcpServer.getAvailableProviders().includes('arxiv'),
+  hasOpenAlex: mcpServer.getAvailableProviders().includes('openalex')
 });
 
 // Initialize Vector Store

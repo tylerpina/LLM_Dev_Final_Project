@@ -226,7 +226,7 @@ export class DatabaseService {
    */
   getBalancedHeadlines(limit: number = 24): Headline[] {
     // Get equal representation from each known provider
-    const sourcesPerProvider = Math.ceil(limit / 4); // Roughly equal for 4 providers
+    const sourcesPerProvider = Math.ceil(limit / 5); // Roughly equal for 5 providers
     
     const guardianStmt = this.db.prepare(`
       SELECT * FROM headlines 
@@ -252,14 +252,27 @@ export class DatabaseService {
       ORDER BY fetchedAt DESC, publishedAt DESC 
       LIMIT ?
     `);
+    const openAlexStmt = this.db.prepare(`
+      SELECT * FROM headlines 
+      WHERE provider = 'openalex' OR source LIKE '%OpenAlex%'
+      ORDER BY fetchedAt DESC, publishedAt DESC 
+      LIMIT ?
+    `);
 
     const guardianHeadlines = guardianStmt.all(sourcesPerProvider) as Headline[];
     const arxivHeadlines = arxivStmt.all(sourcesPerProvider) as Headline[];
     const nyTimesHeadlines = nyTimesStmt.all(sourcesPerProvider) as Headline[];
     const newsApiHeadlines = newsApiStmt.all(sourcesPerProvider) as Headline[];
+    const openAlexHeadlines = openAlexStmt.all(sourcesPerProvider) as Headline[];
 
     // Combine and sort by fetch time, then limit to requested amount
-    const allHeadlines = [...newsApiHeadlines, ...guardianHeadlines, ...arxivHeadlines, ...nyTimesHeadlines]
+    const allHeadlines = [
+      ...newsApiHeadlines,
+      ...guardianHeadlines,
+      ...arxivHeadlines,
+      ...nyTimesHeadlines,
+      ...openAlexHeadlines
+    ]
       .sort((a, b) => new Date(b.fetchedAt).getTime() - new Date(a.fetchedAt).getTime())
       .slice(0, limit);
 

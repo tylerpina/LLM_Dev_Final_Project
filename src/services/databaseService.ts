@@ -1,6 +1,6 @@
-import Database from 'better-sqlite3';
-import path from 'path';
-import { logger } from '../utils/logger';
+import Database from "better-sqlite3";
+import path from "path";
+import { logger } from "../utils/logger";
 
 export interface Headline {
   id: number;
@@ -36,12 +36,32 @@ export interface SavedSearch {
   useCount: number;
 }
 
+export interface DBUserProfile {
+  userId: string;
+  interests: string; // JSON string array
+  interactionCount: number;
+  createdAt: string;
+  lastActive: string;
+}
+
+export interface DBUserInteraction {
+  id: string;
+  userId: string;
+  query: string;
+  timestamp: string;
+  articleId?: string;
+  articleTitle?: string;
+  articleContent?: string;
+  interactionType: string;
+  embedding?: string; // JSON string of number[]
+}
+
 export class DatabaseService {
   private db: Database.Database;
 
-  constructor(dbPath: string = './data/headlines.db') {
+  constructor(dbPath: string = "./data/headlines.db") {
     // Ensure data directory exists
-    const fs = require('fs');
+    const fs = require("fs");
     const dir = path.dirname(dbPath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -49,7 +69,7 @@ export class DatabaseService {
 
     this.db = new Database(dbPath);
     this.initializeDatabase();
-    logger.info('Database initialized', { path: dbPath });
+    logger.info("Database initialized", { path: dbPath });
   }
 
   private initializeDatabase(): void {
@@ -67,10 +87,12 @@ export class DatabaseService {
         provider TEXT DEFAULT 'unknown'
       );
     `);
-    
+
     // Add provider column if it doesn't exist (for existing databases)
     try {
-      this.db.exec(`ALTER TABLE headlines ADD COLUMN provider TEXT DEFAULT 'unknown';`);
+      this.db.exec(
+        `ALTER TABLE headlines ADD COLUMN provider TEXT DEFAULT 'unknown';`
+      );
     } catch (error) {
       // Column already exists, ignore error
     }
@@ -85,6 +107,33 @@ export class DatabaseService {
         createdAt TEXT DEFAULT CURRENT_TIMESTAMP
       );
     `);
+
+    // Create user profiles table for personalization
+    this.db.exec(`
+      CREATE TABLE IF NOT EXISTS user_profiles (
+        userId TEXT PRIMARY KEY,
+        interests TEXT, -- JSON array of strings
+        interactionCount INTEGER DEFAULT 0,
+        createdAt TEXT NOT NULL,
+        lastActive TEXT NOT NULL
+      );
+    `);
+
+    // Create user interactions table for personalization
+    this.db.exec(`
+      CREATE TABLE IF NOT EXISTS user_interactions (
+        id TEXT PRIMARY KEY,
+        userId TEXT NOT NULL,
+        query TEXT,
+        timestamp TEXT NOT NULL,
+        articleId TEXT,
+        articleTitle TEXT,
+        articleContent TEXT,
+        interactionType TEXT NOT NULL,
+        embedding TEXT -- JSON array of numbers
+      );
+    `);
+
     // Create query history table
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS query_history (
@@ -119,13 +168,14 @@ export class DatabaseService {
       CREATE INDEX IF NOT EXISTS idx_source ON headlines(source);
       CREATE INDEX IF NOT EXISTS idx_query_history_user_timestamp ON query_history(userId, timestamp DESC);
       CREATE INDEX IF NOT EXISTS idx_saved_searches_user ON saved_searches(userId);
+      CREATE INDEX IF NOT EXISTS idx_user_interactions_user ON user_interactions(userId, timestamp DESC);
     `);
   }
 
   /**
    * Insert a new headline
    */
-  insertHeadline(headline: Omit<Headline, 'id'>): number {
+  insertHeadline(headline: Omit<Headline, "id">): number {
     const stmt = this.db.prepare(`
       INSERT INTO headlines (title, description, source, url, publishedAt, fetchedAt, category, provider)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -139,7 +189,7 @@ export class DatabaseService {
       headline.publishedAt,
       headline.fetchedAt,
       headline.category,
-      headline.provider || 'unknown'
+      headline.provider || "unknown"
     );
 
     return result.lastInsertRowid as number;
@@ -148,27 +198,29 @@ export class DatabaseService {
   /**
    * Bulk insert headlines
    */
-  insertHeadlines(headlines: Omit<Headline, 'id'>[]): number {
-    const insertMany = this.db.transaction((headlines: Omit<Headline, 'id'>[]) => {
-      const stmt = this.db.prepare(`
+  insertHeadlines(headlines: Omit<Headline, "id">[]): number {
+    const insertMany = this.db.transaction(
+      (headlines: Omit<Headline, "id">[]) => {
+        const stmt = this.db.prepare(`
         INSERT INTO headlines (title, description, source, url, publishedAt, fetchedAt, category, provider)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `);
 
-      for (const headline of headlines) {
-        stmt.run(
-          headline.title,
-          headline.description,
-          headline.source,
-          headline.url,
-          headline.publishedAt,
-          headline.fetchedAt,
-          headline.category,
-          headline.provider || 'unknown'
-        );
+        for (const headline of headlines) {
+          stmt.run(
+            headline.title,
+            headline.description,
+            headline.source,
+            headline.url,
+            headline.publishedAt,
+            headline.fetchedAt,
+            headline.category,
+            headline.provider || "unknown"
+          );
+        }
+        return headlines.length;
       }
-      return headlines.length;
-    });
+    );
 
     return insertMany(headlines);
   }
@@ -179,14 +231,48 @@ export class DatabaseService {
   getRecentHeadlines(limit: number = 20, source?: string): Headline[] {
     let query = `
       SELECT * FROM headlines
-      ${source ? 'WHERE source = ?' : ''}
+      ${source ? "WHERE source = ?" : ""}
       ORDER BY fetchedAt DESC, publishedAt DESC
       LIMIT ?
     `;
 
     const stmt = this.db.prepare(query);
     const params = source ? [source, limit] : [limit];
-    
+
+    return stmt.all(...params) as Headline[];
+  }
+
+  /**
+   * Get headlines filtered by categories
+   */
+  getHeadlinesByCategories(
+    categories: string[],
+    limit: number = 20
+  ): Headline[] {
+    if (!categories || categories.length === 0) {
+      return this.getRecentHeadlines(limit);
+    }
+
+    // Construct a query with multiple LIKE clauses
+    const conditions = categories
+      .map(() => `(category LIKE ? OR title LIKE ? OR description LIKE ?)`)
+      .join(" OR ");
+
+    const query = `
+      SELECT * FROM headlines
+      WHERE ${conditions}
+      ORDER BY fetchedAt DESC, publishedAt DESC
+      LIMIT ?
+    `;
+
+    const params: any[] = [];
+    categories.forEach((cat) => {
+      const term = `%${cat}%`;
+      params.push(term, term, term);
+    });
+    params.push(limit);
+
+    const stmt = this.db.prepare(query);
     return stmt.all(...params) as Headline[];
   }
 
@@ -241,7 +327,7 @@ export class DatabaseService {
   getBalancedHeadlines(limit: number = 24): Headline[] {
     // Get equal representation from each known provider
     const sourcesPerProvider = Math.ceil(limit / 5); // Roughly equal for 5 providers
-    
+
     const guardianStmt = this.db.prepare(`
       SELECT * FROM headlines 
       WHERE provider = 'guardian' OR source = 'guardian'
@@ -273,11 +359,15 @@ export class DatabaseService {
       LIMIT ?
     `);
 
-    const guardianHeadlines = guardianStmt.all(sourcesPerProvider) as Headline[];
+    const guardianHeadlines = guardianStmt.all(
+      sourcesPerProvider
+    ) as Headline[];
     const arxivHeadlines = arxivStmt.all(sourcesPerProvider) as Headline[];
     const nyTimesHeadlines = nyTimesStmt.all(sourcesPerProvider) as Headline[];
     const newsApiHeadlines = newsApiStmt.all(sourcesPerProvider) as Headline[];
-    const openAlexHeadlines = openAlexStmt.all(sourcesPerProvider) as Headline[];
+    const openAlexHeadlines = openAlexStmt.all(
+      sourcesPerProvider
+    ) as Headline[];
 
     // Combine and sort by fetch time, then limit to requested amount
     const allHeadlines = [
@@ -285,9 +375,12 @@ export class DatabaseService {
       ...guardianHeadlines,
       ...arxivHeadlines,
       ...nyTimesHeadlines,
-      ...openAlexHeadlines
+      ...openAlexHeadlines,
     ]
-      .sort((a, b) => new Date(b.fetchedAt).getTime() - new Date(a.fetchedAt).getTime())
+      .sort(
+        (a, b) =>
+          new Date(b.fetchedAt).getTime() - new Date(a.fetchedAt).getTime()
+      )
       .slice(0, limit);
 
     return allHeadlines;
@@ -311,7 +404,76 @@ export class DatabaseService {
    */
   close(): void {
     this.db.close();
-    logger.info('Database connection closed');
+    logger.info("Database connection closed");
+  }
+
+  // ================= USER PROFILE METHODS =================
+
+  /**
+   * Get user profile
+   */
+  getUserProfile(userId: string): DBUserProfile | undefined {
+    const stmt = this.db.prepare(`
+      SELECT * FROM user_profiles WHERE userId = ?
+    `);
+    return stmt.get(userId) as DBUserProfile | undefined;
+  }
+
+  /**
+   * Upsert user profile
+   */
+  upsertUserProfile(profile: DBUserProfile): void {
+    const stmt = this.db.prepare(`
+      INSERT INTO user_profiles (userId, interests, interactionCount, createdAt, lastActive)
+      VALUES (?, ?, ?, ?, ?)
+      ON CONFLICT(userId) DO UPDATE SET
+        interests = excluded.interests,
+        interactionCount = excluded.interactionCount,
+        lastActive = excluded.lastActive
+    `);
+
+    stmt.run(
+      profile.userId,
+      profile.interests,
+      profile.interactionCount,
+      profile.createdAt,
+      profile.lastActive
+    );
+  }
+
+  /**
+   * Save user interaction
+   */
+  saveUserInteraction(interaction: DBUserInteraction): void {
+    const stmt = this.db.prepare(`
+      INSERT INTO user_interactions (id, userId, query, timestamp, articleId, articleTitle, articleContent, interactionType, embedding)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    stmt.run(
+      interaction.id,
+      interaction.userId,
+      interaction.query || "",
+      interaction.timestamp,
+      interaction.articleId || null,
+      interaction.articleTitle || null,
+      interaction.articleContent || null,
+      interaction.interactionType,
+      interaction.embedding || null
+    );
+  }
+
+  /**
+   * Get recent user interactions
+   */
+  getUserInteractions(userId: string, limit: number = 50): DBUserInteraction[] {
+    const stmt = this.db.prepare(`
+      SELECT * FROM user_interactions
+      WHERE userId = ?
+      ORDER BY timestamp DESC
+      LIMIT ?
+    `);
+    return stmt.all(userId, limit) as DBUserInteraction[];
   }
 
   // ================= QUERY HISTORY METHODS =================
@@ -319,7 +481,7 @@ export class DatabaseService {
   /**
    * Save a query to history
    */
-  saveQueryHistory(history: Omit<QueryHistory, 'id'>): number {
+  saveQueryHistory(history: Omit<QueryHistory, "id">): number {
     const stmt = this.db.prepare(`
       INSERT INTO query_history (userId, query, style, timestamp, executionTimeMs, agentsExecuted, sourcesCount)
       VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -355,7 +517,11 @@ export class DatabaseService {
   /**
    * Search query history
    */
-  searchQueryHistory(userId: string, searchTerm: string, limit: number = 20): QueryHistory[] {
+  searchQueryHistory(
+    userId: string,
+    searchTerm: string,
+    limit: number = 20
+  ): QueryHistory[] {
     const stmt = this.db.prepare(`
       SELECT * FROM query_history
       WHERE userId = ? AND query LIKE ?
@@ -402,24 +568,40 @@ export class DatabaseService {
     thisWeek: number;
     averageExecutionTime: number;
   } {
-    const total = this.db.prepare(`
+    const total = this.db
+      .prepare(
+        `
       SELECT COUNT(*) as count FROM query_history WHERE userId = ?
-    `).get(userId) as { count: number };
+    `
+      )
+      .get(userId) as { count: number };
 
-    const today = this.db.prepare(`
+    const today = this.db
+      .prepare(
+        `
       SELECT COUNT(*) as count FROM query_history
       WHERE userId = ? AND date(timestamp) = date('now')
-    `).get(userId) as { count: number };
+    `
+      )
+      .get(userId) as { count: number };
 
-    const thisWeek = this.db.prepare(`
+    const thisWeek = this.db
+      .prepare(
+        `
       SELECT COUNT(*) as count FROM query_history
       WHERE userId = ? AND datetime(timestamp) >= datetime('now', '-7 days')
-    `).get(userId) as { count: number };
+    `
+      )
+      .get(userId) as { count: number };
 
-    const avgTime = this.db.prepare(`
+    const avgTime = this.db
+      .prepare(
+        `
       SELECT AVG(executionTimeMs) as avg FROM query_history
       WHERE userId = ? AND executionTimeMs IS NOT NULL
-    `).get(userId) as { avg: number | null };
+    `
+      )
+      .get(userId) as { avg: number | null };
 
     return {
       total: total.count,
@@ -434,7 +616,7 @@ export class DatabaseService {
   /**
    * Save a search
    */
-  saveSearch(search: Omit<SavedSearch, 'id' | 'useCount'>): number {
+  saveSearch(search: Omit<SavedSearch, "id" | "useCount">): number {
     const stmt = this.db.prepare(`
       INSERT INTO saved_searches (userId, name, query, style, createdAt, lastUsed, useCount)
       VALUES (?, ?, ?, ?, ?, ?, 0)
@@ -481,20 +663,24 @@ export class DatabaseService {
   /**
    * Update a saved search
    */
-  updateSavedSearch(id: number, userId: string, updates: Partial<Pick<SavedSearch, 'name' | 'query' | 'style'>>): boolean {
+  updateSavedSearch(
+    id: number,
+    userId: string,
+    updates: Partial<Pick<SavedSearch, "name" | "query" | "style">>
+  ): boolean {
     const fields: string[] = [];
     const values: any[] = [];
 
     if (updates.name !== undefined) {
-      fields.push('name = ?');
+      fields.push("name = ?");
       values.push(updates.name);
     }
     if (updates.query !== undefined) {
-      fields.push('query = ?');
+      fields.push("query = ?");
       values.push(updates.query);
     }
     if (updates.style !== undefined) {
-      fields.push('style = ?');
+      fields.push("style = ?");
       values.push(updates.style);
     }
 
@@ -503,7 +689,7 @@ export class DatabaseService {
     values.push(id, userId);
     const stmt = this.db.prepare(`
       UPDATE saved_searches
-      SET ${fields.join(', ')}
+      SET ${fields.join(", ")}
       WHERE id = ? AND userId = ?
     `);
 
@@ -537,20 +723,4 @@ export class DatabaseService {
     const result = stmt.run(id, userId);
     return result.changes > 0;
   }
-
-  /**
-   * Clean old query history (keep last N days)
-   */
-  cleanOldQueryHistory(daysToKeep: number = 30): number {
-    const stmt = this.db.prepare(`
-      DELETE FROM query_history
-      WHERE datetime(timestamp) < datetime('now', '-' || ? || ' days')
-    `);
-
-    const result = stmt.run(daysToKeep);
-    return result.changes;
-  }
 }
-
-
-

@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { EmbeddingService } from './embeddingService';
 import { VectorStore } from './vectorStore';
 import { logger } from '../utils/logger';
+import { DatabaseService, DBUserProfile } from './databaseService';
 
 export interface UserInteraction {
   userId: string;
@@ -30,16 +31,18 @@ export interface RecommendationResult {
 }
 
 /**
- * Personalization service using vector embeddings and in-memory vector store
+ * Personalization service using vector embeddings and persistent storage
  */
 export class PersonalizationService {
   private embeddingService: EmbeddingService;
+  private databaseService: DatabaseService;
   private userInteractionsStore: VectorStore;
   private articlesStore: VectorStore;
   private userProfiles: Map<string, UserProfile> = new Map();
 
-  constructor(embeddingService: EmbeddingService) {
+  constructor(embeddingService: EmbeddingService, databaseService: DatabaseService) {
     this.embeddingService = embeddingService;
+    this.databaseService = databaseService;
     this.userInteractionsStore = new VectorStore();
     this.articlesStore = new VectorStore();
   }
@@ -81,6 +84,19 @@ export class PersonalizationService {
         document: textToEmbed,
       }]);
 
+      // Persist interaction to database
+      this.databaseService.saveUserInteraction({
+        id,
+        userId: interaction.userId,
+        query: interaction.query,
+        timestamp: interaction.timestamp.toISOString(),
+        articleId: interaction.articleId,
+        articleTitle: interaction.articleTitle,
+        articleContent: interaction.articleContent,
+        interactionType: interaction.interactionType,
+        embedding: JSON.stringify(embedding),
+      });
+
       // Update user profile
       await this.updateUserProfile(interaction);
 
@@ -92,10 +108,50 @@ export class PersonalizationService {
   }
 
   /**
+   * Update user interests explicitly
+   */
+  async updateUserInterests(userId: string, interests: string[]): Promise<void> {
+    try {
+      let profile = this.getUserProfile(userId);
+
+      if (!profile) {
+        profile = {
+          userId,
+          interests: [],
+          interactionCount: 0,
+          createdAt: new Date(),
+          lastActive: new Date(),
+        };
+      }
+
+      // Update interests (deduplicate)
+      profile.interests = [...new Set(interests)];
+      profile.lastActive = new Date();
+
+      // Update memory cache
+      this.userProfiles.set(userId, profile);
+
+      // Persist to database
+      this.databaseService.upsertUserProfile({
+        userId: profile.userId,
+        interests: JSON.stringify(profile.interests),
+        interactionCount: profile.interactionCount,
+        createdAt: profile.createdAt.toISOString(),
+        lastActive: profile.lastActive.toISOString(),
+      });
+
+      logger.info(`Updated interests for user ${userId}: ${interests.join(', ')}`);
+    } catch (error) {
+      logger.error('Error updating user interests:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Update user profile based on interaction
    */
   private async updateUserProfile(interaction: UserInteraction): Promise<void> {
-    let profile = this.userProfiles.get(interaction.userId);
+    let profile = this.getUserProfile(interaction.userId);
 
     if (!profile) {
       profile = {
@@ -129,7 +185,17 @@ export class PersonalizationService {
       }
     }
 
+    // Update memory cache
     this.userProfiles.set(interaction.userId, profile);
+
+    // Persist to database
+    this.databaseService.upsertUserProfile({
+      userId: profile.userId,
+      interests: JSON.stringify(profile.interests),
+      interactionCount: profile.interactionCount,
+      createdAt: profile.createdAt.toISOString(),
+      lastActive: profile.lastActive.toISOString(),
+    });
   }
 
   /**
@@ -140,8 +206,14 @@ export class PersonalizationService {
     limit: number = 10
   ): Promise<RecommendationResult[]> {
     try {
-      // Get user's past interactions
-      const userHistory = this.userInteractionsStore.get({ userId }, 20);
+      // Get user's past interactions from memory
+      let userHistory = this.userInteractionsStore.get({ userId }, 20);
+
+      // If no history in memory, try to load from DB
+      if (userHistory.length === 0) {
+        await this.loadUserInteractionsFromDB(userId);
+        userHistory = this.userInteractionsStore.get({ userId }, 20);
+      }
 
       if (userHistory.length === 0) {
         logger.info(`No history found for user ${userId}, returning empty recommendations`);
@@ -169,6 +241,39 @@ export class PersonalizationService {
     } catch (error) {
       logger.error('Error getting recommendations:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Load user interactions from database into vector store
+   */
+  private async loadUserInteractionsFromDB(userId: string): Promise<void> {
+    try {
+      const interactions = this.databaseService.getUserInteractions(userId, 20);
+      if (interactions.length > 0) {
+        const vectorDocs = interactions
+          .filter(i => i.embedding) // Only those with embeddings
+          .map(i => ({
+            id: i.id,
+            embedding: JSON.parse(i.embedding!),
+            metadata: {
+              userId: i.userId,
+              query: i.query,
+              timestamp: i.timestamp,
+              articleId: i.articleId || '',
+              articleTitle: i.articleTitle || '',
+              interactionType: i.interactionType,
+            },
+            document: i.query || i.articleContent || '',
+          }));
+        
+        if (vectorDocs.length > 0) {
+          this.userInteractionsStore.add(vectorDocs);
+          logger.info(`Loaded ${vectorDocs.length} interactions from DB for user ${userId}`);
+        }
+      }
+    } catch (error) {
+      logger.warn('Failed to load interactions from DB:', error);
     }
   }
 
@@ -243,14 +348,38 @@ export class PersonalizationService {
   }
 
   /**
-   * Get user profile
+   * Get user profile (from memory or DB)
    */
   getUserProfile(userId: string): UserProfile | undefined {
-    return this.userProfiles.get(userId);
+    let profile = this.userProfiles.get(userId);
+    
+    if (!profile) {
+      // Try to fetch from DB
+      const dbProfile = this.databaseService.getUserProfile(userId);
+      if (dbProfile) {
+        try {
+          profile = {
+            userId: dbProfile.userId,
+            interests: JSON.parse(dbProfile.interests),
+            interactionCount: dbProfile.interactionCount,
+            createdAt: new Date(dbProfile.createdAt),
+            lastActive: new Date(dbProfile.lastActive)
+          };
+          // Cache in memory
+          this.userProfiles.set(userId, profile);
+        } catch (e) {
+          logger.error('Error parsing user profile from DB:', e);
+        }
+      }
+    }
+    
+    return profile;
   }
 
   /**
-   * Get all user profiles
+   * Get all user profiles (from memory only - efficient list)
+   * Note: This only returns currently active/cached profiles. 
+   * For full list, we would need a DB method.
    */
   getAllUserProfiles(): UserProfile[] {
     return Array.from(this.userProfiles.values());
@@ -295,4 +424,3 @@ export class PersonalizationService {
     }
   }
 }
-

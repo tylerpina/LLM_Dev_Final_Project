@@ -43,13 +43,16 @@ logger.info("MCP Server initialized with providers:", {
 // Initialize Vector Store
 const vectorStore = new VectorStore();
 
+// Initialize database first
+const databaseService = new DatabaseService();
+
 // Initialize personalization services
 let embeddingService: EmbeddingService | null = null;
 let personalizationService: PersonalizationService | null = null;
 
 if (process.env.OPENAI_API_KEY) {
   embeddingService = new EmbeddingService(process.env.OPENAI_API_KEY);
-  personalizationService = new PersonalizationService(embeddingService);
+  personalizationService = new PersonalizationService(embeddingService, databaseService);
 
   // Initialize async
   personalizationService
@@ -72,9 +75,6 @@ const queryRouter = new IntelligentQueryRouter(
   vectorStore,
   embeddingService || undefined
 );
-
-// Initialize database first
-const databaseService = new DatabaseService();
 
 // Initialize multi-agent orchestrator
 let multiAgentOrchestrator: MultiAgentOrchestrator | null = null;
@@ -386,6 +386,92 @@ app.get("/notifications/history/:userId", (req, res) => {
 // ================= END NOTIFICATION ENDPOINTS =================
 
 // ================= PERSONALIZATION ENDPOINTS =================
+
+// Update user interests
+app.post("/personalize/interests", async (req, res) => {
+  try {
+    if (!personalizationService) {
+      return res.status(503).json({
+        error: "Personalization service not available. Please set OPENAI_API_KEY.",
+      });
+    }
+
+    const { userId, interests } = req.body;
+
+    if (!userId || !interests || !Array.isArray(interests)) {
+      return res.status(400).json({
+        error: "userId and interests (array) are required",
+      });
+    }
+
+    await personalizationService.updateUserInterests(userId, interests);
+
+    logger.info("User interests updated", { userId, count: interests.length });
+
+    res.json({
+      success: true,
+      message: "Interests updated successfully",
+      interests
+    });
+  } catch (err: any) {
+    logger.error("Failed to update interests:", err);
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
+
+// Get personalized headlines based on interests
+app.get("/headlines/personalized", async (req, res) => {
+  try {
+    const userId = req.query.userId as string;
+    const limit = parseInt(req.query.limit as string) || 20;
+
+    if (!userId) {
+      return res.status(400).json({ error: "userId is required" });
+    }
+
+    let interests: string[] = [];
+    
+    // Get user interests if personalization service is available
+    if (personalizationService) {
+      const profile = personalizationService.getUserProfile(userId);
+      if (profile && profile.interests) {
+        interests = profile.interests;
+      }
+    }
+
+    // If no interests found, return standard balanced headlines
+    if (interests.length === 0) {
+      const headlines = databaseService.getBalancedHeadlines(limit);
+      return res.json({
+        success: true,
+        count: headlines.length,
+        headlines,
+        personalized: false,
+        message: "No interests found, showing general headlines"
+      });
+    }
+
+    // Fetch headlines matching interests
+    const headlines = databaseService.getHeadlinesByCategories(interests, limit);
+
+    logger.info("Personalized headlines retrieved", { 
+      userId, 
+      interests: interests.length,
+      count: headlines.length 
+    });
+
+    res.json({
+      success: true,
+      count: headlines.length,
+      headlines,
+      personalized: true,
+      interests
+    });
+  } catch (err: any) {
+    logger.error("Failed to get personalized headlines:", err);
+    res.status(500).json({ error: err?.message || "Unknown error" });
+  }
+});
 
 // Get personalized recommendations for a user
 app.get("/personalize/recommendations/:userId", async (req, res) => {

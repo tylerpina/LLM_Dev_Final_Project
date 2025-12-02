@@ -233,6 +233,20 @@ Keep insights specific to the user's profile and the current results.`,
     }
   }
 
+  protected async getReasoning(context: AgentContext, data: PersonalizationResult): Promise<string> {
+    const hasUserProfile = !!context.userProfile;
+    const userInterests = context.userProfile?.interests?.length || 0;
+    
+    return `Personalization Agent processed ${data.rankedArticles.length} articles for user relevance:
+- User profile available: ${hasUserProfile ? 'Yes' : 'No'}
+- User interests tracked: ${userInterests}
+- Articles ranked by relevance: ${data.rankedArticles.length}
+- Personalized insights generated: ${data.personalizedInsights.length}
+- Follow-up recommendations: ${data.recommendedFollowUps.length}
+
+The agent analyzed user's historical interests and query patterns to prioritize the most relevant articles and provide personalized analysis tailored to the user's preferences.`;
+  }
+
   protected getDefaultResult(): PersonalizationResult {
     return {
       rankedArticles: [],

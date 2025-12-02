@@ -58,7 +58,8 @@ let personalizationService: PersonalizationService | null = null;
 
 if (process.env.OPENAI_API_KEY) {
   embeddingService = new EmbeddingService(process.env.OPENAI_API_KEY);
-  personalizationService = new PersonalizationService(embeddingService, databaseService);
+  // Pass the global vectorStore so personalization can use indexed headlines for recommendations
+  personalizationService = new PersonalizationService(embeddingService, databaseService, vectorStore);
 
   // Initialize async
   personalizationService

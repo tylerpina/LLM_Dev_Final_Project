@@ -11,6 +11,7 @@ export interface Headline {
   publishedAt: string;
   fetchedAt: string;
   category: string;
+  provider?: string; // Track which API provider (newsapi, guardian, arxiv)
 }
 
 export interface QueryHistory {
@@ -62,9 +63,17 @@ export class DatabaseService {
         url TEXT,
         publishedAt TEXT,
         fetchedAt TEXT NOT NULL,
-        category TEXT DEFAULT 'general'
+        category TEXT DEFAULT 'general',
+        provider TEXT DEFAULT 'unknown'
       );
     `);
+    
+    // Add provider column if it doesn't exist (for existing databases)
+    try {
+      this.db.exec(`ALTER TABLE headlines ADD COLUMN provider TEXT DEFAULT 'unknown';`);
+    } catch (error) {
+      // Column already exists, ignore error
+    }
 
     // Create users table
     this.db.exec(`
@@ -76,7 +85,6 @@ export class DatabaseService {
         createdAt TEXT DEFAULT CURRENT_TIMESTAMP
       );
     `);
-
     // Create query history table
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS query_history (
@@ -119,8 +127,8 @@ export class DatabaseService {
    */
   insertHeadline(headline: Omit<Headline, 'id'>): number {
     const stmt = this.db.prepare(`
-      INSERT INTO headlines (title, description, source, url, publishedAt, fetchedAt, category)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO headlines (title, description, source, url, publishedAt, fetchedAt, category, provider)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     const result = stmt.run(
@@ -130,7 +138,8 @@ export class DatabaseService {
       headline.url,
       headline.publishedAt,
       headline.fetchedAt,
-      headline.category
+      headline.category,
+      headline.provider || 'unknown'
     );
 
     return result.lastInsertRowid as number;
@@ -142,8 +151,8 @@ export class DatabaseService {
   insertHeadlines(headlines: Omit<Headline, 'id'>[]): number {
     const insertMany = this.db.transaction((headlines: Omit<Headline, 'id'>[]) => {
       const stmt = this.db.prepare(`
-        INSERT INTO headlines (title, description, source, url, publishedAt, fetchedAt, category)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO headlines (title, description, source, url, publishedAt, fetchedAt, category, provider)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `);
 
       for (const headline of headlines) {
@@ -154,7 +163,8 @@ export class DatabaseService {
           headline.url,
           headline.publishedAt,
           headline.fetchedAt,
-          headline.category
+          headline.category,
+          headline.provider || 'unknown'
         );
       }
       return headlines.length;
@@ -167,20 +177,6 @@ export class DatabaseService {
    * Get recent headlines
    */
   getRecentHeadlines(limit: number = 20, source?: string): Headline[] {
-    let query = `
-      SELECT * FROM headlines
-      ${source ? 'WHERE source = ?' : ''}
-      ORDER BY fetchedAt DESC, publishedAt DESC
-      LIMIT ?
-    `;
-
-    const stmt = this.db.prepare(query);
-    const params = source ? [source, limit] : [limit];
-    
-    return stmt.all(...params) as Headline[];
-  }
-
-  getBalancedHeadlines(limit: number = 20, source?: string): Headline[] { // Copy of getRecentHeadlines to make code run
     let query = `
       SELECT * FROM headlines
       ${source ? 'WHERE source = ?' : ''}
@@ -237,6 +233,64 @@ export class DatabaseService {
     `);
 
     return stmt.all() as { source: string; count: number; latest: string }[];
+  }
+
+  /**
+   * Get balanced headlines from different sources
+   */
+  getBalancedHeadlines(limit: number = 24): Headline[] {
+    // Get equal representation from each known provider
+    const sourcesPerProvider = Math.ceil(limit / 5); // Roughly equal for 5 providers
+    
+    const guardianStmt = this.db.prepare(`
+      SELECT * FROM headlines 
+      WHERE provider = 'guardian' OR source = 'guardian'
+      ORDER BY fetchedAt DESC, publishedAt DESC 
+      LIMIT ?
+    `);
+    const arxivStmt = this.db.prepare(`
+      SELECT * FROM headlines 
+      WHERE provider = 'arxiv' OR source = 'arxiv'
+      ORDER BY fetchedAt DESC, publishedAt DESC 
+      LIMIT ?
+    `);
+    const nyTimesStmt = this.db.prepare(`
+      SELECT * FROM headlines 
+      WHERE provider = 'nytimes' OR source LIKE '%New York Times%'
+      ORDER BY fetchedAt DESC, publishedAt DESC 
+      LIMIT ?
+    `);
+    const newsApiStmt = this.db.prepare(`
+      SELECT * FROM headlines 
+      WHERE provider = 'newsapi' OR (provider IS NULL AND source NOT IN ('guardian', 'arxiv', 'nytimes') AND source NOT LIKE '%New York Times%')
+      ORDER BY fetchedAt DESC, publishedAt DESC 
+      LIMIT ?
+    `);
+    const openAlexStmt = this.db.prepare(`
+      SELECT * FROM headlines 
+      WHERE provider = 'openalex' OR source LIKE '%OpenAlex%'
+      ORDER BY fetchedAt DESC, publishedAt DESC 
+      LIMIT ?
+    `);
+
+    const guardianHeadlines = guardianStmt.all(sourcesPerProvider) as Headline[];
+    const arxivHeadlines = arxivStmt.all(sourcesPerProvider) as Headline[];
+    const nyTimesHeadlines = nyTimesStmt.all(sourcesPerProvider) as Headline[];
+    const newsApiHeadlines = newsApiStmt.all(sourcesPerProvider) as Headline[];
+    const openAlexHeadlines = openAlexStmt.all(sourcesPerProvider) as Headline[];
+
+    // Combine and sort by fetch time, then limit to requested amount
+    const allHeadlines = [
+      ...newsApiHeadlines,
+      ...guardianHeadlines,
+      ...arxivHeadlines,
+      ...nyTimesHeadlines,
+      ...openAlexHeadlines
+    ]
+      .sort((a, b) => new Date(b.fetchedAt).getTime() - new Date(a.fetchedAt).getTime())
+      .slice(0, limit);
+
+    return allHeadlines;
   }
 
   /**

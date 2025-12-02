@@ -40,6 +40,11 @@ export interface AgentContext {
     | "general";
   agentsToRun?: AgentRole[];
   rawData?: any;
+  sources?: Array<{
+    provider: string;
+    url?: string;
+    title?: string;
+  }>;
   timestamp: Date;
 }
 
@@ -54,6 +59,7 @@ export interface AgentResult<T = any> {
   executionTimeMs: number;
   tokensUsed?: number;
   timestamp: Date;
+  reasoning?: string; // Agent's reasoning/thinking process
 }
 
 /**
@@ -167,6 +173,9 @@ export interface OrchestrationResult {
     trend?: TrendAgentResult;
     bias?: BiasAgentResult;
     personalization?: PersonalizationResult;
+  };
+  agentReasoning?: {
+    [key in AgentRole]?: string;
   };
   timestamp: string;
 }

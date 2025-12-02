@@ -26,7 +26,8 @@ const USE_MULTI_AGENT = process.env.USE_MULTI_AGENT === "true";
 const mcpServer = new UniversalMcpServer(
   process.env.NEWSAPI_KEY || "",
   process.env.GUARDIAN_API_KEY,
-  process.env.NYTIMES_API_KEY
+  process.env.NYTIMES_API_KEY,
+  process.env.OPENALEX_CONTACT_EMAIL || "mozaslan@mines.edu"
 );
 
 // Log available providers for debugging
@@ -35,7 +36,8 @@ logger.info("MCP Server initialized with providers:", {
   hasNewsAPI: mcpServer.getAvailableProviders().includes('newsapi'),
   hasGuardian: mcpServer.getAvailableProviders().includes('guardian'),
   hasNYTimes: mcpServer.getAvailableProviders().includes('nytimes'),
-  hasArxiv: mcpServer.getAvailableProviders().includes('arxiv')
+  hasArxiv: mcpServer.getAvailableProviders().includes('arxiv'),
+  hasOpenAlex: mcpServer.getAvailableProviders().includes('openalex')
 });
 
 // Initialize Vector Store
@@ -157,14 +159,19 @@ app.post("/ask", async (req, res) => {
   const startTime = Date.now();
   const { query, style, userId, useMultiAgent } = req.body;
 
-  // Determine which system to use - force multi-agent for now to test
-  const shouldUseMultiAgent = true; // Force multi-agent system usage
+  // Determine which system to use.
+  // Explicit request overrides the env flag; otherwise fallback to env configuration.
+  const shouldUseMultiAgent =
+    typeof useMultiAgent === "boolean" ? useMultiAgent : USE_MULTI_AGENT;
+  const canRunMultiAgent = shouldUseMultiAgent && !!multiAgentOrchestrator;
 
   logger.info("AI query received", {
     query,
     style,
     userId,
+    useMultiAgentRequest: useMultiAgent,
     useMultiAgent: shouldUseMultiAgent,
+    canRunMultiAgent,
     USE_MULTI_AGENT_ENV: USE_MULTI_AGENT,
     hasOrchestrator: !!multiAgentOrchestrator,
     timestamp: new Date().toISOString(),
@@ -176,8 +183,14 @@ app.post("/ask", async (req, res) => {
       return res.status(400).json({ error: "Query is required" });
     }
 
+    if (shouldUseMultiAgent && !multiAgentOrchestrator) {
+      logger.warn(
+        "Multi-agent system requested but orchestrator unavailable. Falling back to legacy flow."
+      );
+    }
+
     // Use multi-agent system if enabled and available
-    if (shouldUseMultiAgent && multiAgentOrchestrator) {
+    if (canRunMultiAgent && multiAgentOrchestrator) {
       const result = await multiAgentOrchestrator.processQuery(
         query,
         userId || "anonymous"
@@ -216,7 +229,7 @@ app.post("/ask", async (req, res) => {
         },
         sources: result.sources,
         detailedResults: result.metadata,
-       //agentReasoning: result.agentReasoning, // commented out because not using agent reasoning yet - TODO: add back in
+        agentReasoning: result.agentReasoning,
         timestamp: result.timestamp,
       });
     } else {

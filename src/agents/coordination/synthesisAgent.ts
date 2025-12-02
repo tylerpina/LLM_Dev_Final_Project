@@ -153,6 +153,27 @@ export class SynthesisAgent extends BaseAgent<string> {
       }
     }
 
+    // Add sources information for the synthesis
+    if (context.sources && context.sources.length > 0) {
+      parts.push("\n=== SOURCES INFORMATION ===");
+      const sourcesByProvider = context.sources.reduce((acc: any, source) => {
+        if (!acc[source.provider]) {
+          acc[source.provider] = [];
+        }
+        acc[source.provider].push(source);
+        return acc;
+      }, {});
+
+      for (const [provider, sources] of Object.entries(sourcesByProvider)) {
+        parts.push(`\n${provider}:`);
+        if (Array.isArray(sources)) {
+          sources.forEach((source: any) => {
+            parts.push(`- ${source.title || 'Untitled'}${source.url ? ` (${source.url})` : ''}`);
+          });
+        }
+      }
+    }
+
     return parts.join("\n");
   }
 
@@ -176,13 +197,13 @@ ${context}
 Create a markdown report with the following structure:
 
 ## Summary
-[2-3 sentence executive summary answering the user's query directly]
+[Executive summary answering the user's query directly]
 
 ## Key Findings
-[3-5 bullet points of the most important findings]
+[Bullet points of the most important findings]
 
 ## Latest News
-[List top 5-7 articles with titles, sources, and brief context. Include sentiment indicators where relevant]
+[List top articles with titles, sources, and brief context. Include sentiment indicators where relevant]
 
 ## Analysis & Insights
 [Combine insights from sentiment, trend, and bias analysis into a cohesive narrative]
@@ -227,6 +248,20 @@ ${context}
 ---
 
 *Note: This is a simplified report due to synthesis limitations. Please try your query again for a more polished response.*`;
+  }
+
+  protected async getReasoning(context: AgentContext, data: string): Promise<string> {
+    const wordCount = data.split(/\s+/).length;
+    const hasHeadings = data.includes('##') || data.includes('###');
+    const hasLists = data.includes('-') || data.includes('*');
+    
+    return `Synthesis Agent consolidated insights from multiple specialist agents:
+- Generated ${wordCount} word comprehensive report
+- Applied markdown formatting: ${hasHeadings ? 'headings' : 'no headings'}, ${hasLists ? 'lists' : 'no lists'}
+- Integrated data from: ${Object.keys(context.rawData || {}).join(', ')}
+- Query focus: "${context.query}"
+
+The agent combined technical analysis, sentiment insights, trend patterns, and bias considerations into a cohesive narrative that directly addresses the user's question.`;
   }
 
   protected getDefaultResult(): string {

@@ -208,6 +208,20 @@ For each article, determine:
       .map(([emotion]) => emotion);
   }
 
+  protected async getReasoning(context: AgentContext, data: SentimentAgentResult): Promise<string> {
+    const sentimentCounts = data.articleSentiments.reduce((acc, item) => {
+      acc[item.sentiment] = (acc[item.sentiment] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return `Sentiment Agent analyzed ${data.articleSentiments.length} articles and found:
+- Overall sentiment: ${data.overallSentiment}
+- Sentiment distribution: ${Object.entries(sentimentCounts).map(([sentiment, count]) => `${sentiment} (${count})`).join(', ')}
+- Trend: ${data.sentimentTrend}
+
+The agent used emotional analysis to determine how each article's tone affects the overall narrative, identifying patterns in public sentiment toward the topics.`;
+  }
+
   protected getDefaultResult(): SentimentAgentResult {
     return {
       overallSentiment: "neutral",

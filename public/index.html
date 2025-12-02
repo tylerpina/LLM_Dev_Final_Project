@@ -535,6 +535,38 @@
             transform: none;
         }
 
+        .synthesis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            padding: 10px 18px;
+            background: var(--accent-green);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .export-btn:hover:not(:disabled) {
+            background: #3ec09d;
+            transform: translateY(-1px);
+        }
+
+        .export-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .response-section {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -1745,9 +1777,11 @@
         })();
     </script>
     
-    <!-- Markdown and DOMPurify libraries -->
+    <!-- Markdown, DOMPurify, and PDF helper libraries -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -1913,6 +1947,8 @@
         let isLoading = false;
         let progressInterval = null;
         let currentProgressStep = 0;
+        let lastSubmittedQuery = '';
+        let lastSynthesisMetadata = null;
         const THEME_STORAGE_KEY = 'llm-news-theme';
 
         // ================= THEME FUNCTIONALITY =================
@@ -2215,6 +2251,7 @@
             e.preventDefault();
             const query = document.getElementById('queryInput').value.trim();
             if (query && !isLoading) {
+                lastSubmittedQuery = query;
                 await askQuestion(query);
             }
         });
@@ -2275,6 +2312,11 @@
             
             // Store for cleanup
             window.currentTimerInterval = timerInterval;
+            window.simulationTimeouts = window.simulationTimeouts || [];
+            
+            // Clear any existing timeouts first
+            window.simulationTimeouts.forEach(timeout => clearTimeout(timeout));
+            window.simulationTimeouts = [];
             
             // Simulate progress through agents
             const agentSequence = [
@@ -2286,13 +2328,15 @@
             ];
             
             agentSequence.forEach(agent => {
-                setTimeout(() => {
+                const timeout1 = setTimeout(() => {
                     updateAgentBoxStatus(agent.id, 'active');
                 }, agent.delay);
                 
-                setTimeout(() => {
+                const timeout2 = setTimeout(() => {
                     updateAgentBoxStatus(agent.id, 'processing');
                 }, agent.delay + agent.duration / 2);
+                
+                window.simulationTimeouts.push(timeout1, timeout2);
             });
         }
 
@@ -2512,6 +2556,12 @@
                 window.currentTimerInterval = null;
             }
             
+            // Clear all simulation timeouts
+            if (window.simulationTimeouts) {
+                window.simulationTimeouts.forEach(timeout => clearTimeout(timeout));
+                window.simulationTimeouts = [];
+            }
+            
             currentProgressStep = 0;
         }
 
@@ -2524,6 +2574,7 @@
             const responseDiv = document.getElementById('response');
             const styleSelect = document.getElementById('styleSelect');
             const selectedStyle = styleSelect.value;
+            lastSynthesisMetadata = null;
             
             askBtn.disabled = true;
             askBtn.textContent = 'Analyzing...';
@@ -2645,6 +2696,10 @@
             }
             
             const formattedResponse = formatResponseText(responseText);
+            lastSynthesisMetadata = {
+                query: data?.metadata?.userQuery || data?.metadata?.query || data?.query || lastSubmittedQuery,
+                timestamp: data?.timestamp || new Date().toISOString()
+            };
             
             let sourcesHtml = '';
             if (data.sources && data.sources.length > 0) {
@@ -2725,6 +2780,12 @@
             console.log('Agent reasoning:', data.agentReasoning);
             console.log('Agent reasoning keys:', data.agentReasoning ? Object.keys(data.agentReasoning) : 'NO REASONING');
             
+            // Clear simulation timeouts since we have real data
+            if (window.simulationTimeouts) {
+                window.simulationTimeouts.forEach(timeout => clearTimeout(timeout));
+                window.simulationTimeouts = [];
+            }
+            
             // Populate the live agent boxes with actual data
             // NOTE: The actual agent data is in detailedResults, not metadata!
             const agentData = data.detailedResults || {};
@@ -2797,14 +2858,19 @@
                     synthesisSection.className = 'final-synthesis-section';
                     synthesisSection.innerHTML = `
                         <div style="margin-top: 24px; padding-top: 24px; border-top: 2px solid var(--border-color);">
-                            <h2 style="color: var(--accent-blue); margin-bottom: 16px;">
-                                Final Synthesis
-                            </h2>
-                            <div class="response-content">
-                                ${formattedResponse}
+                            <div class="synthesis-header">
+                                <h2 style="color: var(--accent-blue); margin-bottom: 16px;">
+                                    Final Synthesis
+                                </h2>
+                                <button class="export-btn" type="button" onclick="exportSynthesisToPDF()">Export PDF</button>
                             </div>
-                            ${sourcesHtml}
-                            ${metaInfo}
+                            <div id="finalSynthesisContent">
+                                <div class="response-content">
+                                    ${formattedResponse}
+                                </div>
+                                ${sourcesHtml}
+                                ${metaInfo}
+                            </div>
                         </div>
                     `;
                     container.appendChild(synthesisSection);
@@ -2885,6 +2951,75 @@
             toggle.classList.toggle('active');
             content.classList.toggle('expanded');
             arrow.classList.toggle('expanded');
+        }
+
+        async function exportSynthesisToPDF() {
+            const target = document.getElementById('finalSynthesisContent');
+            if (!target) {
+                alert('Generate a synthesis first, then try exporting.');
+                return;
+            }
+
+            if (typeof html2canvas === 'undefined' || !window.jspdf) {
+                window.print();
+                return;
+            }
+
+            const exportButton = document.querySelector('.export-btn');
+            try {
+                if (exportButton) {
+                    exportButton.disabled = true;
+                    exportButton.textContent = 'Generating...';
+                }
+
+                const canvas = await html2canvas(target, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff'
+                });
+
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'pt', 'a4');
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const margin = 32;
+                const usableWidth = pageWidth - margin * 2;
+                const imgHeight = canvas.height * (usableWidth / canvas.width);
+                let heightLeft = imgHeight;
+                let position = margin;
+
+                pdf.addImage(imgData, 'PNG', margin, position, usableWidth, imgHeight);
+                heightLeft -= pageHeight - margin * 2;
+
+                while (heightLeft > 0) {
+                    pdf.addPage();
+                    position = margin - (imgHeight - heightLeft);
+                    pdf.addImage(imgData, 'PNG', margin, position, usableWidth, imgHeight);
+                    heightLeft -= pageHeight - margin * 2;
+                }
+
+                const querySlug = (lastSynthesisMetadata?.query || 'ai-news-report')
+                    .toString()
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '') || 'ai-news-report';
+                const dateStamp = lastSynthesisMetadata?.timestamp
+                    ? new Date(lastSynthesisMetadata.timestamp).toISOString().slice(0, 10)
+                    : new Date().toISOString().slice(0, 10);
+                const filename = `${querySlug}-${dateStamp}.pdf`;
+
+                pdf.save(filename);
+            } catch (error) {
+                console.error('PDF export failed', error);
+                alert('Unable to generate PDF automatically. Opening the print dialog instead.');
+                window.print();
+            } finally {
+                if (exportButton) {
+                    exportButton.disabled = false;
+                    exportButton.textContent = 'Export PDF';
+                }
+            }
         }
 
         // Load headlines

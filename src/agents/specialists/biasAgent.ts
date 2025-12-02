@@ -209,6 +209,16 @@ Look for:
     return recommendations.join(". ") || "Coverage appears reasonably balanced";
   }
 
+  protected async getReasoning(context: AgentContext, data: BiasAgentResult): Promise<string> {
+    return `Bias Agent analyzed ${context.rawData?.articles?.length || 0} articles for source diversity and bias:
+- Source diversity: ${data.sourceDiversity.leftLeaning} left, ${data.sourceDiversity.rightLeaning} right, ${data.sourceDiversity.neutral} neutral
+- Bias warnings: ${data.biasWarnings.length} identified
+- Different perspectives: ${data.perspectives.length} found
+- Recommendation: ${data.recommendation}
+
+The agent analyzed political leanings, source diversity, and content bias to ensure balanced perspective representation and identify potential gaps in coverage.`;
+  }
+
   protected getDefaultResult(): BiasAgentResult {
     return {
       sourceDiversity: {

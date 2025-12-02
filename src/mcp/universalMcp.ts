@@ -1,4 +1,4 @@
-import { ApiRegistry, createNewsApiProvider, createGuardianProvider, createArxivProvider} from '../services/apiRegistry';
+import { ApiRegistry, createNewsApiProvider, createGuardianProvider, createArxivProvider, createNYTimesProvider, createOpenAlexProvider } from '../services/apiRegistry';
 
 export interface McpRequest {
   method: string;
@@ -16,7 +16,12 @@ export interface McpResponse {
 export class UniversalMcpServer {
   private readonly registry: ApiRegistry;
 
-  constructor(newsApiKey: string, guardianApiKey?: string, nyTimesApiKey?: string) {
+  constructor(
+    newsApiKey: string,
+    guardianApiKey?: string,
+    nyTimesApiKey?: string,
+    openAlexContactEmail?: string
+  ) {
     this.registry = new ApiRegistry();
     
     // Register NewsAPI
@@ -28,13 +33,15 @@ export class UniversalMcpServer {
     }
     
     // Register NYTimes if key provided
-    // Commented out because not using NYTimes
-    /* if (nyTimesApiKey) {
+    if (nyTimesApiKey) {
       this.registry.register(createNYTimesProvider(nyTimesApiKey));
-    } */
+    }
     
     // Register ArXiv (no API key needed)
     this.registry.register(createArxivProvider());
+
+    // Register OpenAlex (no key required, but pass contact email for polite usage)
+    this.registry.register(createOpenAlexProvider(openAlexContactEmail));
   }
 
   async handle(req: McpRequest): Promise<McpResponse> {
@@ -175,6 +182,31 @@ export class UniversalMcpServer {
         });
       } else {
         throw new Error(`NYTimes archive not supported by ${providerName}`);
+      }
+    } else if (req.method === 'GET' && req.path === '/openalex/works') {
+      if (provider.name === 'openalex') {
+        const { search, filter, sort, per_page, page, cursor, mailto } = req.query || {};
+        data = await (provider.service as any).searchWorks({
+          search: search as string | undefined,
+          filter: filter as string | undefined,
+          sort: sort as string | undefined,
+          per_page: per_page ? Number(per_page) : undefined,
+          page: page ? Number(page) : undefined,
+          cursor: cursor as string | undefined,
+          mailto: mailto as string | undefined,
+        });
+      } else {
+        throw new Error(`OpenAlex works search not supported by ${providerName}`);
+      }
+    } else if (req.method === 'GET' && req.path === '/openalex/work') {
+      if (provider.name === 'openalex') {
+        const { id } = req.query || {};
+        if (!id) {
+          throw new Error('OpenAlex work id is required');
+        }
+        data = await (provider.service as any).getWork(id as string);
+      } else {
+        throw new Error(`OpenAlex work lookup not supported by ${providerName}`);
       }
     } else {
       throw new Error(`Unsupported method/path: ${req.method} ${req.path}`);

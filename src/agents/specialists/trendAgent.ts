@@ -106,6 +106,16 @@ Look for:
     }
   }
 
+  protected async getReasoning(context: AgentContext, data: TrendAgentResult): Promise<string> {
+    return `Trend Agent analyzed ${context.rawData?.articles?.length || 0} articles to identify patterns:
+- Main topics discovered: ${data.mainTopics.length} 
+- Emerging themes: ${data.emergingThemes.length}
+- Key insights generated: ${data.keyInsights.length}
+- Temporal pattern: ${data.temporalPattern}
+
+The agent used pattern recognition to identify recurring topics, emerging trends, and temporal patterns across multiple sources to provide broader context beyond individual articles.`;
+  }
+
   protected getDefaultResult(): TrendAgentResult {
     return {
       mainTopics: [],

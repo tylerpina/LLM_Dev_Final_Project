@@ -46,6 +46,9 @@ export abstract class BaseAgent<TResult = any> {
       // Call the abstract process method implemented by each agent
       const data = await this.process(context);
 
+      // Get reasoning about the process
+      const reasoning = await this.getReasoning(context, data);
+
       const executionTimeMs = Date.now() - startTime;
       metrics.endTime = new Date();
       metrics.durationMs = executionTimeMs;
@@ -60,6 +63,7 @@ export abstract class BaseAgent<TResult = any> {
         role: this.role,
         success: true,
         data,
+        reasoning,
         executionTimeMs,
         timestamp: new Date(),
       };
@@ -92,6 +96,14 @@ export abstract class BaseAgent<TResult = any> {
    * Contains the core logic for that specific agent
    */
   protected abstract process(context: AgentContext): Promise<TResult>;
+
+  /**
+   * Method for agents to provide reasoning about their process
+   * Can be overridden by agents to capture their thinking
+   */
+  protected async getReasoning(context: AgentContext, data: TResult): Promise<string> {
+    return `${this.role} agent processed the query and generated results.`;
+  }
 
   /**
    * Get default result in case of failure

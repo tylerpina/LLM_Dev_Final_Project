@@ -1,10 +1,11 @@
 import { NewsApiService } from './newsApiService';
 import { GuardianApiService } from './guardianApiService';
 import { ArxivApiService } from './arxivApiService';
+import { NYTimesApiService } from './nytimesApiService';
 
 export interface ApiProvider {
   name: string;
-  service: NewsApiService | GuardianApiService | ArxivApiService;
+  service: NewsApiService | GuardianApiService | ArxivApiService | NYTimesApiService;
   endpoints: string[];
 }
 
@@ -50,5 +51,13 @@ export function createArxivProvider(): ApiProvider {
     name: 'arxiv',
     service: new ArxivApiService(),
     endpoints: ['/arxiv/search', '/arxiv/paper', '/arxiv/category']
+  };
+}
+
+export function createNYTimesProvider(apiKey: string): ApiProvider {
+  return {
+    name: 'nytimes',
+    service: new NYTimesApiService(apiKey),
+    endpoints: ['/nytimes/search', '/nytimes/archive']
   };
 }

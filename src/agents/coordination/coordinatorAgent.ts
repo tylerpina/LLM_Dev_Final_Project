@@ -176,6 +176,20 @@ Examples:
     }
   }
 
+  protected async getReasoning(context: AgentContext, data: CoordinationResult): Promise<string> {
+    const userInfo = context.userProfile ? 
+      `User has history with interests: ${context.userProfile.interests.slice(0, 3).join(", ")}` : 
+      "New user with no history";
+    
+    return `Coordinator analyzed query "${context.query}" and determined:
+- Intent: ${data.intent} (${data.priority} priority)
+- Search terms: ${data.searchTerms.join(", ")}
+- Agents to run: ${data.agentsToRun.join(", ")}
+- User context: ${userInfo}
+
+This decision was made to optimize the analysis approach based on the query's complexity and user's interests.`;
+  }
+
   protected getDefaultResult(): CoordinationResult {
     return {
       intent: "general",

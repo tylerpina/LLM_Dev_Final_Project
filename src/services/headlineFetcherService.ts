@@ -89,6 +89,15 @@ export class HeadlineFetcherService {
         logger.error('Failed to fetch ArXiv papers', error);
       }
 
+      // Fetch from NYTimes
+      try {
+        const nyTimesHeadlines = await this.fetchNYTimes(fetchedAt);
+        headlines.push(...nyTimesHeadlines);
+        logger.info('Fetched NYTimes headlines', { count: nyTimesHeadlines.length });
+      } catch (error) {
+        logger.error('Failed to fetch NYTimes headlines', error);
+      }
+
       // Insert into database
       if (headlines.length > 0) {
         const insertedCount = this.db.insertHeadlines(headlines);
@@ -114,7 +123,7 @@ export class HeadlineFetcherService {
     const result = await this.mcpServer.handle({
       method: 'GET',
       path: '/news/top-headlines',
-      query: { country: 'us', pageSize: '10' },
+      query: { country: 'us', pageSize: '15' },
       provider: 'newsapi'
     });
 
@@ -123,11 +132,18 @@ export class HeadlineFetcherService {
     return articles.map((article: any) => ({
       title: article.title || 'No title',
       description: article.description || article.content || '',
-      source: 'newsapi',
+      source: article.source?.name || (() => {
+        try {
+          return article.url ? new URL(article.url).hostname.replace('www.', '') : 'Unknown Source';
+        } catch {
+          return 'Unknown Source';
+        }
+      })(),
       url: article.url || '',
       publishedAt: article.publishedAt || fetchedAt,
       fetchedAt,
-      category: 'news'
+      category: 'news',
+      provider: 'newsapi'
     }));
   }
 
@@ -139,7 +155,7 @@ export class HeadlineFetcherService {
       method: 'GET',
       path: '/guardian/search',
       query: { 
-        'page-size': '10',
+        'page-size': '8',
         'order-by': 'newest',
         'show-fields': 'headline,trailText'
       },
@@ -155,7 +171,8 @@ export class HeadlineFetcherService {
       url: item.webUrl || '',
       publishedAt: item.webPublicationDate || fetchedAt,
       fetchedAt,
-      category: item.sectionName || 'news'
+      category: item.sectionName || 'news',
+      provider: 'guardian'
     }));
   }
 
@@ -169,7 +186,7 @@ export class HeadlineFetcherService {
       path: '/arxiv/search',
       query: { 
         search_query: 'cat:cs.AI OR cat:cs.LG',
-        max_results: '10',
+        max_results: '8',
         sortBy: 'submittedDate',
         sortOrder: 'descending'
       },
@@ -179,15 +196,74 @@ export class HeadlineFetcherService {
     const entries = result.data?.feed?.entry || [];
     const entriesArray = Array.isArray(entries) ? entries : [entries];
     
-    return entriesArray.map((entry: any) => ({
-      title: entry.title?.replace(/\s+/g, ' ').trim() || 'No title',
-      description: entry.summary?.replace(/\s+/g, ' ').trim().substring(0, 300) || '',
-      source: 'arxiv',
-      url: entry.id || entry.links?.[0]?.href || '',
-      publishedAt: entry.published || fetchedAt,
-      fetchedAt,
-      category: 'research'
-    }));
+    return entriesArray.map((entry: any) => {
+      // Prioritize proper Arxiv URLs from links, fallback to constructing from id
+      let url = '';
+      if (entry.links && entry.links.length > 0) {
+        // Look for the 'alternate' link which should be the main paper URL
+        const alternateLink = entry.links.find((link: any) => link.rel === 'alternate');
+        if (alternateLink && alternateLink.href) {
+          url = alternateLink.href;
+        } else if (entry.links[0] && entry.links[0].href) {
+          url = entry.links[0].href;
+        }
+      }
+      
+      // If no proper URL found, construct it from the id
+      if (!url && entry.id) {
+        if (entry.id.startsWith('http://arxiv.org/abs/') || entry.id.startsWith('https://arxiv.org/abs/')) {
+          url = entry.id;
+        } else {
+          // If id is just the paper ID, construct the full URL
+          url = `https://arxiv.org/abs/${entry.id}`;
+        }
+      }
+
+      return {
+        title: entry.title?.replace(/\s+/g, ' ').trim() || 'No title',
+        description: entry.summary?.replace(/\s+/g, ' ').trim().substring(0, 300) || '',
+        source: 'arxiv',
+        url: url || '',
+        publishedAt: entry.published || fetchedAt,
+        fetchedAt,
+        category: 'research',
+        provider: 'arxiv'
+      };
+    });
+  }
+
+  /**
+   * Fetch recent headlines from NYTimes
+   */
+  private async fetchNYTimes(fetchedAt: string): Promise<Omit<Headline, 'id'>[]> {
+    try {
+      const result = await this.mcpServer.handle({
+        method: 'GET',
+        path: '/nytimes/search',
+        query: {
+          q: 'politics OR technology OR business OR world',
+          sort: 'newest',
+          page: '0'
+        },
+        provider: 'nytimes'
+      });
+
+      const articles = result.data?.response?.docs || [];
+      
+      return articles.map((article: any) => ({
+        title: article.headline?.main || 'No title',
+        description: article.abstract || article.snippet || article.lead_paragraph || '',
+        source: 'The New York Times',
+        url: article.web_url || '',
+        publishedAt: article.pub_date || fetchedAt,
+        fetchedAt,
+        category: article.section_name || 'news',
+        provider: 'nytimes'
+      }));
+    } catch (error) {
+      logger.error('Failed to fetch NYTimes headlines', error);
+      return [];
+    }
   }
 
   /**

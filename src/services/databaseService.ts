@@ -176,20 +176,6 @@ export class DatabaseService {
     return stmt.all(...params) as Headline[];
   }
 
-  getBalancedHeadlines(limit: number = 20, source?: string): Headline[] { // Copy of getRecentHeadlines to make code run
-    let query = `
-      SELECT * FROM headlines
-      ${source ? 'WHERE source = ?' : ''}
-      ORDER BY fetchedAt DESC, publishedAt DESC
-      LIMIT ?
-    `;
-
-    const stmt = this.db.prepare(query);
-    const params = source ? [source, limit] : [limit];
-    
-    return stmt.all(...params) as Headline[];
-  }
-
   /**
    * Get headlines by time range
    */

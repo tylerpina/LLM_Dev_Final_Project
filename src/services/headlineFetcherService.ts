@@ -25,6 +25,12 @@ export class HeadlineFetcherService {
     this.vectorStore = vectorStore;
   }
 
+  private isProviderAvailable(providerName: string): boolean {
+    return this.mcpServer
+      .getAvailableProviders()
+      .includes(providerName);
+  }
+
   /**
    * Start fetching headlines on a schedule
    */
@@ -83,12 +89,16 @@ export class HeadlineFetcherService {
       }
 
       // Fetch from Guardian
-      try {
-        const guardianHeadlines = await this.fetchGuardian(fetchedAt);
-        headlines.push(...guardianHeadlines);
-        logger.info('Fetched Guardian headlines', { count: guardianHeadlines.length });
-      } catch (error) {
-        logger.error('Failed to fetch Guardian headlines', error);
+      if (this.isProviderAvailable('guardian')) {
+        try {
+          const guardianHeadlines = await this.fetchGuardian(fetchedAt);
+          headlines.push(...guardianHeadlines);
+          logger.info('Fetched Guardian headlines', { count: guardianHeadlines.length });
+        } catch (error) {
+          logger.error('Failed to fetch Guardian headlines', error);
+        }
+      } else {
+        logger.warn('Guardian provider not configured, skipping fetch');
       }
 
       // Fetch from ArXiv
@@ -101,12 +111,16 @@ export class HeadlineFetcherService {
       }
 
       // Fetch from NYTimes
-      try {
-        const nyTimesHeadlines = await this.fetchNYTimes(fetchedAt);
-        headlines.push(...nyTimesHeadlines);
-        logger.info('Fetched NYTimes headlines', { count: nyTimesHeadlines.length });
-      } catch (error) {
-        logger.error('Failed to fetch NYTimes headlines', error);
+      if (this.isProviderAvailable('nytimes')) {
+        try {
+          const nyTimesHeadlines = await this.fetchNYTimes(fetchedAt);
+          headlines.push(...nyTimesHeadlines);
+          logger.info('Fetched NYTimes headlines', { count: nyTimesHeadlines.length });
+        } catch (error) {
+          logger.error('Failed to fetch NYTimes headlines', error);
+        }
+      } else {
+        logger.warn('NYTimes provider not configured, skipping fetch');
       }
 
       // Insert into database
@@ -185,6 +199,11 @@ export class HeadlineFetcherService {
    * Fetch headlines from Guardian
    */
   private async fetchGuardian(fetchedAt: string): Promise<Omit<Headline, 'id'>[]> {
+    if (!this.isProviderAvailable('guardian')) {
+      logger.debug('Guardian provider unavailable, skipping direct fetch');
+      return [];
+    }
+
     const result = await this.mcpServer.handle({
       method: 'GET',
       path: '/guardian/search',
@@ -270,6 +289,11 @@ export class HeadlineFetcherService {
    * Fetch recent headlines from NYTimes
    */
   private async fetchNYTimes(fetchedAt: string): Promise<Omit<Headline, 'id'>[]> {
+    if (!this.isProviderAvailable('nytimes')) {
+      logger.debug('NYTimes provider unavailable, skipping direct fetch');
+      return [];
+    }
+
     try {
       const result = await this.mcpServer.handle({
         method: 'GET',

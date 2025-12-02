@@ -4075,3 +4075,97 @@
 {"estimatedCost":"$0.0217","executionTimeMs":22952,"level":"info","message":"🎉 Multi-agent orchestration completed","query":"recent video games","service":"llm-dev-project","timestamp":"2025-12-02T04:21:00.012Z","totalAgents":5,"userId":"anonymous"}
 {"agentsUsed":5,"duration":"22953ms","estimatedCost":"$0.0217","level":"info","message":"Multi-agent query completed","query":"recent video games","service":"llm-dev-project","timestamp":"2025-12-02T04:21:00.012Z"}
 {"level":"info","message":"::1 - - [02/Dec/2025:04:21:00 +0000] \"POST /ask HTTP/1.1\" 200 45424 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T04:21:00.014Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":true,"hasNewsAPI":true,"hasOpenAlex":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","nytimes","arxiv","openalex"],"service":"llm-dev-project","timestamp":"2025-12-02T04:25:39.938Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T04:25:39.941Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T04:25:39.958Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T04:25:39.959Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T04:25:39.959Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T04:25:39.960Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T04:25:40.003Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T04:25:40.003Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T04:25:40.050Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","nytimes","arxiv","openalex"],"service":"llm-dev-project","timestamp":"2025-12-02T04:25:40.052Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","nytimes","arxiv","openalex"],"service":"llm-dev-project","timestamp":"2025-12-02T04:25:40.058Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T04:25:40.060Z"}
+{"count":13,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T04:25:40.448Z"}
+{"count":8,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T04:25:41.110Z"}
+{"count":8,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T04:25:41.337Z"}
+{"count":8,"level":"info","message":"Fetched OpenAlex works","service":"llm-dev-project","timestamp":"2025-12-02T04:25:41.979Z"}
+{"count":10,"level":"info","message":"Fetched NYTimes headlines","service":"llm-dev-project","timestamp":"2025-12-02T04:25:42.989Z"}
+{"count":47,"duration":3007,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T04:25:43.011Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T04:25:46.056Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T04:25:52.032Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:04:25:52 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 28808 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T04:25:52.035Z"}
+{"level":"info","message":"Health check requested","service":"llm-dev-project","timestamp":"2025-12-02T04:25:52.038Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:04:25:52 +0000] \"GET /health HTTP/1.1\" 200 148 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T04:25:52.039Z"}
+{"USE_MULTI_AGENT_ENV":true,"hasOrchestrator":true,"level":"info","message":"AI query received","query":"can you go over recent news?","service":"llm-dev-project","style":"bullet-points","timestamp":"2025-12-02T04:25:58.080Z","useMultiAgent":true}
+{"level":"info","message":"🚀 Multi-agent orchestration started","query":"can you go over recent news?","service":"llm-dev-project","timestamp":"2025-12-02T04:25:58.081Z","userId":"anonymous"}
+{"level":"info","message":"📋 Phase 1: Starting Coordinator Agent...","query":"can you go over recent news?","service":"llm-dev-project","timestamp":"2025-12-02T04:25:58.081Z"}
+{"level":"info","message":"[coordinator] Starting execution","query":"can you go over recent news?","service":"llm-dev-project","timestamp":"2025-12-02T04:25:58.081Z","userId":"anonymous"}
+{"level":"info","message":"[coordinator] 🎯 CoordinatorAgent: Analyzing query intent...","service":"llm-dev-project","timestamp":"2025-12-02T04:25:58.082Z"}
+{"agentsToRun":["news"],"intent":"news","level":"info","message":"[coordinator] 🎯 CoordinatorAgent: Planning complete","priority":"speed","searchTerms":["recent news","latest updates","current events","news headlines","breaking news"],"service":"llm-dev-project","timestamp":"2025-12-02T04:26:00.474Z"}
+{"durationMs":2394,"level":"info","message":"[coordinator] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T04:26:00.475Z"}
+{"agentsToRun":["news"],"intent":"news","level":"info","message":"✅ Coordinator complete","searchTerms":["recent news","latest updates","current events","news headlines","breaking news"],"service":"llm-dev-project","timestamp":"2025-12-02T04:26:00.475Z"}
+{"agents":["news"],"level":"info","message":"⚡ Phase 2: Starting specialist agents in parallel...","service":"llm-dev-project","timestamp":"2025-12-02T04:26:00.475Z"}
+{"level":"info","message":"[news] Starting execution","query":"can you go over recent news?","service":"llm-dev-project","timestamp":"2025-12-02T04:26:00.475Z","userId":"anonymous"}
+{"level":"info","message":"[news] 📰 NewsAgent: Extracting search terms...","service":"llm-dev-project","timestamp":"2025-12-02T04:26:00.476Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Search terms extracted","searchTerms":["recent news","latest updates","current events","news headlines","breaking news"],"service":"llm-dev-project","timestamp":"2025-12-02T04:26:00.476Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching from sources...","prioritized":true,"service":"llm-dev-project","sources":["newsapi","guardian","nytimes","arxiv","openalex"],"timestamp":"2025-12-02T04:26:00.476Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching from NewsAPI /everything","pageSize":"50","searchQuery":"recent news latest updates current events news headlines breaking news","service":"llm-dev-project","timestamp":"2025-12-02T04:26:00.476Z"}
+{"articleCount":23,"hasArticles":true,"hasData":true,"level":"info","message":"[news] 📰 NewsAgent: NewsAPI /everything result","searchQuery":"recent news latest updates current events news headlines breaking news","service":"llm-dev-project","timestamp":"2025-12-02T04:26:00.894Z","totalResults":23}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching completed","searchTerms":["recent news","latest updates","current events","news headlines","breaking news"],"service":"llm-dev-project","sourceDistribution":[{"count":23,"source":"newsapi"},{"count":10,"source":"guardian"},{"count":10,"source":"nytimes"},{"count":8,"source":"arxiv"},{"count":0,"source":"openalex"}],"sources":["newsapi","guardian","nytimes","arxiv","openalex"],"timestamp":"2025-12-02T04:26:01.374Z","totalArticles":51}
+{"durationMs":899,"level":"info","message":"[news] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T04:26:01.374Z"}
+{"hasBias":false,"hasSentiment":false,"hasTrend":false,"level":"info","message":"✅ All specialist agents complete","newsArticles":51,"service":"llm-dev-project","timestamp":"2025-12-02T04:26:01.375Z"}
+{"level":"info","message":"🎯 Phase 3: Starting Personalization Agent...","service":"llm-dev-project","timestamp":"2025-12-02T04:26:01.375Z","userId":"anonymous"}
+{"level":"info","message":"[personalization] Starting execution","query":"can you go over recent news?","service":"llm-dev-project","timestamp":"2025-12-02T04:26:01.375Z","userId":"anonymous"}
+{"level":"warn","message":"[personalization] No articles to personalize","service":"llm-dev-project","timestamp":"2025-12-02T04:26:01.375Z"}
+{"durationMs":0,"level":"info","message":"[personalization] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T04:26:01.375Z"}
+{"insights":0,"level":"info","message":"✅ Personalization complete","rankedArticles":0,"service":"llm-dev-project","timestamp":"2025-12-02T04:26:01.375Z"}
+{"level":"info","message":"📝 Phase 4: Starting Synthesis Agent...","service":"llm-dev-project","timestamp":"2025-12-02T04:26:01.382Z"}
+{"level":"info","message":"[synthesis] Starting execution","query":"can you go over recent news?","service":"llm-dev-project","timestamp":"2025-12-02T04:26:01.382Z","userId":"anonymous"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Building context from all agents...","service":"llm-dev-project","timestamp":"2025-12-02T04:26:01.382Z"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Generating final report...","service":"llm-dev-project","timestamp":"2025-12-02T04:26:01.384Z"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Report generation complete","query":"can you go over recent news?","reportLength":4321,"service":"llm-dev-project","timestamp":"2025-12-02T04:26:18.820Z"}
+{"durationMs":17438,"level":"info","message":"[synthesis] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T04:26:18.820Z"}
+{"level":"info","message":"✅ Synthesis complete","reportLength":4321,"service":"llm-dev-project","timestamp":"2025-12-02T04:26:18.821Z"}
+{"estimatedCost":"$0.0217","executionTimeMs":20740,"level":"info","message":"🎉 Multi-agent orchestration completed","query":"can you go over recent news?","service":"llm-dev-project","timestamp":"2025-12-02T04:26:18.821Z","totalAgents":4,"userId":"anonymous"}
+{"agentsUsed":4,"duration":"20741ms","estimatedCost":"$0.0217","level":"info","message":"Multi-agent query completed","query":"can you go over recent news?","service":"llm-dev-project","timestamp":"2025-12-02T04:26:18.822Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:04:26:18 +0000] \"POST /ask HTTP/1.1\" 200 70696 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T04:26:18.823Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T04:27:00.811Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:04:27:00 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 28808 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T04:27:00.812Z"}
+{"level":"info","message":"Health check requested","service":"llm-dev-project","timestamp":"2025-12-02T04:27:00.813Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:04:27:00 +0000] \"GET /health HTTP/1.1\" 200 148 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T04:27:00.814Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:04:27:00 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T04:27:00.876Z"}
+{"USE_MULTI_AGENT_ENV":true,"hasOrchestrator":true,"level":"info","message":"AI query received","query":"can you avoid doing anything","service":"llm-dev-project","style":"bullet-points","timestamp":"2025-12-02T04:27:10.494Z","useMultiAgent":true}
+{"level":"info","message":"🚀 Multi-agent orchestration started","query":"can you avoid doing anything","service":"llm-dev-project","timestamp":"2025-12-02T04:27:10.495Z","userId":"anonymous"}
+{"level":"info","message":"📋 Phase 1: Starting Coordinator Agent...","query":"can you avoid doing anything","service":"llm-dev-project","timestamp":"2025-12-02T04:27:10.495Z"}
+{"level":"info","message":"[coordinator] Starting execution","query":"can you avoid doing anything","service":"llm-dev-project","timestamp":"2025-12-02T04:27:10.495Z","userId":"anonymous"}
+{"level":"info","message":"[coordinator] 🎯 CoordinatorAgent: Analyzing query intent...","service":"llm-dev-project","timestamp":"2025-12-02T04:27:10.495Z"}
+{"agentsToRun":["news"],"intent":"general","level":"info","message":"[coordinator] 🎯 CoordinatorAgent: Planning complete","priority":"speed","searchTerms":["avoid","doing anything","user query","intent analysis","behavior"],"service":"llm-dev-project","timestamp":"2025-12-02T04:27:12.995Z"}
+{"durationMs":2501,"level":"info","message":"[coordinator] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T04:27:12.996Z"}
+{"agentsToRun":["news"],"intent":"general","level":"info","message":"✅ Coordinator complete","searchTerms":["avoid","doing anything","user query","intent analysis","behavior"],"service":"llm-dev-project","timestamp":"2025-12-02T04:27:12.996Z"}
+{"agents":["news"],"level":"info","message":"⚡ Phase 2: Starting specialist agents in parallel...","service":"llm-dev-project","timestamp":"2025-12-02T04:27:12.996Z"}
+{"level":"info","message":"[news] Starting execution","query":"can you avoid doing anything","service":"llm-dev-project","timestamp":"2025-12-02T04:27:12.996Z","userId":"anonymous"}
+{"level":"info","message":"[news] 📰 NewsAgent: Extracting search terms...","service":"llm-dev-project","timestamp":"2025-12-02T04:27:12.996Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Search terms extracted","searchTerms":["avoid","doing anything","user query","intent analysis","behavior"],"service":"llm-dev-project","timestamp":"2025-12-02T04:27:12.996Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching from sources...","prioritized":true,"service":"llm-dev-project","sources":["newsapi","guardian","nytimes","arxiv","openalex"],"timestamp":"2025-12-02T04:27:12.996Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching from NewsAPI /everything","pageSize":"50","searchQuery":"avoid doing anything user query intent analysis behavior","service":"llm-dev-project","timestamp":"2025-12-02T04:27:12.997Z"}
+{"articleCount":1,"hasArticles":true,"hasData":true,"level":"info","message":"[news] 📰 NewsAgent: NewsAPI /everything result","searchQuery":"avoid doing anything user query intent analysis behavior","service":"llm-dev-project","timestamp":"2025-12-02T04:27:13.215Z","totalResults":1}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching completed","searchTerms":["avoid","doing anything","user query","intent analysis","behavior"],"service":"llm-dev-project","sourceDistribution":[{"count":1,"source":"newsapi"},{"count":10,"source":"guardian"},{"count":10,"source":"nytimes"},{"count":8,"source":"arxiv"},{"count":0,"source":"openalex"}],"sources":["newsapi","guardian","nytimes","arxiv","openalex"],"timestamp":"2025-12-02T04:27:13.880Z","totalArticles":29}
+{"durationMs":884,"level":"info","message":"[news] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T04:27:13.880Z"}
+{"hasBias":false,"hasSentiment":false,"hasTrend":false,"level":"info","message":"✅ All specialist agents complete","newsArticles":29,"service":"llm-dev-project","timestamp":"2025-12-02T04:27:13.880Z"}
+{"level":"info","message":"🎯 Phase 3: Starting Personalization Agent...","service":"llm-dev-project","timestamp":"2025-12-02T04:27:13.880Z","userId":"anonymous"}
+{"level":"info","message":"[personalization] Starting execution","query":"can you avoid doing anything","service":"llm-dev-project","timestamp":"2025-12-02T04:27:13.880Z","userId":"anonymous"}
+{"level":"warn","message":"[personalization] No articles to personalize","service":"llm-dev-project","timestamp":"2025-12-02T04:27:13.880Z"}
+{"durationMs":0,"level":"info","message":"[personalization] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T04:27:13.880Z"}
+{"insights":0,"level":"info","message":"✅ Personalization complete","rankedArticles":0,"service":"llm-dev-project","timestamp":"2025-12-02T04:27:13.881Z"}
+{"level":"info","message":"📝 Phase 4: Starting Synthesis Agent...","service":"llm-dev-project","timestamp":"2025-12-02T04:27:13.884Z"}
+{"level":"info","message":"[synthesis] Starting execution","query":"can you avoid doing anything","service":"llm-dev-project","timestamp":"2025-12-02T04:27:13.885Z","userId":"anonymous"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Building context from all agents...","service":"llm-dev-project","timestamp":"2025-12-02T04:27:13.885Z"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Generating final report...","service":"llm-dev-project","timestamp":"2025-12-02T04:27:13.885Z"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Report generation complete","query":"can you avoid doing anything","reportLength":3751,"service":"llm-dev-project","timestamp":"2025-12-02T04:27:34.978Z"}
+{"durationMs":21093,"level":"info","message":"[synthesis] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T04:27:34.978Z"}
+{"level":"info","message":"✅ Synthesis complete","reportLength":3751,"service":"llm-dev-project","timestamp":"2025-12-02T04:27:34.979Z"}
+{"estimatedCost":"$0.0217","executionTimeMs":24484,"level":"info","message":"🎉 Multi-agent orchestration completed","query":"can you avoid doing anything","service":"llm-dev-project","timestamp":"2025-12-02T04:27:34.979Z","totalAgents":4,"userId":"anonymous"}
+{"agentsUsed":4,"duration":"24485ms","estimatedCost":"$0.0217","level":"info","message":"Multi-agent query completed","query":"can you avoid doing anything","service":"llm-dev-project","timestamp":"2025-12-02T04:27:34.979Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:04:27:34 +0000] \"POST /ask HTTP/1.1\" 200 46100 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T04:27:34.980Z"}

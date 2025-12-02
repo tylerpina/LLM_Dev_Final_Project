@@ -248,3 +248,606 @@
 {"level":"info","message":"::1 - - [15/Oct/2025:21:11:57 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 200 5782 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T21:11:57.909Z"}
 {"count":12,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-10-15T21:11:58.990Z"}
 {"level":"info","message":"::1 - - [15/Oct/2025:21:11:58 +0000] \"GET /headlines?limit=12 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0\"","service":"llm-dev-project","timestamp":"2025-10-15T21:11:58.992Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:06:22.959Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:06:22.963Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T05:06:22.975Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:06:22.976Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:06:22.976Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:06:22.977Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:06:22.998Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:06:22.999Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:06:23.047Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:06:23.049Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:06:23.055Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:06:23.056Z"}
+{"count":9,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:06:23.358Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:06:24.022Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T05:06:24.239Z"}
+{"count":29,"duration":1249,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T05:06:24.248Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T05:06:25.023Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:07:06.352Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:07:06 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12146 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T05:07:06.355Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:09:52.309Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:09:52 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12146 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T05:09:52.311Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:12:06.956Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:12:06 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T05:12:06.957Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:14:52.319Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:14:52 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T05:14:52.321Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:17:07.305Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:17:07 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T05:17:07.308Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:19:25.902Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:19:25.907Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T05:19:25.915Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:19:25.916Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:19:25.916Z"}
+{"level":"warn","message":"SendGrid API key not provided. Email notifications will fall back to console logs.","service":"llm-dev-project","timestamp":"2025-12-02T05:19:25.916Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:19:25.917Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:19:25.950Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:19:25.951Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:19:26.002Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:19:26.004Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:19:26.013Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:19:26.014Z"}
+{"count":9,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:19:26.244Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:19:26.953Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T05:19:27.348Z"}
+{"count":29,"duration":1405,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T05:19:27.357Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T05:19:28.298Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.624Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.627Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.632Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.632Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.632Z"}
+{"level":"warn","message":"SendGrid API key not provided. Email notifications will fall back to console logs.","service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.633Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.633Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.654Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.655Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.700Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.702Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.709Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.710Z"}
+{"count":9,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:19:30.923Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:19:31.867Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T05:19:32.144Z"}
+{"count":29,"duration":1508,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T05:19:32.164Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T05:19:33.037Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:19:52.307Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:19:52 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12197 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T05:19:52.311Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:20:30.747Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:20:30.752Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T05:20:30.760Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:20:30.761Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:20:30.762Z"}
+{"level":"warn","message":"SendGrid API key not provided. Email notifications will fall back to console logs.","service":"llm-dev-project","timestamp":"2025-12-02T05:20:30.763Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:20:30.764Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:20:30.806Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:20:30.807Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:20:30.863Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:20:30.867Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:20:30.876Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:20:30.878Z"}
+{"count":9,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:20:31.040Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:20:32.073Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T05:20:32.324Z"}
+{"count":29,"duration":1525,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T05:20:32.333Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T05:20:33.010Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:21:34.964Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:21:34.968Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T05:21:34.974Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:21:34.975Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:21:34.975Z"}
+{"level":"warn","message":"SendGrid API key not provided. Email notifications will fall back to console logs.","service":"llm-dev-project","timestamp":"2025-12-02T05:21:34.976Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:21:34.976Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:21:34.997Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:21:34.998Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:21:35.043Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:21:35.045Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:21:35.051Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:21:35.053Z"}
+{"count":9,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:21:35.268Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:21:35.937Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T05:21:36.545Z"}
+{"count":29,"duration":1564,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T05:21:36.564Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T05:21:37.623Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.518Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.523Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.527Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.527Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.528Z"}
+{"level":"warn","message":"SendGrid API key not provided. Email notifications will fall back to console logs.","service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.528Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.528Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.549Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.550Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.595Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.597Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.604Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.606Z"}
+{"count":9,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:21:39.799Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:21:40.443Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T05:21:40.660Z"}
+{"count":29,"duration":1118,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T05:21:40.668Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T05:21:41.161Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.617Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.622Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.626Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.627Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.627Z"}
+{"level":"warn","message":"SendGrid API key not provided. Email notifications will fall back to console logs.","service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.628Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.628Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.650Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.651Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.696Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.699Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.706Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.708Z"}
+{"count":9,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:21:45.911Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:21:46.561Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T05:21:46.794Z"}
+{"count":29,"duration":1150,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T05:21:46.801Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T05:21:48.248Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.355Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.360Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.364Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.365Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.365Z"}
+{"level":"warn","message":"SendGrid API key not provided. Email notifications will fall back to console logs.","service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.366Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.366Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.387Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.388Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.433Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.436Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.444Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.446Z"}
+{"count":9,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:22:01.629Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:22:02.291Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T05:22:02.486Z"}
+{"count":29,"duration":1115,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T05:22:02.504Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T05:22:03.189Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:22:07.355Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:22:07 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12197 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T05:22:07.358Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.479Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.483Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.489Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.490Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.490Z"}
+{"level":"warn","message":"SendGrid API key not provided. Email notifications will fall back to console logs.","service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.491Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.491Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.514Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.515Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.559Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.561Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.569Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.570Z"}
+{"count":9,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:24:07.892Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:24:08.624Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T05:24:08.880Z"}
+{"count":29,"duration":1374,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T05:24:08.890Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T05:24:09.624Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:24:52.315Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:24:52 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12197 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T05:24:52.319Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:27:07.823Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:27:07 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12197 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T05:27:07.826Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:29:52.314Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:29:52 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T05:29:52.316Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:32:08.760Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:32:08 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T05:32:08.761Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:34:52.306Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:34:52 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T05:34:52.307Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:35:57.695Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:35:57.700Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T05:35:57.706Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:35:57.707Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:35:57.707Z"}
+{"level":"warn","message":"No email provider configured. Email notifications will fall back to console logs.","service":"llm-dev-project","timestamp":"2025-12-02T05:35:57.708Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:35:57.708Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:35:57.739Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:35:57.740Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:35:57.784Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:35:57.786Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:35:57.794Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:35:57.795Z"}
+{"count":9,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:35:58.018Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:35:58.714Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T05:35:59.066Z"}
+{"count":29,"duration":1334,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T05:35:59.074Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T05:35:59.676Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.453Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.457Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.462Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.463Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.463Z"}
+{"level":"warn","message":"No email provider configured. Email notifications will fall back to console logs.","service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.464Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.464Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.486Z"}
+{"level":"warn","message":"Email provider not configured. Digest scheduler will remain disabled.","service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.487Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.487Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.532Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.534Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.541Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.543Z"}
+{"count":9,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:36:06.720Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:36:07.376Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T05:36:07.561Z"}
+{"count":29,"duration":1080,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T05:36:07.568Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T05:36:09.713Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.093Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.099Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.105Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.106Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.106Z"}
+{"level":"warn","message":"No email provider configured. Email notifications will fall back to console logs.","service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.107Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.107Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.134Z"}
+{"level":"warn","message":"Email provider not configured. Digest scheduler will remain disabled.","service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.135Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.135Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.185Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.188Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.195Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.197Z"}
+{"count":9,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:36:11.430Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:36:12.074Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T05:36:12.283Z"}
+{"count":29,"duration":1156,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T05:36:12.293Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T05:36:12.940Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:37:09.429Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:37:09 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12231 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T05:37:09.434Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.683Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.689Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.698Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.699Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.699Z"}
+{"level":"warn","message":"No email provider configured. Email notifications will fall back to console logs.","service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.700Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.700Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.727Z"}
+{"level":"warn","message":"Email provider not configured. Digest scheduler will remain disabled.","service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.727Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.728Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.783Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.785Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.794Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.796Z"}
+{"count":9,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:38:01.972Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T05:38:02.619Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T05:38:02.865Z"}
+{"count":29,"duration":1147,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T05:38:02.876Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T05:38:03.525Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:39:52.312Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:39:52 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12231 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T05:39:52.316Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:42:10.083Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:42:10 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12231 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T05:42:10.084Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:44:52.306Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:44:52 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T05:44:52.308Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:47:11.201Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:47:11 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T05:47:11.202Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T05:49:52.311Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:05:49:52 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T05:49:52.313Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:29:38.836Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:29:38.846Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T18:29:38.881Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:29:38.883Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:29:38.884Z"}
+{"level":"info","message":"AWS SES email notifications enabled","region":"us-east-2","service":"llm-dev-project","timestamp":"2025-12-02T18:29:38.896Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:29:38.898Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:29:38.998Z"}
+{"cronExpression":"0 9 * * *","level":"info","message":"Starting digest scheduler","recipientsProvided":false,"service":"llm-dev-project","timestamp":"2025-12-02T18:29:38.999Z"}
+{"cron":"09:00","level":"info","message":"Email digest scheduler initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:29:39.007Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:29:39.008Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:29:39.114Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:29:39.120Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:29:39.139Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:29:39.143Z"}
+{"count":10,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:29:39.854Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:29:40.651Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T18:29:40.959Z"}
+{"count":30,"duration":1970,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T18:29:40.979Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T18:29:42.622Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T18:30:06.033Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:18:30:06 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12292 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T18:30:06.040Z"}
+{"level":"info","message":"Health check requested","service":"llm-dev-project","timestamp":"2025-12-02T18:30:06.045Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:18:30:06 +0000] \"GET /health HTTP/1.1\" 200 127 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T18:30:06.047Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:32:05.993Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.002Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.014Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.015Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.015Z"}
+{"level":"info","message":"AWS SES email notifications enabled","region":"us-east-2","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.025Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.026Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.070Z"}
+{"cronExpression":"0 9 * * *","level":"info","message":"Starting digest scheduler","recipientsProvided":false,"service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.071Z"}
+{"cron":"09:00","level":"info","message":"Email digest scheduler initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.080Z"}
+{"level":"warn","message":"No digest recipients resolved; skipping send","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.082Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.082Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.186Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.191Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.207Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.211Z"}
+{"level":"info","message":"Startup digest dispatched","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.213Z"}
+{"count":10,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.335Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:32:06.987Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T18:32:07.110Z"}
+{"count":30,"duration":1046,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T18:32:07.129Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T18:32:08.032Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.087Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.096Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.106Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.107Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.108Z"}
+{"level":"info","message":"AWS SES email notifications enabled","region":"us-east-2","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.121Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.122Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.176Z"}
+{"cronExpression":"0 9 * * *","level":"info","message":"Starting digest scheduler","recipientsProvided":false,"service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.177Z"}
+{"cron":"09:00","level":"info","message":"Email digest scheduler initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.188Z"}
+{"level":"warn","message":"No digest recipients resolved; skipping send","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.189Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.190Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.276Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.281Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.295Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.297Z"}
+{"level":"info","message":"Startup digest dispatched","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.299Z"}
+{"count":10,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:32:36.415Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:32:37.299Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T18:32:37.484Z"}
+{"count":30,"duration":1313,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T18:32:37.505Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T18:32:38.228Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T18:33:07.942Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:18:33:07 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12368 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T18:33:07.951Z"}
+{"level":"info","message":"Health check requested","service":"llm-dev-project","timestamp":"2025-12-02T18:33:07.955Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:18:33:07 +0000] \"GET /health HTTP/1.1\" 200 127 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T18:33:07.957Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.125Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.129Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.136Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.136Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.137Z"}
+{"level":"info","message":"AWS SES email notifications enabled","region":"us-east-2","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.142Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.142Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.166Z"}
+{"cronExpression":"0 9 * * *","level":"info","message":"Starting digest scheduler","recipientsProvided":false,"service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.167Z"}
+{"cron":"09:00","level":"info","message":"Email digest scheduler initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.171Z"}
+{"level":"warn","message":"No digest recipients resolved; skipping send","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.172Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.173Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.218Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.220Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.228Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.230Z"}
+{"level":"info","message":"Startup digest dispatched","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.230Z"}
+{"count":10,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:37:57.493Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:37:58.149Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T18:37:58.241Z"}
+{"count":30,"duration":1076,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T18:37:58.249Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T18:38:03.887Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T18:38:07.941Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:18:38:07 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12585 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T18:38:07.945Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.715Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.719Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.723Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.724Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.724Z"}
+{"level":"info","message":"AWS SES email notifications enabled","region":"us-east-2","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.730Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.731Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.755Z"}
+{"cronExpression":"0 9 * * *","level":"info","message":"Starting digest scheduler","recipientsProvided":false,"service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.756Z"}
+{"cron":"09:00","level":"info","message":"Email digest scheduler initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.760Z"}
+{"level":"warn","message":"No digest recipients resolved; skipping send","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.761Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.761Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.804Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.806Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.813Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.815Z"}
+{"level":"info","message":"Startup digest dispatched","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.816Z"}
+{"count":10,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:39:27.969Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:39:28.577Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T18:39:28.692Z"}
+{"count":30,"duration":938,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T18:39:28.699Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T18:39:29.106Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.832Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.836Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.840Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.841Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.841Z"}
+{"level":"info","message":"AWS SES email notifications enabled","region":"us-east-2","service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.847Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.848Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.870Z"}
+{"cronExpression":"0 9 * * *","level":"info","message":"Starting digest scheduler","recipientsProvided":false,"service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.871Z"}
+{"cron":"09:00","level":"info","message":"Email digest scheduler initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.883Z"}
+{"level":"warn","message":"No digest recipients resolved; skipping send","service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.884Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.884Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.943Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.946Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.956Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.958Z"}
+{"level":"info","message":"Startup digest dispatched","service":"llm-dev-project","timestamp":"2025-12-02T18:39:57.959Z"}
+{"count":10,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:39:58.189Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:39:58.763Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T18:39:58.880Z"}
+{"count":30,"duration":1004,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T18:39:58.889Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T18:39:59.923Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.793Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.797Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.801Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.801Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.802Z"}
+{"level":"info","message":"AWS SES email notifications enabled","region":"us-east-2","service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.806Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.807Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.829Z"}
+{"cronExpression":"0 9 * * *","level":"info","message":"Starting digest scheduler","recipientsProvided":false,"service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.831Z"}
+{"cron":"09:00","level":"info","message":"Email digest scheduler initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.836Z"}
+{"level":"warn","message":"No digest recipients resolved; skipping send","service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.836Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.837Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.880Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.882Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.889Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.890Z"}
+{"level":"info","message":"Startup digest dispatched","service":"llm-dev-project","timestamp":"2025-12-02T18:41:02.891Z"}
+{"count":10,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:41:03.015Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:41:03.637Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T18:41:03.727Z"}
+{"count":30,"duration":897,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T18:41:03.734Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T18:41:04.782Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.895Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.899Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.906Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.907Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.907Z"}
+{"level":"info","message":"AWS SES email notifications enabled","region":"us-east-2","service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.912Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.912Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.935Z"}
+{"cronExpression":"0 9 * * *","level":"info","message":"Starting digest scheduler","recipientsProvided":false,"service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.936Z"}
+{"cron":"09:00","level":"info","message":"Email digest scheduler initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.940Z"}
+{"level":"warn","message":"No digest recipients resolved; skipping send","service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.940Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.941Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.988Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.991Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.998Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:42:56.999Z"}
+{"level":"info","message":"Startup digest dispatched","service":"llm-dev-project","timestamp":"2025-12-02T18:42:57.000Z"}
+{"count":10,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:42:57.137Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:42:57.752Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T18:42:57.874Z"}
+{"count":30,"duration":942,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T18:42:57.884Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T18:42:58.259Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.367Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.371Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.376Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.377Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.377Z"}
+{"level":"info","message":"AWS SES email notifications enabled","region":"us-east-2","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.383Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.383Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.411Z"}
+{"cronExpression":"0 9 * * *","level":"info","message":"Starting digest scheduler","recipientsProvided":false,"service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.411Z"}
+{"cron":"09:00","level":"info","message":"Email digest scheduler initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.416Z"}
+{"level":"warn","message":"No digest recipients resolved; skipping send","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.417Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.417Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.464Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.467Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.476Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.477Z"}
+{"level":"info","message":"Startup digest dispatched","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.478Z"}
+{"count":10,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:44:19.730Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:44:20.408Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T18:44:20.519Z"}
+{"count":30,"duration":1110,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T18:44:20.527Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T18:44:21.856Z"}
+{"headlineLimit":5,"level":"info","message":"Building daily digest payload","personalizedLimit":5,"service":"llm-dev-project","timestamp":"2025-12-02T18:44:28.311Z","userId":"professor"}
+{"level":"info","message":"No history found for user professor, returning empty recommendations","service":"llm-dev-project","timestamp":"2025-12-02T18:44:28.313Z"}
+{"channel":"email","emailProvider":"ses","level":"info","message":"Preparing to send email notification","service":"llm-dev-project","timestamp":"2025-12-02T18:44:28.314Z","userId":"professor"}
+{"error":{"$fault":"client","$metadata":{"attempts":1,"httpStatusCode":403,"requestId":"9549a427-42c1-4033-99ce-961469fe4621","totalRetryDelay":0},"message":"The security token included in the request is invalid.","name":"UnrecognizedClientException"},"level":"error","message":"Failed to send notification to professor","service":"llm-dev-project","timestamp":"2025-12-02T18:44:28.504Z"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [02/Dec/2025:18:44:28 +0000] \"POST /notifications/digest HTTP/1.1\" 200 74 \"-\" \"curl/7.68.0\"","service":"llm-dev-project","timestamp":"2025-12-02T18:44:28.507Z"}
+{"headlineLimit":5,"level":"info","message":"Building daily digest payload","personalizedLimit":5,"service":"llm-dev-project","timestamp":"2025-12-02T18:48:03.793Z","userId":"professor"}
+{"level":"info","message":"No history found for user professor, returning empty recommendations","service":"llm-dev-project","timestamp":"2025-12-02T18:48:03.795Z"}
+{"channel":"email","emailProvider":"ses","level":"info","message":"Preparing to send email notification","service":"llm-dev-project","timestamp":"2025-12-02T18:48:03.797Z","userId":"professor"}
+{"error":{"$fault":"client","$metadata":{"attempts":1,"httpStatusCode":403,"requestId":"dc6f84b4-9a26-45dc-bd92-72b06037629c","totalRetryDelay":0},"message":"The security token included in the request is invalid.","name":"UnrecognizedClientException"},"level":"error","message":"Failed to send notification to professor","service":"llm-dev-project","timestamp":"2025-12-02T18:48:04.033Z"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [02/Dec/2025:18:48:04 +0000] \"POST /notifications/digest HTTP/1.1\" 200 74 \"-\" \"curl/7.68.0\"","service":"llm-dev-project","timestamp":"2025-12-02T18:48:04.034Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T18:48:08.302Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:18:48:08 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12640 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T18:48:08.303Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":false,"hasNewsAPI":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.131Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.135Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.142Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.143Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.143Z"}
+{"level":"info","message":"AWS SES email notifications enabled","region":"us-east-2","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.148Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.149Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.175Z"}
+{"cronExpression":"0 9 * * *","level":"info","message":"Starting digest scheduler","recipientsProvided":false,"service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.176Z"}
+{"cron":"09:00","level":"info","message":"Email digest scheduler initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.180Z"}
+{"level":"warn","message":"No digest recipients resolved; skipping send","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.180Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.181Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.227Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.229Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","arxiv"],"service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.236Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.238Z"}
+{"level":"info","message":"Startup digest dispatched","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.238Z"}
+{"count":10,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:48:31.737Z"}
+{"count":10,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T18:48:32.381Z"}
+{"count":10,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T18:48:32.517Z"}
+{"count":30,"duration":1346,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T18:48:32.527Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T18:48:34.624Z"}
+{"headlineLimit":5,"level":"info","message":"Building daily digest payload","personalizedLimit":5,"service":"llm-dev-project","timestamp":"2025-12-02T18:48:39.004Z","userId":"professor"}
+{"level":"info","message":"No history found for user professor, returning empty recommendations","service":"llm-dev-project","timestamp":"2025-12-02T18:48:39.005Z"}
+{"channel":"email","emailProvider":"ses","level":"info","message":"Preparing to send email notification","service":"llm-dev-project","timestamp":"2025-12-02T18:48:39.006Z","userId":"professor"}
+{"level":"info","message":"Notification yxmlsh sent successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:48:39.303Z"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [02/Dec/2025:18:48:39 +0000] \"POST /notifications/digest HTTP/1.1\" 200 59 \"-\" \"curl/7.68.0\"","service":"llm-dev-project","timestamp":"2025-12-02T18:48:39.305Z"}
+{"USE_MULTI_AGENT_ENV":true,"hasOrchestrator":true,"level":"info","message":"AI query received","query":"recent game news","service":"llm-dev-project","style":"bullet-points","timestamp":"2025-12-02T18:51:29.698Z","useMultiAgent":true}
+{"level":"info","message":"🚀 Multi-agent orchestration started","query":"recent game news","service":"llm-dev-project","timestamp":"2025-12-02T18:51:29.698Z","userId":"anonymous"}
+{"level":"info","message":"📋 Phase 1: Starting Coordinator Agent...","query":"recent game news","service":"llm-dev-project","timestamp":"2025-12-02T18:51:29.699Z"}
+{"level":"info","message":"[coordinator] Starting execution","query":"recent game news","service":"llm-dev-project","timestamp":"2025-12-02T18:51:29.699Z","userId":"anonymous"}
+{"level":"info","message":"[coordinator] 🎯 CoordinatorAgent: Analyzing query intent...","service":"llm-dev-project","timestamp":"2025-12-02T18:51:29.699Z"}
+{"agentsToRun":["news","trend"],"intent":"news","level":"info","message":"[coordinator] 🎯 CoordinatorAgent: Planning complete","priority":"speed","searchTerms":["recent","game","news","updates","gaming"],"service":"llm-dev-project","timestamp":"2025-12-02T18:51:32.093Z"}
+{"durationMs":2394,"level":"info","message":"[coordinator] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T18:51:32.093Z"}
+{"agentsToRun":["news","trend"],"intent":"news","level":"info","message":"✅ Coordinator complete","searchTerms":["recent","game","news","updates","gaming"],"service":"llm-dev-project","timestamp":"2025-12-02T18:51:32.094Z"}
+{"agents":["news","trend"],"level":"info","message":"⚡ Phase 2: Starting specialist agents in parallel...","service":"llm-dev-project","timestamp":"2025-12-02T18:51:32.094Z"}
+{"level":"info","message":"[news] Starting execution","query":"recent game news","service":"llm-dev-project","timestamp":"2025-12-02T18:51:32.095Z","userId":"anonymous"}
+{"level":"info","message":"[news] 📰 NewsAgent: Extracting search terms...","service":"llm-dev-project","timestamp":"2025-12-02T18:51:32.095Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Search terms extracted","searchTerms":["recent","game","news","updates","gaming"],"service":"llm-dev-project","timestamp":"2025-12-02T18:51:32.096Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching from sources...","prioritized":true,"service":"llm-dev-project","sources":["newsapi","guardian","arxiv"],"timestamp":"2025-12-02T18:51:32.096Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching from NewsAPI /everything","pageSize":"50","searchQuery":"recent game news updates gaming","service":"llm-dev-project","timestamp":"2025-12-02T18:51:32.096Z"}
+{"articleCount":49,"hasArticles":true,"hasData":true,"level":"info","message":"[news] 📰 NewsAgent: NewsAPI /everything result","searchQuery":"recent game news updates gaming","service":"llm-dev-project","timestamp":"2025-12-02T18:51:32.653Z","totalResults":84}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching completed","searchTerms":["recent","game","news","updates","gaming"],"service":"llm-dev-project","sourceDistribution":[{"count":49,"source":"newsapi"},{"count":10,"source":"guardian"},{"count":8,"source":"arxiv"}],"sources":["newsapi","guardian","arxiv"],"timestamp":"2025-12-02T18:51:32.917Z","totalArticles":67}
+{"durationMs":822,"level":"info","message":"[news] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T18:51:32.918Z"}
+{"level":"info","message":"[trend] Starting execution","query":"recent game news","service":"llm-dev-project","timestamp":"2025-12-02T18:51:32.918Z","userId":"anonymous"}
+{"articleCount":67,"level":"info","message":"[trend] 📈 TrendAgent: Detecting trends and patterns...","service":"llm-dev-project","timestamp":"2025-12-02T18:51:32.918Z"}
+{"emergingThemes":4,"insights":3,"level":"info","mainTopics":5,"message":"[trend] 📈 TrendAgent: Analysis completed","service":"llm-dev-project","timestamp":"2025-12-02T18:51:39.302Z"}
+{"durationMs":6385,"level":"info","message":"[trend] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T18:51:39.303Z"}
+{"hasBias":false,"hasSentiment":false,"hasTrend":true,"level":"info","message":"✅ All specialist agents complete","newsArticles":67,"service":"llm-dev-project","timestamp":"2025-12-02T18:51:39.303Z"}
+{"level":"info","message":"🎯 Phase 3: Starting Personalization Agent...","service":"llm-dev-project","timestamp":"2025-12-02T18:51:39.303Z","userId":"anonymous"}
+{"level":"info","message":"[personalization] Starting execution","query":"recent game news","service":"llm-dev-project","timestamp":"2025-12-02T18:51:39.303Z","userId":"anonymous"}
+{"level":"warn","message":"[personalization] No articles to personalize","service":"llm-dev-project","timestamp":"2025-12-02T18:51:39.304Z"}
+{"durationMs":1,"level":"info","message":"[personalization] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T18:51:39.304Z"}
+{"insights":0,"level":"info","message":"✅ Personalization complete","rankedArticles":0,"service":"llm-dev-project","timestamp":"2025-12-02T18:51:39.304Z"}
+{"level":"info","message":"📝 Phase 4: Starting Synthesis Agent...","service":"llm-dev-project","timestamp":"2025-12-02T18:51:39.304Z"}
+{"level":"info","message":"[synthesis] Starting execution","query":"recent game news","service":"llm-dev-project","timestamp":"2025-12-02T18:51:39.304Z","userId":"anonymous"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Building context from all agents...","service":"llm-dev-project","timestamp":"2025-12-02T18:51:39.304Z"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Generating final report...","service":"llm-dev-project","timestamp":"2025-12-02T18:51:39.305Z"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Report generation complete","query":"recent game news","reportLength":3986,"service":"llm-dev-project","timestamp":"2025-12-02T18:52:00.767Z"}
+{"durationMs":21463,"level":"info","message":"[synthesis] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T18:52:00.768Z"}
+{"level":"info","message":"✅ Synthesis complete","reportLength":3986,"service":"llm-dev-project","timestamp":"2025-12-02T18:52:00.768Z"}
+{"estimatedCost":"$0.0217","executionTimeMs":31070,"level":"info","message":"🎉 Multi-agent orchestration completed","query":"recent game news","service":"llm-dev-project","timestamp":"2025-12-02T18:52:00.768Z","totalAgents":5,"userId":"anonymous"}
+{"agentsUsed":5,"duration":"31070ms","estimatedCost":"$0.0217","level":"info","message":"Multi-agent query completed","query":"recent game news","service":"llm-dev-project","timestamp":"2025-12-02T18:52:00.768Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:18:52:00 +0000] \"POST /ask HTTP/1.1\" 200 91394 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T18:52:00.770Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T18:53:07.940Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:18:53:07 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12574 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Cursor/2.1.39 Chrome/138.0.7204.251 Electron/37.7.0 Safari/537.36\"","service":"llm-dev-project","timestamp":"2025-12-02T18:53:07.941Z"}
+{"level":"info","message":"Health check requested","service":"llm-dev-project","timestamp":"2025-12-02T18:53:57.948Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:18:53:57 +0000] \"GET /health HTTP/1.1\" 200 127 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T18:53:57.949Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T18:53:57.952Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:18:53:57 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 12574 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T18:53:57.953Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:18:53:58 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T18:53:58.040Z"}
+{"USE_MULTI_AGENT_ENV":true,"hasOrchestrator":true,"level":"info","message":"AI query received","query":"recent ai news","service":"llm-dev-project","style":"bullet-points","timestamp":"2025-12-02T18:54:06.042Z","useMultiAgent":true}
+{"level":"info","message":"🚀 Multi-agent orchestration started","query":"recent ai news","service":"llm-dev-project","timestamp":"2025-12-02T18:54:06.043Z","userId":"anonymous"}
+{"level":"info","message":"📋 Phase 1: Starting Coordinator Agent...","query":"recent ai news","service":"llm-dev-project","timestamp":"2025-12-02T18:54:06.043Z"}
+{"level":"info","message":"[coordinator] Starting execution","query":"recent ai news","service":"llm-dev-project","timestamp":"2025-12-02T18:54:06.043Z","userId":"anonymous"}
+{"level":"info","message":"[coordinator] 🎯 CoordinatorAgent: Analyzing query intent...","service":"llm-dev-project","timestamp":"2025-12-02T18:54:06.043Z"}
+{"agentsToRun":["news","trend"],"intent":"news","level":"info","message":"[coordinator] 🎯 CoordinatorAgent: Planning complete","priority":"speed","searchTerms":["recent","AI","news","artificial intelligence","updates"],"service":"llm-dev-project","timestamp":"2025-12-02T18:54:09.073Z"}
+{"durationMs":3030,"level":"info","message":"[coordinator] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T18:54:09.073Z"}
+{"agentsToRun":["news","trend"],"intent":"news","level":"info","message":"✅ Coordinator complete","searchTerms":["recent","AI","news","artificial intelligence","updates"],"service":"llm-dev-project","timestamp":"2025-12-02T18:54:09.073Z"}
+{"agents":["news","trend"],"level":"info","message":"⚡ Phase 2: Starting specialist agents in parallel...","service":"llm-dev-project","timestamp":"2025-12-02T18:54:09.073Z"}
+{"level":"info","message":"[news] Starting execution","query":"recent ai news","service":"llm-dev-project","timestamp":"2025-12-02T18:54:09.074Z","userId":"anonymous"}
+{"level":"info","message":"[news] 📰 NewsAgent: Extracting search terms...","service":"llm-dev-project","timestamp":"2025-12-02T18:54:09.074Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Search terms extracted","searchTerms":["recent","AI","news","artificial intelligence","updates"],"service":"llm-dev-project","timestamp":"2025-12-02T18:54:09.074Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching from sources...","prioritized":true,"service":"llm-dev-project","sources":["newsapi","guardian","arxiv"],"timestamp":"2025-12-02T18:54:09.074Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching from NewsAPI /everything","pageSize":"50","searchQuery":"recent AI news artificial intelligence updates","service":"llm-dev-project","timestamp":"2025-12-02T18:54:09.074Z"}
+{"articleCount":50,"hasArticles":true,"hasData":true,"level":"info","message":"[news] 📰 NewsAgent: NewsAPI /everything result","searchQuery":"recent AI news artificial intelligence updates","service":"llm-dev-project","timestamp":"2025-12-02T18:54:09.282Z","totalResults":138}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching completed","searchTerms":["recent","AI","news","artificial intelligence","updates"],"service":"llm-dev-project","sourceDistribution":[{"count":50,"source":"newsapi"},{"count":10,"source":"guardian"},{"count":8,"source":"arxiv"}],"sources":["newsapi","guardian","arxiv"],"timestamp":"2025-12-02T18:54:09.670Z","totalArticles":68}
+{"durationMs":596,"level":"info","message":"[news] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T18:54:09.670Z"}
+{"level":"info","message":"[trend] Starting execution","query":"recent ai news","service":"llm-dev-project","timestamp":"2025-12-02T18:54:09.671Z","userId":"anonymous"}
+{"articleCount":68,"level":"info","message":"[trend] 📈 TrendAgent: Detecting trends and patterns...","service":"llm-dev-project","timestamp":"2025-12-02T18:54:09.671Z"}
+{"emergingThemes":5,"insights":5,"level":"info","mainTopics":5,"message":"[trend] 📈 TrendAgent: Analysis completed","service":"llm-dev-project","timestamp":"2025-12-02T18:54:16.195Z"}
+{"durationMs":6525,"level":"info","message":"[trend] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T18:54:16.195Z"}
+{"hasBias":false,"hasSentiment":false,"hasTrend":true,"level":"info","message":"✅ All specialist agents complete","newsArticles":68,"service":"llm-dev-project","timestamp":"2025-12-02T18:54:16.195Z"}
+{"level":"info","message":"🎯 Phase 3: Starting Personalization Agent...","service":"llm-dev-project","timestamp":"2025-12-02T18:54:16.195Z","userId":"anonymous"}
+{"level":"info","message":"[personalization] Starting execution","query":"recent ai news","service":"llm-dev-project","timestamp":"2025-12-02T18:54:16.195Z","userId":"anonymous"}
+{"level":"warn","message":"[personalization] No articles to personalize","service":"llm-dev-project","timestamp":"2025-12-02T18:54:16.195Z"}
+{"durationMs":0,"level":"info","message":"[personalization] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T18:54:16.195Z"}
+{"insights":0,"level":"info","message":"✅ Personalization complete","rankedArticles":0,"service":"llm-dev-project","timestamp":"2025-12-02T18:54:16.195Z"}
+{"level":"info","message":"📝 Phase 4: Starting Synthesis Agent...","service":"llm-dev-project","timestamp":"2025-12-02T18:54:16.196Z"}
+{"level":"info","message":"[synthesis] Starting execution","query":"recent ai news","service":"llm-dev-project","timestamp":"2025-12-02T18:54:16.196Z","userId":"anonymous"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Building context from all agents...","service":"llm-dev-project","timestamp":"2025-12-02T18:54:16.196Z"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Generating final report...","service":"llm-dev-project","timestamp":"2025-12-02T18:54:16.196Z"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Report generation complete","query":"recent ai news","reportLength":4622,"service":"llm-dev-project","timestamp":"2025-12-02T18:54:33.487Z"}
+{"durationMs":17291,"level":"info","message":"[synthesis] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T18:54:33.487Z"}
+{"level":"info","message":"✅ Synthesis complete","reportLength":4622,"service":"llm-dev-project","timestamp":"2025-12-02T18:54:33.487Z"}
+{"estimatedCost":"$0.0217","executionTimeMs":27445,"level":"info","message":"🎉 Multi-agent orchestration completed","query":"recent ai news","service":"llm-dev-project","timestamp":"2025-12-02T18:54:33.487Z","totalAgents":5,"userId":"anonymous"}
+{"agentsUsed":5,"duration":"27446ms","estimatedCost":"$0.0217","level":"info","message":"Multi-agent query completed","query":"recent ai news","service":"llm-dev-project","timestamp":"2025-12-02T18:54:33.488Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:18:54:33 +0000] \"POST /ask HTTP/1.1\" 200 90313 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T18:54:33.489Z"}
+{"headlineLimit":5,"level":"info","message":"Building daily digest payload","personalizedLimit":5,"service":"llm-dev-project","timestamp":"2025-12-02T18:54:46.710Z","userId":"professor"}
+{"level":"info","message":"No history found for user professor, returning empty recommendations","service":"llm-dev-project","timestamp":"2025-12-02T18:54:46.710Z"}
+{"channel":"email","emailProvider":"ses","level":"info","message":"Preparing to send email notification","service":"llm-dev-project","timestamp":"2025-12-02T18:54:46.711Z","userId":"professor"}
+{"level":"info","message":"Notification v8a3b sent successfully","service":"llm-dev-project","timestamp":"2025-12-02T18:54:46.966Z"}
+{"level":"info","message":"::ffff:127.0.0.1 - - [02/Dec/2025:18:54:46 +0000] \"POST /notifications/digest HTTP/1.1\" 200 59 \"-\" \"curl/7.68.0\"","service":"llm-dev-project","timestamp":"2025-12-02T18:54:46.968Z"}

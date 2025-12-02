@@ -59,17 +59,26 @@ export interface DBUserInteraction {
 export class DatabaseService {
   private db: Database.Database;
 
-  constructor(dbPath: string = "./data/headlines.db") {
+  constructor(dbPath?: string) {
+    // Use /tmp directory in serverless environments (Vercel, AWS Lambda)
+    const isServerless =
+      process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+    const finalDbPath =
+      dbPath || (isServerless ? "/tmp/headlines.db" : "./data/headlines.db");
+
     // Ensure data directory exists
     const fs = require("fs");
-    const dir = path.dirname(dbPath);
+    const dir = path.dirname(finalDbPath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
 
-    this.db = new Database(dbPath);
+    this.db = new Database(finalDbPath);
     this.initializeDatabase();
-    logger.info("Database initialized", { path: dbPath });
+    logger.info("Database initialized", {
+      path: finalDbPath,
+      isServerless: !!isServerless,
+    });
   }
 
   private initializeDatabase(): void {

@@ -19,6 +19,9 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
+// Detect serverless environment (Vercel, AWS Lambda, etc.)
+const isServerless = !!(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+
 // Feature flag for multi-agent system
 const USE_MULTI_AGENT = process.env.USE_MULTI_AGENT === "true";
 
@@ -100,9 +103,14 @@ if (multiAgentOrchestrator) {
     multiAgentOrchestrator,
     notificationService
   );
-  // Start scheduler (9 AM daily default)
-  dailyRoundupService.startScheduler();
-  logger.info("Daily Roundup Service initialized");
+  // Only start scheduler if not in serverless environment
+  if (!isServerless) {
+    // Start scheduler (9 AM daily default)
+    dailyRoundupService.startScheduler();
+    logger.info("Daily Roundup Service initialized");
+  } else {
+    logger.info("Daily Roundup Service initialized (scheduler disabled in serverless)");
+  }
 }
 
 // Initialize headline fetcher
@@ -113,14 +121,19 @@ const headlineFetcherService = new HeadlineFetcherService(
   vectorStore
 );
 
-// Start fetching headlines every hour
-headlineFetcherService.startScheduledFetching("0 * * * *"); // Every hour at minute 0
+// Only start scheduled tasks if not in serverless environment
+if (!isServerless) {
+  // Start fetching headlines every hour
+  headlineFetcherService.startScheduledFetching("0 * * * *"); // Every hour at minute 0
 
-// Clean old headlines daily at midnight
-setInterval(() => {
-  const deleted = databaseService.cleanOldHeadlines(7); // Keep last 7 days
-  logger.info("Cleaned old headlines", { deleted });
-}, 24 * 60 * 60 * 1000);
+  // Clean old headlines daily at midnight
+  setInterval(() => {
+    const deleted = databaseService.cleanOldHeadlines(7); // Keep last 7 days
+    logger.info("Cleaned old headlines", { deleted });
+  }, 24 * 60 * 60 * 1000);
+} else {
+  logger.info("Scheduled tasks disabled in serverless environment");
+}
 
 // Middleware
 app.use(express.json());
@@ -1278,38 +1291,46 @@ app.get("/nytimes/archive", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  logger.info("Server started successfully", {
-    port,
-    providers: mcpServer.getAvailableProviders(),
-    aiEnabled: !!process.env.OPENAI_API_KEY,
-    personalizationEnabled: !!personalizationService,
-    multiAgentEnabled: USE_MULTI_AGENT,
-  });
-  console.log(`🚀 Server listening on port ${port}`);
-  console.log(
-    `📊 Available providers: ${mcpServer.getAvailableProviders().join(", ")}`
-  );
-  console.log(`AI-powered endpoint: POST /ask`);
-  console.log(
-    `🎯 Personalization: ${
-      personalizationService ? "ENABLED" : "DISABLED (set OPENAI_API_KEY)"
-    }`
-  );
-  console.log(
-    `🧠 Multi-Agent System: ${
-      USE_MULTI_AGENT ? "ENABLED ✨" : "DISABLED (set USE_MULTI_AGENT=true)"
-    }`
-  );
-  if (USE_MULTI_AGENT) {
+// Export app for Vercel serverless functions
+export default app;
+
+// Only start listening if not in serverless environment
+if (!isServerless) {
+  app.listen(port, () => {
+    logger.info("Server started successfully", {
+      port,
+      providers: mcpServer.getAvailableProviders(),
+      aiEnabled: !!process.env.OPENAI_API_KEY,
+      personalizationEnabled: !!personalizationService,
+      multiAgentEnabled: USE_MULTI_AGENT,
+    });
+    console.log(`🚀 Server listening on port ${port}`);
     console.log(
-      `   ├─ Parallel Specialist Agents (News, Sentiment, Trend, Bias)`
+      `📊 Available providers: ${mcpServer.getAvailableProviders().join(", ")}`
     );
-    console.log(`   ├─ Personalization & Synthesis`);
-    console.log(`   └─ Debug endpoint: POST /ask/debug`);
-  }
-  console.log(
-    `📈 Monitoring: GET /agents/stats, /agents/performance, /agents/costs`
-  );
-  console.log(`🌐 Web UI: http://localhost:${port}`);
-});
+    console.log(`AI-powered endpoint: POST /ask`);
+    console.log(
+      `🎯 Personalization: ${
+        personalizationService ? "ENABLED" : "DISABLED (set OPENAI_API_KEY)"
+      }`
+    );
+    console.log(
+      `🧠 Multi-Agent System: ${
+        USE_MULTI_AGENT ? "ENABLED ✨" : "DISABLED (set USE_MULTI_AGENT=true)"
+      }`
+    );
+    if (USE_MULTI_AGENT) {
+      console.log(
+        `   ├─ Parallel Specialist Agents (News, Sentiment, Trend, Bias)`
+      );
+      console.log(`   ├─ Personalization & Synthesis`);
+      console.log(`   └─ Debug endpoint: POST /ask/debug`);
+    }
+    console.log(
+      `📈 Monitoring: GET /agents/stats, /agents/performance, /agents/costs`
+    );
+    console.log(`🌐 Web UI: http://localhost:${port}`);
+  });
+} else {
+  logger.info("Running in serverless mode - app exported for Vercel");
+}

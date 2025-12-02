@@ -5509,3 +5509,97 @@ gi{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":true,"hasNewsAPI":true,"hasOp
 {"channel":"email","emailProvider":"ses","level":"info","message":"Preparing to send email notification","service":"llm-dev-project","timestamp":"2025-12-02T19:21:22.634Z","userId":"user-1764702052545"}
 {"level":"info","message":"Notification tepkl sent successfully","service":"llm-dev-project","timestamp":"2025-12-02T19:21:22.964Z"}
 {"level":"info","message":"::ffff:127.0.0.1 - - [02/Dec/2025:19:21:22 +0000] \"POST /notifications/digest HTTP/1.1\" 200 59 \"-\" \"curl/7.68.0\"","service":"llm-dev-project","timestamp":"2025-12-02T19:21:22.964Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T19:24:02.980Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:19:24:02 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 304 - \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T19:24:02.981Z"}
+{"count":24,"level":"info","message":"Headlines retrieved","service":"llm-dev-project","timestamp":"2025-12-02T19:24:02.984Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:19:24:02 +0000] \"GET /headlines?limit=24 HTTP/1.1\" 200 28461 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T19:24:02.984Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":true,"hasNewsAPI":true,"hasOpenAlex":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","nytimes","arxiv","openalex"],"service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.593Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.601Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.603Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.604Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.604Z"}
+{"level":"info","message":"AWS SES email notifications enabled","region":"us-east-2","service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.609Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.610Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.632Z"}
+{"cronExpression":"0 9 * * *","level":"info","message":"Starting digest scheduler","recipientsProvided":false,"service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.632Z"}
+{"cron":"09:00","level":"info","message":"Email digest scheduler initialized","service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.637Z"}
+{"level":"warn","message":"No digest recipients resolved; skipping send","service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.637Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.638Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.680Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","nytimes","arxiv","openalex"],"service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.682Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","nytimes","arxiv","openalex"],"service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.690Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.692Z"}
+{"level":"info","message":"Startup digest dispatched","service":"llm-dev-project","timestamp":"2025-12-02T19:25:05.692Z"}
+{"count":11,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T19:25:06.004Z"}
+{"count":8,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T19:25:06.738Z"}
+{"count":8,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T19:25:06.883Z"}
+{"count":8,"level":"info","message":"Fetched OpenAlex works","service":"llm-dev-project","timestamp":"2025-12-02T19:25:07.305Z"}
+{"count":10,"level":"info","message":"Fetched NYTimes headlines","service":"llm-dev-project","timestamp":"2025-12-02T19:25:08.200Z"}
+{"count":45,"duration":2574,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T19:25:08.212Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T19:25:08.763Z"}
+{"hasArxiv":true,"hasGuardian":true,"hasNYTimes":true,"hasNewsAPI":true,"hasOpenAlex":true,"level":"info","message":"MCP Server initialized with providers:","providers":["newsapi","guardian","nytimes","arxiv","openalex"],"service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.449Z"}
+{"level":"info","message":"Database initialized","path":"./data/headlines.db","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.455Z"}
+{"level":"info","message":"Personalization service initialized successfully","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.457Z"}
+{"hasPersonalization":true,"level":"info","message":"MultiAgentOrchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.458Z"}
+{"enabled":true,"level":"info","message":"Multi-agent orchestrator initialized","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.458Z"}
+{"level":"info","message":"AWS SES email notifications enabled","region":"us-east-2","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.463Z"}
+{"level":"info","message":"Starting Daily Roundup Scheduler","schedule":"0 9 * * *","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.463Z"}
+{"level":"info","message":"Daily Roundup Service initialized","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.485Z"}
+{"cronExpression":"0 9 * * *","level":"info","message":"Starting digest scheduler","recipientsProvided":false,"service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.486Z"}
+{"cron":"09:00","level":"info","message":"Email digest scheduler initialized","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.490Z"}
+{"level":"warn","message":"No digest recipients resolved; skipping send","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.491Z"}
+{"level":"info","message":"Starting headline fetcher","schedule":"0 * * * *","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.491Z"}
+{"level":"info","message":"Headline fetcher scheduled successfully","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.536Z"}
+{"hasOpenAI":true,"level":"info","message":"Starting LLM Dev Project server...","port":3000,"providers":["newsapi","guardian","nytimes","arxiv","openalex"],"service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.538Z"}
+{"aiEnabled":true,"level":"info","message":"Server started successfully","multiAgentEnabled":true,"personalizationEnabled":true,"port":3000,"providers":["newsapi","guardian","nytimes","arxiv","openalex"],"service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.546Z"}
+{"level":"info","message":"Personalization service initialized","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.547Z"}
+{"level":"info","message":"Startup digest dispatched","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.548Z"}
+{"count":11,"level":"info","message":"Fetched NewsAPI headlines","service":"llm-dev-project","timestamp":"2025-12-02T19:25:25.692Z"}
+{"count":8,"level":"info","message":"Fetched Guardian headlines","service":"llm-dev-project","timestamp":"2025-12-02T19:25:26.351Z"}
+{"count":8,"level":"info","message":"Fetched ArXiv papers","service":"llm-dev-project","timestamp":"2025-12-02T19:25:26.431Z"}
+{"count":8,"level":"info","message":"Fetched OpenAlex works","service":"llm-dev-project","timestamp":"2025-12-02T19:25:26.879Z"}
+{"count":10,"level":"info","message":"Fetched NYTimes headlines","service":"llm-dev-project","timestamp":"2025-12-02T19:25:27.362Z"}
+{"count":45,"duration":1884,"level":"info","message":"Headlines inserted into database","service":"llm-dev-project","timestamp":"2025-12-02T19:25:27.376Z"}
+{"count":20,"level":"info","message":"Added headlines to vector store","service":"llm-dev-project","timestamp":"2025-12-02T19:25:28.158Z"}
+{"USE_MULTI_AGENT_ENV":true,"canRunMultiAgent":true,"hasOrchestrator":true,"level":"info","message":"AI query received","query":"recent papers on weather","service":"llm-dev-project","style":"professional","timestamp":"2025-12-02T19:25:39.669Z","useMultiAgent":true,"userId":"user-1764702052545"}
+{"level":"info","message":"🚀 Multi-agent orchestration started","query":"recent papers on weather","service":"llm-dev-project","timestamp":"2025-12-02T19:25:39.670Z","userId":"user-1764702052545"}
+{"level":"info","message":"📋 Phase 1: Starting Coordinator Agent...","query":"recent papers on weather","service":"llm-dev-project","timestamp":"2025-12-02T19:25:39.670Z"}
+{"level":"info","message":"[coordinator] Starting execution","query":"recent papers on weather","service":"llm-dev-project","timestamp":"2025-12-02T19:25:39.670Z","userId":"user-1764702052545"}
+{"level":"info","message":"[coordinator] 🎯 CoordinatorAgent: Analyzing query intent...","service":"llm-dev-project","timestamp":"2025-12-02T19:25:39.670Z"}
+{"interactionCount":2,"interests":["Science","Politics","Entertainment"],"level":"info","message":"[coordinator] 🎯 CoordinatorAgent: User profile loaded","service":"llm-dev-project","timestamp":"2025-12-02T19:25:39.671Z"}
+{"agentsToRun":["news","trend"],"intent":"research","level":"info","message":"[coordinator] 🎯 CoordinatorAgent: Planning complete","priority":"depth","searchTerms":["recent papers","weather","climate studies","meteorology","scientific articles"],"service":"llm-dev-project","timestamp":"2025-12-02T19:25:42.556Z"}
+{"durationMs":2887,"level":"info","message":"[coordinator] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T19:25:42.557Z"}
+{"agentsToRun":["news","trend"],"intent":"research","level":"info","message":"✅ Coordinator complete","searchTerms":["recent papers","weather","climate studies","meteorology","scientific articles"],"service":"llm-dev-project","timestamp":"2025-12-02T19:25:42.557Z"}
+{"agents":["news","trend"],"level":"info","message":"⚡ Phase 2: Starting specialist agents in parallel...","service":"llm-dev-project","timestamp":"2025-12-02T19:25:42.557Z"}
+{"level":"info","message":"[news] Starting execution","query":"recent papers on weather","service":"llm-dev-project","timestamp":"2025-12-02T19:25:42.558Z","userId":"user-1764702052545"}
+{"level":"info","message":"[news] 📰 NewsAgent: Extracting search terms...","service":"llm-dev-project","timestamp":"2025-12-02T19:25:42.558Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Search terms extracted","searchTerms":["recent papers","weather","climate studies","meteorology","scientific articles"],"service":"llm-dev-project","timestamp":"2025-12-02T19:25:42.558Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching from sources...","prioritized":true,"service":"llm-dev-project","sources":["newsapi","guardian","nytimes","arxiv","openalex"],"timestamp":"2025-12-02T19:25:42.558Z"}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching from NewsAPI /everything","pageSize":"50","searchQuery":"recent papers weather climate studies meteorology scientific articles","service":"llm-dev-project","timestamp":"2025-12-02T19:25:42.559Z"}
+{"articleCount":2,"hasArticles":true,"hasData":true,"level":"info","message":"[news] 📰 NewsAgent: NewsAPI /everything result","searchQuery":"recent papers weather climate studies meteorology scientific articles","service":"llm-dev-project","timestamp":"2025-12-02T19:25:42.741Z","totalResults":2}
+{"level":"info","message":"[news] 📰 NewsAgent: Fetching completed","searchTerms":["recent papers","weather","climate studies","meteorology","scientific articles"],"service":"llm-dev-project","sourceDistribution":[{"count":2,"source":"newsapi"},{"count":10,"source":"guardian"},{"count":10,"source":"nytimes"},{"count":8,"source":"arxiv"},{"count":0,"source":"openalex"}],"sources":["newsapi","guardian","nytimes","arxiv","openalex"],"timestamp":"2025-12-02T19:25:43.320Z","totalArticles":30}
+{"durationMs":762,"level":"info","message":"[news] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T19:25:43.320Z"}
+{"level":"info","message":"[trend] Starting execution","query":"recent papers on weather","service":"llm-dev-project","timestamp":"2025-12-02T19:25:43.321Z","userId":"user-1764702052545"}
+{"articleCount":30,"level":"info","message":"[trend] 📈 TrendAgent: Detecting trends and patterns...","service":"llm-dev-project","timestamp":"2025-12-02T19:25:43.321Z"}
+{"emergingThemes":4,"insights":4,"level":"info","mainTopics":5,"message":"[trend] 📈 TrendAgent: Analysis completed","service":"llm-dev-project","timestamp":"2025-12-02T19:25:47.301Z"}
+{"durationMs":3980,"level":"info","message":"[trend] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T19:25:47.301Z"}
+{"hasBias":false,"hasSentiment":false,"hasTrend":true,"level":"info","message":"✅ All specialist agents complete","newsArticles":30,"service":"llm-dev-project","timestamp":"2025-12-02T19:25:47.301Z"}
+{"level":"info","message":"🎯 Phase 3: Starting Personalization Agent...","service":"llm-dev-project","timestamp":"2025-12-02T19:25:47.301Z","userId":"user-1764702052545"}
+{"level":"info","message":"[personalization] Starting execution","query":"recent papers on weather","service":"llm-dev-project","timestamp":"2025-12-02T19:25:47.302Z","userId":"user-1764702052545"}
+{"level":"info","message":"Tracked query for user user-1764702052545","service":"llm-dev-project","timestamp":"2025-12-02T19:26:15.074Z"}
+{"followUps":3,"insights":3,"level":"info","message":"[personalization] 🎯 PersonalizationAgent: Ranking and insights complete","service":"llm-dev-project","timestamp":"2025-12-02T19:26:15.075Z","topScore":0.9,"totalArticles":30}
+{"durationMs":27774,"level":"info","message":"[personalization] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T19:26:15.075Z"}
+{"insights":3,"level":"info","message":"✅ Personalization complete","rankedArticles":30,"service":"llm-dev-project","timestamp":"2025-12-02T19:26:15.075Z"}
+{"level":"info","message":"📝 Phase 4: Starting Synthesis Agent...","service":"llm-dev-project","timestamp":"2025-12-02T19:26:15.083Z"}
+{"level":"info","message":"[synthesis] Starting execution","query":"recent papers on weather","service":"llm-dev-project","timestamp":"2025-12-02T19:26:15.083Z","userId":"user-1764702052545"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Building context from all agents...","service":"llm-dev-project","timestamp":"2025-12-02T19:26:15.083Z"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Generating final report...","service":"llm-dev-project","timestamp":"2025-12-02T19:26:15.084Z"}
+{"level":"info","message":"[synthesis] 📝 SynthesisAgent: Report generation complete","query":"recent papers on weather","reportLength":4098,"service":"llm-dev-project","timestamp":"2025-12-02T19:26:31.633Z"}
+{"durationMs":16551,"level":"info","message":"[synthesis] Execution completed","service":"llm-dev-project","success":true,"timestamp":"2025-12-02T19:26:31.634Z"}
+{"level":"info","message":"✅ Synthesis complete","reportLength":4098,"service":"llm-dev-project","timestamp":"2025-12-02T19:26:31.634Z"}
+{"estimatedCost":"$0.0217","executionTimeMs":51966,"level":"info","message":"🎉 Multi-agent orchestration completed","query":"recent papers on weather","service":"llm-dev-project","timestamp":"2025-12-02T19:26:31.635Z","totalAgents":5,"userId":"user-1764702052545"}
+{"agentsUsed":5,"duration":"51966ms","estimatedCost":"$0.0217","level":"info","message":"Multi-agent query completed","query":"recent papers on weather","service":"llm-dev-project","timestamp":"2025-12-02T19:26:31.635Z"}
+{"level":"info","message":"Tracked query for user user-1764702052545","service":"llm-dev-project","timestamp":"2025-12-02T19:26:31.852Z"}
+{"level":"info","message":"::1 - - [02/Dec/2025:19:26:31 +0000] \"POST /ask HTTP/1.1\" 200 86000 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T19:26:31.861Z"}
+{"count":7,"level":"info","message":"Query history retrieved","service":"llm-dev-project","timestamp":"2025-12-02T19:26:31.877Z","userId":"user-1764702052545"}
+{"level":"info","message":"::1 - - [02/Dec/2025:19:26:31 +0000] \"GET /queries/history?userId=user-1764702052545&limit=50 HTTP/1.1\" 200 1938 \"http://localhost:3000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0\"","service":"llm-dev-project","timestamp":"2025-12-02T19:26:31.878Z"}

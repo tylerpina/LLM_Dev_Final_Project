@@ -34,6 +34,10 @@ A TypeScript-powered news intelligence platform with **multi-agent AI orchestrat
    DIGEST_DEFAULT_RECIPIENTS=user1@example.com,user2@example.com  # Optional fallback list
    ```
 
+NOTIFICATION SYSTEM NOTE:
+
+Amazon SES only supports sandbox approved emails, so the email notification service will NOT work unless you have registered your personal email in Amazon SES.
+
 2. Install dependencies:
 
    ```bash
